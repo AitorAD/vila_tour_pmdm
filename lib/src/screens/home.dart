@@ -4,7 +4,7 @@ import 'package:vila_tour_pmdm/src/providers/menu.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text('Componentes')), body: _lista());
+    return Scaffold(appBar: AppBar(title: const Text('VILATOUR')), body: _lista());
   }
 
   Widget _lista() {
