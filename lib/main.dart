@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/screens/festivals.dart';
 
 void main() => runApp(const MyApp());
 
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
-      routes: {'festivals_traditions_screen': (_) => FestivalsAndTraditionsScreen()},
+      routes: {'festivals_traditions_screen': (_) => FestivalsScreen()},
       initialRoute: 'festivals_traditions_screen',
     );
   }
