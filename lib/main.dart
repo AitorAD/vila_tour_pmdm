@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/screens/SplashScreen.dart';
+import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -23,13 +24,12 @@ class MyApp extends StatelessWidget {
       Locale('en', ''),
       Locale('es', 'ES')
     ],
-    initialRoute: 'festivals',
     routes: getApplicationRoutes(),
     onGenerateRoute: (RouteSettings settings) {
       print('Ruta llamada: ${settings.name}');
 
       return MaterialPageRoute(
-        builder: (BuildContext context) => SplashScreen()
+        builder: (BuildContext context) => HomePage()
       );
     },
   );
