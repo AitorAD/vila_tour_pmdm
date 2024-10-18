@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/src/screens/SplashScreen.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
