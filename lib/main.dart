@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/screens/festivals.dart';
 import 'package:vila_tour_pmdm/src/screens/SplashScreen.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 void main() => runApp(const MyApp());
 
