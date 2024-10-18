@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/screens/festivals.dart';
 import 'package:vila_tour_pmdm/src/screens/SplashScreen.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
  @override
  Widget build(BuildContext context) {
   return MaterialApp(
-    title: 'Primera APP',
+    title: 'VILATOUR',
     debugShowCheckedModeBanner: false,
     localizationsDelegates: const [
       GlobalMaterialLocalizations.delegate,
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget {
       Locale('en', ''),
       Locale('es', 'ES')
     ],
-    initialRoute: '/',
+    initialRoute: 'festivals',
     routes: getApplicationRoutes(),
     onGenerateRoute: (RouteSettings settings) {
       print('Ruta llamada: ${settings.name}');
