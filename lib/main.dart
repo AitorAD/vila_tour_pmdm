@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/screens/festivals.dart';
-import 'package:vila_tour_pmdm/src/screens/SplashScreen.dart';
+import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
       print('Ruta llamada: ${settings.name}');
 
       return MaterialPageRoute(
-        builder: (BuildContext context) => SplashScreen()
+        builder: (BuildContext context) => HomePage()
       );
     },
   );

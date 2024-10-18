@@ -1,0 +1,13 @@
+{
+    "nombreApp" : "VilaTour",
+     "rutas" : [
+        {
+            "ruta" : "splash",
+            "texto": "Splash"
+        },
+        {
+            "ruta" : "festivals",
+            "texto": "Festivales"
+        }
+     ]
+}
