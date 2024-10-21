@@ -8,6 +8,10 @@
         {
             "ruta" : "festivals",
             "texto": "Festivales"
+        },
+        {
+            "ruta" : "login",
+            "texto": "LogIn"
         }
      ]
 }
