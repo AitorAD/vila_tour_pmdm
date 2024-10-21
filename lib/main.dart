@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
  @override
  Widget build(BuildContext context) {
   return MaterialApp(
-    title: 'Primera APP',
+    title: 'VILATOUR',
     debugShowCheckedModeBanner: false,
     localizationsDelegates: const [
       GlobalMaterialLocalizations.delegate,
@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
       Locale('en', ''),
       Locale('es', 'ES')
     ],
-    initialRoute: '/',
     routes: getApplicationRoutes(),
     onGenerateRoute: (RouteSettings settings) {
       print('Ruta llamada: ${settings.name}');

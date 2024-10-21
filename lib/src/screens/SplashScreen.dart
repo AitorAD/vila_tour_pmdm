@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class SplashScreen extends StatelessWidget{
   const SplashScreen({super.key});
 
@@ -7,7 +8,7 @@ class SplashScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return const Scaffold (
         
+
     );
   }
-
 }
