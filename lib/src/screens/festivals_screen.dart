@@ -3,6 +3,8 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 class FestivalsScreen extends StatelessWidget {
+  const FestivalsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     var festivales = [
@@ -19,7 +21,7 @@ class FestivalsScreen extends StatelessWidget {
           flexibleSpace: DefaultDecoration(),
           foregroundColor: Colors.white,
         ),
-        body: Column(
+        body: const Column(
           children: [
             SearchBox(),
             //ListView.builder(Festival)
@@ -42,7 +44,7 @@ class FestivalBox extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             image: DecorationImage(
                 image: NetworkImage(
@@ -51,7 +53,7 @@ class FestivalBox extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Image(
+            const Image(
               image: NetworkImage(
                   'https://admin.vila.softme.es/Files/Img?url=~%2FApp_Data%2FUploadedFiles%2FJunio%202024%2F20240521041824Pebrereta.jpg&sz=100&ql=50'),
               width: 20,
@@ -60,9 +62,9 @@ class FestivalBox extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
               decoration: BoxDecoration(
-                  color: Color(0xFFA0D6F1).withOpacity(0.80),
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: Column(
+                  color: const Color(0xFFA0D6F1).withOpacity(0.80),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))),
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(

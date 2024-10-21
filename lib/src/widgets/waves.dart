@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class WavesWidget extends StatelessWidget {
+  const WavesWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: double.infinity,
       width: double.infinity,
       child: Stack(
@@ -25,7 +27,7 @@ class WavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Color(0x00FFB7).withOpacity(0.2)
+      ..color = const Color(0x0000ffb7).withOpacity(0.2)
       ..style = PaintingStyle.fill;
 
     // Onda inferior
@@ -41,7 +43,7 @@ class WavePainter extends CustomPainter {
 
     // Onda superior más suave
     Paint paint2 = Paint()
-      ..color = Color(0x00FFB7).withOpacity(0.2)
+      ..color = const Color(0x0000ffb7).withOpacity(0.2)
       ..style = PaintingStyle.fill;
 
     Path path2 = Path();
