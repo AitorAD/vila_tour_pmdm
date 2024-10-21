@@ -4,7 +4,14 @@ import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 
-void main() => runApp(const MyApp());
+Future main() async {
+  await initialization(null);
+  runApp(const MyApp());
+}
+
+Future initialization(BuildContext? context) async {
+  await Future.delayed(Duration(seconds: 3));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
