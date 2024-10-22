@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/providers/menu.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: const Text('VILATOUR')), body: _lista());
@@ -10,7 +12,7 @@ class HomePage extends StatelessWidget {
   Widget _lista() {
   return FutureBuilder(
     future: menuProvider.cargarData(),
-    initialData: [],
+    initialData: const [],
     builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
       if (snapshot.hasData && snapshot.data!.isNotEmpty) {
         return ListView(
@@ -26,7 +28,7 @@ class HomePage extends StatelessWidget {
 
   List<Widget> _listaItems(List<dynamic> data, BuildContext context) {
     final List<Widget> opciones = [];
-    data.forEach((opt) {
+    for (var opt in data) {
       final widgetTemp = ListTile(
         title: Text(opt['texto']),
         trailing: const Icon(Icons.keyboard_arrow_right, color: Colors.blue),
@@ -36,7 +38,7 @@ class HomePage extends StatelessWidget {
       );
 
       opciones..add(widgetTemp)..add(const Divider());
-    });
+    }
     
     return opciones;
   }
