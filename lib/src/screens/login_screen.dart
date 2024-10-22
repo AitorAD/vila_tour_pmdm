@@ -28,9 +28,10 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(height: 10),
                   // Barra de LogIn
                   BarScreen(labelText: "Log In"),
-                  SizedBox(height: 100), // Reduce el espacio aquí para ajustar
+                  SizedBox(height: 90), // Reduce el espacio aquí para ajustar
                   // Formulario
-                  Expanded( // Usa Expanded para ocupar el espacio restante
+                  Expanded(
+                    // Usa Expanded para ocupar el espacio restante
                     child: Padding(
                       padding: EdgeInsets.all(20.0),
                       child: Column(
@@ -44,21 +45,33 @@ class LoginScreen extends StatelessWidget {
                           // Recuperar contraseña
                           GestureDetector(
                             onTap: () {
-                              print("Recuperar password"); // Llevar a pantalla de recuperar contraseña
+                              print(
+                                  "Recuperar password"); // Llevar a pantalla de recuperar contraseña
                             },
-                            child: Text(
-                              '¿Has olvidado tu contraseña? Haz clic aquí',
-                              style: TextStyle(color: Colors.black),
+                            child: Align(
+                              alignment: Alignment
+                                  .centerLeft, // Alinea el texto a la izquierda
+                              child: Text(
+                                '¿Has olvidado tu contraseña? Haz clic aquí',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  decoration: TextDecoration
+                                      .underline, // Subraya el texto
+                                ),
+                              ),
                             ),
                           ),
-                          SizedBox(height: 100), // Espacio entre el texto y los botones
+                          SizedBox(
+                              height:
+                                  70), // Espacio entre el texto y los botones
                           // Fila Botones
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               // Boton 1
                               CustomButton(
-                                text: 'Entrar', // Texto que aparecerá en el botón
+                                text:
+                                    'Entrar', // Texto que aparecerá en el botón
                                 onPressed: () {
                                   // Acción para iniciar sesión
                                   print('Botón "Entrar" presionado');
@@ -66,7 +79,8 @@ class LoginScreen extends StatelessWidget {
                               ),
                               // Boton 2
                               CustomButton(
-                                text: 'Registrarse', // Texto que aparecerá en el botón
+                                text:
+                                    'Registrarse', // Texto que aparecerá en el botón
                                 onPressed: () {
                                   // Acción para iniciar sesión
                                   print('Botón "Registrar" presionado');
@@ -74,6 +88,46 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ],
                           ),
+                          SizedBox(height: 40),
+                          // Barra negra y texto
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration:
+                                      BoxDecoration(color: Colors.black),
+                                  height: 2, // Altura más fina
+                                ),
+                              ),
+                              Text(
+                                "  Acceder con  ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  decoration:
+                                      BoxDecoration(color: Colors.black),
+                                  height: 2, // Altura más fina
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 50),
+                          // Boton Google
+                          GestureDetector(
+                            onTap: () {
+                              //Accion al presionar
+                            },
+                            child: Image.asset(
+                              "assets/google-logo.png",
+                              height: 50,
+                              width: 50,
+                            ),
+                          )
                         ],
                       ),
                     ),

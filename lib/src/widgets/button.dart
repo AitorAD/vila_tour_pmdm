@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class CustomButton extends StatelessWidget {
@@ -30,7 +31,7 @@ class CustomButton extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: TextStyle(color: Colors.white), // Color del texto
+              style: Utils.textStyleVilaTour, // Color del texto
             ),
           ),
         )
