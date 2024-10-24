@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+import 'package:vila_tour_pmdm/src/widgets/default_decoration.dart';
 
 class GeneralFestivalsScreen extends StatelessWidget {
   const GeneralFestivalsScreen({super.key});
