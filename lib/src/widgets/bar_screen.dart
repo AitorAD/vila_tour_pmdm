@@ -15,7 +15,7 @@ class BarScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      decoration: defaultBoxDecoration(),
+      decoration: DefaultDecoration().defaultDecoration(0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
