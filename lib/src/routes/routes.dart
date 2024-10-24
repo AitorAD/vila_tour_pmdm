@@ -13,6 +13,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     'festivals': (BuildContext context) => FestivalsScreen(),
     'general_festivals': (BuildContext context) => GeneralFestivalsScreen(),
     'login': (BuildContext context) => LoginScreen(),
-    'registrer': (BuildContext context) => RegistrerScreen(),
+    'registrer_screen': (BuildContext context) => RegistrerScreen(),
   };
 }

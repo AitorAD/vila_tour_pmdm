@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/src/widgets/bar_screen.dart';
-import 'package:vila_tour_pmdm/src/widgets/button.dart';
-import 'package:vila_tour_pmdm/src/widgets/header_log.dart';
-import 'package:vila_tour_pmdm/src/widgets/input_text.dart';
-import 'package:vila_tour_pmdm/src/widgets/waves.dart';
+import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/registrer_confirmation_screen.dart';
+import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+
 
 class RegistrerScreen extends StatelessWidget {
 
- const RegistrerScreen({super.key});
+ const  RegistrerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,16 @@ class RegistrerScreen extends StatelessWidget {
                   HeaderLog(),
                   SizedBox(height: 10),
                   // Barra de LogIn
-                  BarScreen(labelText: "Registrarse"),
+                  BarScreenArrow(
+                    labelText: "Registrarse",
+                    onBackPressed: () {
+                      // Navega a LoginScreen al presionar el botón de retroceso
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
+                  ),
                   SizedBox(height: 70), // Reduce el espacio aquí para ajustar
                   // Formulario
                   Expanded(
@@ -57,7 +65,12 @@ class RegistrerScreen extends StatelessWidget {
                                 text:
                                     'Crear cuenta', // Texto que aparecerá en el botón
                                 onPressed: () {
-                                  // Acción para iniciar sesión
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RegistrerConfirmationScreen()
+                                    )
+                                  );
                                   print('Botón "Registrar" presionado');
                                 },
                               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
-import 'package:vila_tour_pmdm/src/widgets/bar_screen.dart';
+import 'package:vila_tour_pmdm/src/widgets/bar_login.dart';
 import 'package:vila_tour_pmdm/src/widgets/button.dart';
 import 'package:vila_tour_pmdm/src/widgets/header_log.dart';
 import 'package:vila_tour_pmdm/src/widgets/input_text.dart';
@@ -28,7 +28,7 @@ class LoginScreen extends StatelessWidget {
                   HeaderLog(),
                   SizedBox(height: 10),
                   // Barra de LogIn
-                  BarScreen(labelText: "Log In"),
+                  BarScreenLogin(labelText: "Log In"),
                   SizedBox(height: 90), // Reduce el espacio aquí para ajustar
                   // Formulario
                   Expanded(
