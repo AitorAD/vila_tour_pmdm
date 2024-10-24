@@ -3,6 +3,8 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 class FestivalsScreen extends StatelessWidget {
+  const FestivalsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     /*
