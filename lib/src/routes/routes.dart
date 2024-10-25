@@ -4,6 +4,7 @@ import 'package:vila_tour_pmdm/src/screens/SplashScreen.dart';
 import 'package:vila_tour_pmdm/src/screens/general_festivals.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
 
 Map<String, WidgetBuilder> getApplicationRoutes() {
