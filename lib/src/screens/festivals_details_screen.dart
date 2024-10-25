@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/src/models/festival.dart';
+import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/providers/festivals_provider.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
-class GeneralFestivalsScreen extends StatefulWidget {
-  const GeneralFestivalsScreen({super.key});
+class DetailsFestival extends StatefulWidget {
+  const DetailsFestival({super.key});
 
   @override
-  State<GeneralFestivalsScreen> createState() => _GeneralFestivalsScreenState();
+  State<DetailsFestival> createState() => _DetailsFestivalState();
 }
 
-class _GeneralFestivalsScreenState extends State<GeneralFestivalsScreen> {
+class _DetailsFestivalState extends State<DetailsFestival> {
   @override
   Widget build(BuildContext context) {
-    final Festival festival = ModalRoute.of(context)!.settings.arguments as Festival;
+    final Festival festival =
+        ModalRoute.of(context)!.settings.arguments as Festival;
 
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +39,8 @@ class _GeneralFestivalsScreenState extends State<GeneralFestivalsScreen> {
                   height: 400,
                   fit: BoxFit.cover,
                 ),
-                const SizedBox(height: 16), // Extra spacing
+
+                const SizedBox(height: 16),
 
                 // Festival title
                 Padding(
@@ -123,17 +127,26 @@ class _GeneralFestivalsScreenState extends State<GeneralFestivalsScreen> {
           ),
         ],
       ),
-      // Floating action button for "share" or "favorite"
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            festival.favourite = !festival.favourite;
-          });
+
+      // Floating action button for "favorite"
+
+      // El widget consumer reconstruye automaticamente el floatingActionButton
+      // cuando es estado de FestivalsProvider cambia
+      floatingActionButton: Consumer<FestivalsProvider>(
+        builder: (context, festivalsProvider, child) {
+          // Verifica si el festival actual es favorito
+          final isFavourite = festivalsProvider.festivals.any((f) => f.title == festival.title && f.favourite);
+
+          return FloatingActionButton(
+            onPressed: () {
+              festivalsProvider.toggleFavorite(festival);
+            },
+            backgroundColor: isFavourite ? Colors.white : Colors.redAccent,
+            child: isFavourite
+                ? Icon(Icons.favorite, color: Colors.redAccent)
+                : Icon(Icons.favorite_border),
+          );
         },
-        backgroundColor: festival.favourite ? Colors.white : Colors.redAccent,
-        child: festival.favourite
-            ? Icon(Icons.favorite, color: Colors.redAccent)
-            : Icon(Icons.favorite_border),
       ),
     );
   }

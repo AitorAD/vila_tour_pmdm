@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/festival.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+
+import '../providers/festivals_provider.dart';
 
 class FestivalsScreen extends StatelessWidget {
   const FestivalsScreen({super.key});
@@ -9,7 +12,7 @@ class FestivalsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Provisional hasta conectar con la API
-    List<Map<String, dynamic>> festivalsList = getFestivals();
+    final festivasProvider = Provider.of<FestivalsProvider>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -28,18 +31,9 @@ class FestivalsScreen extends StatelessWidget {
                 SearchBox(),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: festivalsList.length,
+                    itemCount: festivasProvider.festivals.length,
                     itemBuilder: (context, index) {
-                      var event = festivalsList[index];
-                      return _FestivalBox(
-                          festival: new Festival(
-                              imageUrl: event['imageUrl'],
-                              title: event['title'],
-                              location: event['location'],
-                              date: event['date'],
-                              rating: event['rating'],
-                              description: event['description'],
-                              favourite: event['favourite']));
+                      return _FestivalBox(festival: festivasProvider.festivals[index],);
                     },
                   ),
                 ),

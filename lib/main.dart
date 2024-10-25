@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/providers/festivals_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 
-void main() => runApp(const MyApp());
+void main() => runApp(AppState());
+
+class AppState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => FestivalsProvider(), lazy: false)
+    ], child: MyApp());
+  }
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
