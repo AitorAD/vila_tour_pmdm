@@ -3,13 +3,17 @@ import 'package:vila_tour_pmdm/src/models/festival.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
-class GeneralFestivalsScreen extends StatelessWidget {
+class GeneralFestivalsScreen extends StatefulWidget {
   const GeneralFestivalsScreen({super.key});
 
   @override
+  State<GeneralFestivalsScreen> createState() => _GeneralFestivalsScreenState();
+}
+
+class _GeneralFestivalsScreenState extends State<GeneralFestivalsScreen> {
+  @override
   Widget build(BuildContext context) {
-    final Festival festival =
-        ModalRoute.of(context)!.settings.arguments as Festival;
+    final Festival festival = ModalRoute.of(context)!.settings.arguments as Festival;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,15 +28,13 @@ class GeneralFestivalsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Hero animation for image
-                Hero(
-                  tag: festival.imageUrl,
-                  child: Image.network(
-                    festival.imageUrl,
-                    width: double.infinity,
-                    height: 400,
-                    fit: BoxFit.cover,
-                  ),
+                // Image
+                FadeInImage(
+                  placeholder: AssetImage('assets/logo.ico'),
+                  image: NetworkImage(festival.imageUrl),
+                  width: double.infinity,
+                  height: 400,
+                  fit: BoxFit.cover,
                 ),
                 const SizedBox(height: 16), // Extra spacing
 
@@ -53,32 +55,30 @@ class GeneralFestivalsScreen extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Row for rating stars
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      festival.rating.toString(),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: 'PontanoSans',
+                Container(
+                  width: 300,
+                  height: 50,
+                  decoration: DefaultDecoration().defaultDecoration(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        festival.rating.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'PontanoSans',
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Row(
-                      children: List.generate(4, (index) {
-                        return const Icon(
-                          Icons.star,
-                          color: Color(0xFFEFCE4A),
-                          size: 20,
-                        );
-                      }),
-                    ),
-                    const SizedBox(width: 4),
-                    const Text(
-                      '(281)',
-                      style: TextStyle(fontSize: 16),
-                    )
-                  ],
+                      const SizedBox(width: 4),
+                      PaintStars(rating: festival.rating),
+                      const SizedBox(width: 4),
+                      const Text(
+                        '(281)',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      )
+                    ],
+                  ),
                 ),
 
                 const Divider(),
@@ -126,10 +126,14 @@ class GeneralFestivalsScreen extends StatelessWidget {
       // Floating action button for "share" or "favorite"
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Acción de compartir o favorito
+          setState(() {
+            festival.favourite = !festival.favourite;
+          });
         },
-        backgroundColor: Colors.redAccent,
-        child: const Icon(Icons.favorite_border),
+        backgroundColor: festival.favourite ? Colors.white : Colors.redAccent,
+        child: festival.favourite
+            ? Icon(Icons.favorite, color: Colors.redAccent)
+            : Icon(Icons.favorite_border),
       ),
     );
   }
