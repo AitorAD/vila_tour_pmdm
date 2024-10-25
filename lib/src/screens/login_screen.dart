@@ -8,15 +8,14 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,  // This prevents the screen from resizing when keyboard appears
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          // Waves widget positioned at the bottom
           Positioned.fill(
             child: WavesWidget(),
           ),
           SafeArea(
-            child: SingleChildScrollView( // Wrap entire content in SingleChildScrollView
+            child: SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   minHeight: MediaQuery.of(context).size.height - 
@@ -28,77 +27,99 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       HeaderLog(),
                       BarScreenLogin(labelText: "Log In"),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50),
+                      Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // This spreads out the sections
                           children: [
-                            InputText(labelText: "Correo:"),
-                            SizedBox(height: 30),
-                            InputText(labelText: "Contraseña:"),
-                            GestureDetector(
-                              onTap: () {
-                                print("Recuperar password");
-                              },
-                              child: Text(
-                                '¿Has olvidado tu contraseña? Haz clic aquí',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  decoration: TextDecoration.underline,
-                                ),
+                            // Input Section
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  InputText(labelText: "Correo:"),
+                                  SizedBox(height: 40), // Increased spacing
+                                  InputText(labelText: "Contraseña:"),
+                                  SizedBox(height: 20),
+                                  GestureDetector(
+                                    onTap: () {
+                                      print("Recuperar password");
+                                    },
+                                    child: Text(
+                                      '¿Has olvidado tu contraseña? Haz clic aquí',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 60),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                CustomButton(
-                                  text: 'Entrar',
-                                  onPressed: () {
-                                    print('Botón "Entrar" presionado');
-                                  },
-                                ),
-                                CustomButton(
-                                  text: 'Registrarse',
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, 'registrer_screen');
-                                  },
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    height: 2,
-                                    color: Colors.black,
+                            
+                            // Buttons Section
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  CustomButton(
+                                    text: 'Entrar',
+                                    onPressed: () {
+                                      print('Botón "Entrar" presionado');
+                                    },
                                   ),
-                                ),
-                                Text(
-                                  "  Acceder con  ",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    height: 2,
-                                    color: Colors.black,
+                                  CustomButton(
+                                    text: 'Registrarse',
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, 'registrer_screen');
+                                    },
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            SizedBox(height: 30),
-                            Center(
-                              child: GestureDetector(
-                                onTap: () {
-                                  // Acción para iniciar sesión con Google
-                                },
-                                child: Image.asset(
-                                  "assets/google-logo.png",
-                                  height: 50,
-                                  width: 50,
-                                ),
+                            
+                            // Social Login Section
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          height: 2,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                        child: Text(
+                                          "Acceder con",
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          height: 2,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Acción para iniciar sesión con Google
+                                    },
+                                    child: Image.asset(
+                                      "assets/google-logo.png",
+                                      height: 50,
+                                      width: 50,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],

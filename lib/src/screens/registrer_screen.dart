@@ -3,128 +3,112 @@ import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/registrer_confirmation_screen.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
-
 class RegistrerScreen extends StatelessWidget {
-
- const  RegistrerScreen({super.key});
+  const RegistrerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: <Widget>[
-              // Background
-              Positioned.fill(
-                child: WavesWidget(),
-              ),
-              // BODY
-              Column(
-                children: [
-                  // Logo y nombre de la aplicación
-                  HeaderLog(),
-                  SizedBox(height: 10),
-                  // Barra de LogIn
-                  BarScreenArrow(
-                    labelText: "Registrarse",
-                    onBackPressed: () {
-                      // Navega a LoginScreen al presionar el botón de retroceso
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 70), // Reduce el espacio aquí para ajustar
-                  // Formulario
-                  Expanded(
-                    // Usa Expanded para ocupar el espacio restante
-                    child: Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: Column(
-                        children: <Widget>[
-                          // Input 1
-                          InputText(labelText: "E-Mail:"),
-                          SizedBox(height: 25),
-                          // Input 2
-                          InputText(labelText: "Contraseña:"),
-                          SizedBox(height: 25),
-                          // Input 2
-                          InputText(labelText: "Repetir contraseña:"),
-                          SizedBox(height: 15),
-                          SizedBox(
-                              height:
-                                  30), // Espacio entre el texto y los botones
-                          // Fila Botones
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              CustomButton(
-                                text:
-                                    'Crear cuenta', // Texto que aparecerá en el botón
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => RegistrerConfirmationScreen()
-                                    )
-                                  );
-                                  print('Botón "Registrar" presionado');
-                                },
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 40),
-                          // Barra negra y texto
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration:
-                                      BoxDecoration(color: Colors.black),
-                                  height: 2, // Altura más fina
-                                ),
-                              ),
-                              Text(
-                                "  Registrarse con  ",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration:
-                                      BoxDecoration(color: Colors.black),
-                                  height: 2, // Altura más fina
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 50),
-                          // Boton Google
-                          GestureDetector(
-                            onTap: () {
-                              //Accion al presionar
-                            },
-                            child: Image.asset(
-                              "assets/google-logo.png",
-                              height: 50,
-                              width: 50,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+      resizeToAvoidBottomInset:
+          false, // This prevents the screen from resizing when keyboard appears
+      body: Stack(
+        children: [
+          // Waves widget positioned at the bottom
+          Positioned.fill(
+            child: WavesWidget(),
           ),
-        ),
+          SafeArea(
+            child: SingleChildScrollView(
+              // Wrap entire content in SingleChildScrollView
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).padding.top -
+                      MediaQuery.of(context).padding.bottom,
+                ),
+                child: IntrinsicHeight(
+                  //BODY
+                  child: Column(
+                    children: [
+                      HeaderLog(),
+                      BarScreenArrow(
+                          labelText: "Registrarse",
+                          onBackPressed: () => LoginScreen),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 50),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InputText(labelText: "Correo:"),
+                            SizedBox(height: 30),
+                            InputText(labelText: "Contraseña:"),
+                            SizedBox(height: 30),
+                            InputText(labelText: "Escriba de nuevo la Contraseña:"),
+                            SizedBox(height: 60),
+                            // Fila Botones
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                CustomButton(
+                                  text:
+                                      'Crear cuenta', // Texto que aparecerá en el botón
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RegistrerConfirmationScreen()));
+                                    print('Botón "Registrar" presionado');
+                                  },
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    height: 2,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  "  Acceder con  ",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    height: 2,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 30),
+                            Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Acción para iniciar sesión con Google
+                                },
+                                child: Image.asset(
+                                  "assets/google-logo.png",
+                                  height: 50,
+                                  width: 50,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
