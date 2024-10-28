@@ -1,0 +1,17 @@
+{
+    "nombreApp" : "VILATOUR",
+     "rutas" : [
+        {
+            "ruta" : "splash",
+            "texto": "Splash"
+        },
+        {
+            "ruta" : "festivals",
+            "texto": "Festivales"
+        },
+        {
+            "ruta" : "login",
+            "texto": "LogIn"
+        }
+     ]
+}
