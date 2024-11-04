@@ -154,11 +154,12 @@ class _RecipeInfo extends StatelessWidget {
       left: 0,
       right: 0,
       child: Container(
+        margin: EdgeInsets.only(left: 135),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
           color: Colors.black.withOpacity(0.4),
         ),
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -171,21 +172,13 @@ class _RecipeInfo extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              (widget.article as Festival).location,
-              style: TextStyle(color: Colors.white, fontSize: 14),
-            ),
-            Text(
-              (widget.article as Festival).date,
-              style: TextStyle(color: Colors.white, fontSize: 14),
-            ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             Row(
               children: [
-                PaintStars(rating: (widget.article as Festival).averageScore),
+                PaintStars(rating: (widget.article as Recipe).averageScore),
                 SizedBox(width: 10),
                 Text(
-                  (widget.article as Festival).averageScore.toString(),
+                  (widget.article as Recipe).averageScore.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,

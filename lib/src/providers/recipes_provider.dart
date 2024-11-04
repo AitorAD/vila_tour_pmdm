@@ -28,36 +28,30 @@ Future<List<Map<String, dynamic>>> _getRecipes() async {
   return [
     {
       "imagePath":
-          "https://www.elperiodic.com/archivos/imagenes/noticias/2024/06/15/20240614-221327.jpg",
-      "name": "Sant Miquel",
-      "location": "Plaza de la Iglesia - La Ermita",
-      "date": "26 - 29 Septiembre",
+          "https://www.turismolavilajoiosa.com/img/disfruta/Gastronomia/GastronomiaRecetario/mostralavila2.62.jpg",
+      "name": "Bollets a la lloseta",
       "averageScore": 4.7,
       "favourite": true,
       "description":
-          "La fiesta de Sant Miquel es una celebración que tiene lugar en la Plaza de la Iglesia - La Ermita. Se rinde homenaje al patrón de la localidad con una serie de actividades culturales y religiosas. La festividad incluye una misa solemne, una procesión por las calles del pueblo, danzas tradicionales y una feria gastronómica donde se pueden degustar platos típicos de la región. Durante estos días, los fuegos artificiales iluminan el cielo, creando un ambiente festivo y mágico."
+          "1. Amasar la harina con agua hirviendo y un pellizco de sal. 2. Cocer en agua las acelgas limpias y troceadas, y dejarlas escurrir hasta que estén bien secas. 3. Formar discos delgados de masa, de unos 12 centímetros de diámetro, y cubrir la mitad de ellos de acelgas. 4. Espolvorear con pimentón y con unas migas de melva previamente desalada. 5. Cubrir con los otros discos de pasta y cerrar los bordes. 6. Untar con aceite y asar los 'bollos' en una 'lloseta' o sartén antiadherente."
     },
     {
       "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg",
-      "name": "Festa de Sant Marti",
-      "location": "Calle Mayor",
-      "date": "11 Noviembre",
+          "https://www.turismolavilajoiosa.com/img/disfruta/Gastronomia/GastronomiaRecetario/Nardo/nardo.jpg",
+      "name": "Nardo",
       "averageScore": 4.5,
       "favourite": false,
       "description":
-          "La Festa de Sant Marti se celebra el 11 de noviembre en la Calle Mayor y es una tradición que une a la comunidad en torno a la figura del patrón de los agricultores. La festividad comienza con una misa en honor a Sant Marti, seguida de actividades populares que incluyen música en vivo, danzas folklóricas y ferias de productos locales. Los habitantes visten trajes tradicionales y la celebración culmina con un banquete comunitario donde se disfrutan delicias culinarias de la región."
+          "El Nardo es un cóctel popular con café granizado y absenta que se ha convertido en la bebida “típica” de La Vila Joiosa. Debe su nombre a un grupo de vileros, que al regresar de Alicante de ver una actuación de Celia Gámez acudieron al emblemático Café Mercantil. Como es habitual en La Vila mezclar bebidas espirituosas y era verano, decidieron mezclar absenta con café granizado para refrescar. Como cantaron varias veces el tema de “Tenga usted, nardos caballero...” y la mezcla les gustó, pues la bautizaron como Nardo"
     },
     {
       "imagePath":
-          "https://www.turismolavilajoiosa.com/img/Disfruta/TradicionYFiesta/FiestaMorosYCristianos/PRIMER%20PREMI%20ACTES%20FESTERS%20PEDRO%20MARCET%20BALDO%202011%20.jpg",
-      "name": "Fiestas Patronales",
-      "location": "Centro Histórico",
-      "date": "Del 16 al 24 Julio",
+          "https://www.turismolavilajoiosa.com/img/disfruta/Gastronomia/GastronomiaRecetario/Pebrereta/5.jpg",
+      "name": "Pebrereta",
       "averageScore": 4.8,
       "favourite": false,
       "description":
-          "Las Fiestas Patronales son una de las celebraciones más grandes de La Vila Joiosa, que se llevan a cabo en el Centro Histórico del pueblo. Durante diez días, la ciudad se llena de vida con procesiones, actuaciones musicales, eventos deportivos y actividades culturales. Los asistentes disfrutan de ferias de comida, conciertos y espectáculos de danzas tradicionales. Esta celebración es un tributo a los patrones de la ciudad, y destaca la historia y la cultura de la comunidad."
+          "1. Freír los pimientos a trozos con los ajos enteros: no hace falta pelarlos, basta con darles a cada uno un golpe con la mano del mortero o hacerles un corte. Reservar. 2. Sofreír la calabaza y echar el tomate pelado y troceado sin semillas. 3. Cuando esté casi hecho, incorporar el sangatxo puesto a remojo desde la víspera. 4. Después de unos minutos, añadir el pimiento y los ajos, probar y añadir sal si fuera necesario."
     },
     {
       "imagePath":
