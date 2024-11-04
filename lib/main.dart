@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vila_tour_pmdm/src/providers/festivals_provider.dart';
-import 'package:vila_tour_pmdm/src/providers/theme_provider.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:vila_tour_pmdm/src/theme/theme.dart';
 
 
 void main() => runApp(AppState());
@@ -15,7 +13,8 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => FestivalsProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => ThemeProvider(), lazy: false)
+      ChangeNotifierProvider(create: (_) => ThemeProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => RecipesProvider(), lazy: false)
     ], child: MyApp());
   }
 }

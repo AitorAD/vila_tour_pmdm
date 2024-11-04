@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/providers/recipes_provider.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
-import '../providers/festivals_provider.dart';
 
-class FestivalsScreen extends StatelessWidget {
-  const FestivalsScreen({super.key});
+class RecipesScreen extends StatelessWidget {
+  const RecipesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     // Provisional hasta conectar con la API
-    final festivasProvider = Provider.of<FestivalsProvider>(context);
+    final recipesProvider = Provider.of<RecipesProvider>(context);
 
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Festivales y Tradiciones',
+            'Recetas',
             style: Utils.textStyleVilaTour,
           ),
           flexibleSpace: DefaultDecoration(),
@@ -30,9 +30,9 @@ class FestivalsScreen extends StatelessWidget {
                 SearchBox(),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: festivasProvider.festivals.length,
+                    itemCount: recipesProvider.recipes.length,
                     itemBuilder: (context, index) {
-                      return ArticleBox(article: festivasProvider.festivals[index],);
+                      return ArticleBox(article: recipesProvider.recipes[index],);
                     },
                   ),
                 ),
