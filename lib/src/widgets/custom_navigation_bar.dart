@@ -15,7 +15,7 @@ class CustomNavigationBar extends StatelessWidget {
     return BottomNavigationBar(
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.add_box_rounded), label: 'add'),
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
+        BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'home'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'person')
       ],
       currentIndex: currentIndex,

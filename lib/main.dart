@@ -7,15 +7,14 @@ import 'package:vila_tour_pmdm/src/providers/ui_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:vila_tour_pmdm/src/theme/theme.dart';
 
-void main() => {
-      WidgetsFlutterBinding.ensureInitialized(),
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-      ]),
-      runApp(AppState())
-    };
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  runApp(AppState());
+}
 
 class AppState extends StatelessWidget {
   @override
