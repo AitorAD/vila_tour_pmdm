@@ -11,3 +11,4 @@ export 'package:vila_tour_pmdm/src/widgets/bar_screen.dart';
 export 'package:vila_tour_pmdm/src/widgets/input_text.dart';
 export 'package:vila_tour_pmdm/src/widgets/header_log.dart';
 export 'package:vila_tour_pmdm/src/widgets/paint_stars.dart';
+export 'package:vila_tour_pmdm/src/widgets/article_box.dart';

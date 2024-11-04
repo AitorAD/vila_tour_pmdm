@@ -34,7 +34,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                 // Image
                 FadeInImage(
                   placeholder: AssetImage('assets/logo.ico'),
-                  image: NetworkImage(festival.imageUrl),
+                  image: NetworkImage(festival.imagePath),
                   width: double.infinity,
                   height: 400,
                   fit: BoxFit.cover,
@@ -46,7 +46,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
-                    festival.title,
+                    festival.name,
                     style: const TextStyle(
                       fontFamily: 'PontanoSans',
                       fontSize: 28,
@@ -67,7 +67,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        festival.rating.toString(),
+                        festival.averageScore.toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -75,7 +75,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      PaintStars(rating: festival.rating),
+                      PaintStars(rating: festival.averageScore),
                       const SizedBox(width: 4),
                       const Text(
                         '(281)',
@@ -135,7 +135,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
       floatingActionButton: Consumer<FestivalsProvider>(
         builder: (context, festivalsProvider, child) {
           // Verifica si el festival actual es favorito
-          final isFavourite = festivalsProvider.festivals.any((f) => f.title == festival.title && f.favourite);
+          final isFavourite = festivalsProvider.festivals.any((f) => f.name == festival.name && f.favourite);
 
           return FloatingActionButton(
             onPressed: () {

@@ -1,31 +1,37 @@
-class Festival {
-  String imageUrl;
-  String title;
+import 'package:vila_tour_pmdm/src/models/models.dart';
+
+class Festival extends Article {
   String location;
   String date;
-  double rating;
-  bool favourite;
-  String description;
 
   Festival({
-    required this.imageUrl,
-    required this.title,
+    required int id,
+    required String name,
+    required String description,
+    required String imagePath,
+    required double averageScore,
+    required bool favourite,
     required this.location,
     required this.date,
-    required this.rating,
-    required this.favourite,
-    required this.description,
-  });
+  }) : super(
+          id: id,
+          name: name,
+          description: description,
+          imagePath: imagePath,
+          averageScore: averageScore,
+          favourite: favourite,
+        );
 
   factory Festival.fromMap(Map<String, dynamic> map) {
     return Festival(
-      imageUrl: map['imageUrl'],
-      title: map['title'],
-      location: map['location'],
-      date: map['date'],
-      rating: map['rating'],
-      favourite: map['favourite'],
-      description: map['description'],
+      id: map['id'] ?? 0,
+      name: map['name'] ?? 'No name',
+      description: map['description'] ?? 'No description available',
+      imagePath: map['imagePath'] ?? 'https://www.cams-it.com/wp-content/uploads/2015/05/default-placeholder-300x200.png',
+      averageScore: map['averageScore'] ?? 0.0,
+      favourite: map['favourite'] ?? false,
+      location: map['location'] ?? 'Unknown location',
+      date: map['date'] ?? 'No date',
     );
   }
 }
