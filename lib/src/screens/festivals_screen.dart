@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
-import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 import '../providers/festivals_provider.dart';
 
@@ -14,14 +13,7 @@ class FestivalsScreen extends StatelessWidget {
     final festivasProvider = Provider.of<FestivalsProvider>(context);
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Festivales y Tradiciones',
-            style: Utils.textStyleVilaTour,
-          ),
-          flexibleSpace: DefaultDecoration(),
-          foregroundColor: Colors.white,
-        ),
+        appBar: CustomAppBar(title: 'Festivales y Tradiciones'),
         body: Stack(
           children: [
             WavesWidget(),

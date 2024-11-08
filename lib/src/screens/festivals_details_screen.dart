@@ -19,11 +19,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
         ModalRoute.of(context)!.settings.arguments as Festival;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Visión General', style: Utils.textStyleVilaTour),
-        flexibleSpace: DefaultDecoration(),
-        foregroundColor: Colors.white,
-      ),
+      appBar: CustomAppBar(title: 'Visión General'),
       body: Stack(
         children: [
           WavesWidget(),
@@ -62,7 +58,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                 Container(
                   width: 300,
                   height: 50,
-                  decoration: DefaultDecoration().defaultDecoration(10),
+                  decoration: defaultDecoration(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -135,7 +131,8 @@ class _DetailsFestivalState extends State<DetailsFestival> {
       floatingActionButton: Consumer<FestivalsProvider>(
         builder: (context, festivalsProvider, child) {
           // Verifica si el festival actual es favorito
-          final isFavourite = festivalsProvider.festivals.any((f) => f.name == festival.name && f.favourite);
+          final isFavourite = festivalsProvider.festivals
+              .any((f) => f.name == festival.name && f.favourite);
 
           return FloatingActionButton(
             onPressed: () {
