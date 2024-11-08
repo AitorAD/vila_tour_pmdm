@@ -27,7 +27,7 @@ class BarScreenArrow extends StatelessWidget {
             ),
             Text(
               labelText ?? "",
-              style: textStyleVilaTourTitle,
+              style: textStyleVilaTourTitle(color: Colors.white),
             ),
             Icon(
               Icons.arrow_back,

@@ -42,4 +42,5 @@ class Recipe extends Article {
       ingredients: map['ingredients'] ?? [],
     );
   }
+
 }
