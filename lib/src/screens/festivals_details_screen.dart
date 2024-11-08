@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/festivals_provider.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/custom_app_bar.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class DetailsFestival extends StatefulWidget {
