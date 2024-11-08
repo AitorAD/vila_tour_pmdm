@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/src/models/article.dart';
-import 'package:vila_tour_pmdm/src/models/festival.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class ArticleBox extends StatefulWidget {
@@ -19,7 +18,7 @@ class _ArticleBoxState extends State<ArticleBox> {
     return GestureDetector(
       onTap: () => {
         if (widget.article is Festival) routeName = 'general_festivals',
-        // if (widget.article is Recipe) routeName = 'general_recipes', 
+        if (widget.article is Recipe) routeName = 'general_recipes',
         Navigator.pushNamed(
           context,
           routeName,
@@ -34,7 +33,8 @@ class _ArticleBoxState extends State<ArticleBox> {
             _BackgroundImage(widget: widget),
 
             // Información sobre el artículo
-            _ArticleInfo(widget: widget),
+            if (widget.article is Festival) _FestivalInfo(widget: widget),
+            if (widget.article is Recipe) _RecipeInfo(widget: widget),
 
             // Icono de favorito
             _Favorite(article: widget.article)
@@ -76,8 +76,8 @@ class __FavoriteState extends State<_Favorite> {
   }
 }
 
-class _ArticleInfo extends StatelessWidget {
-  const _ArticleInfo({
+class _FestivalInfo extends StatelessWidget {
+  const _FestivalInfo({
     super.key,
     required this.widget,
   });
@@ -109,31 +109,83 @@ class _ArticleInfo extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            if (widget.article is Festival)
-              Text(
-                (widget.article as Festival).location,
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-            if (widget.article is Festival)
-              Text(
-                (widget.article as Festival).date,
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
+            Text(
+              (widget.article as Festival).location,
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+            Text(
+              (widget.article as Festival).date,
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
             SizedBox(height: 10),
-            if (widget.article is Festival)
-              Row(
-                children: [
-                  PaintStars(rating: (widget.article as Festival).averageScore),
-                  SizedBox(width: 10),
-                  Text(
-                    (widget.article as Festival).averageScore.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
+            Row(
+              children: [
+                PaintStars(rating: (widget.article as Festival).averageScore),
+                SizedBox(width: 10),
+                Text(
+                  (widget.article as Festival).averageScore.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
                   ),
-                ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RecipeInfo extends StatelessWidget {
+  const _RecipeInfo({
+    super.key,
+    required this.widget,
+  });
+
+  final ArticleBox widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        margin: EdgeInsets.only(left: 135),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+          color: Colors.black.withOpacity(0.4),
+        ),
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              widget.article.name,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+            SizedBox(height: 5),
+            Row(
+              children: [
+                PaintStars(rating: (widget.article as Recipe).averageScore),
+                SizedBox(width: 10),
+                Text(
+                  (widget.article as Recipe).averageScore.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -153,13 +205,31 @@ class _BackgroundImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
-      child: FadeInImage(
-        placeholder: AssetImage('assets/logo.ico'),
-        image: NetworkImage(widget.article.imagePath),
-        width: double.infinity,
-        height: 150,
-        fit: BoxFit.cover,
-      ),
+      child: widget.article is Recipe
+          ? Container(
+              color: Colors.black.withOpacity(0.4),
+              height: 150,
+              child: Row(
+                children: [
+                  Container(
+                    width: 135,
+                    height: 150,
+                    child: FadeInImage(
+                      placeholder: AssetImage('assets/logo.ico'),
+                      image: NetworkImage(widget.article.imagePath),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : FadeInImage(
+              placeholder: AssetImage('assets/logo.ico'),
+              image: NetworkImage(widget.article.imagePath),
+              width: double.infinity,
+              height: 150,
+              fit: BoxFit.cover,
+            ),
     );
   }
 }

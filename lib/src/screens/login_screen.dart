@@ -12,6 +12,7 @@ class LoginScreen extends StatelessWidget {
         children: [
           Positioned.fill(
             child: WavesWidget(),
+            
           ),
           SafeArea(
             child: SingleChildScrollView(
