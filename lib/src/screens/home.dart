@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/menu.dart';
 import 'package:vila_tour_pmdm/src/providers/theme_provider.dart';
+import 'package:vila_tour_pmdm/src/widgets/custom_app_bar.dart';
+import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,13 +11,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        bottomNavigationBar: CustomNavigationBar(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
           },
           child: Icon(Icons.dark_mode),
         ),
-        appBar: AppBar(title: const Text('VILATOUR')),
+        // appBar: AppBar(title: const Text('VILATOUR')),
+        appBar: CustomAppBar(title: 'VILATOUR'),
         body: _lista());
   }
 
@@ -54,3 +58,4 @@ class HomePage extends StatelessWidget {
     return opciones;
   }
 }
+

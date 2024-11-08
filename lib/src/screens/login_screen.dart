@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
