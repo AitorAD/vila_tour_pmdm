@@ -23,7 +23,7 @@ class AppState extends StatelessWidget {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => FestivalsProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => ThemeProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => RecipesProvider(), lazy: false)
+      ChangeNotifierProvider(create: (_) => RecipesProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => UiProvider(), lazy: false)
 
     ], child: MyApp());
@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
       title: 'VILATOUR',
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
+      themeMode: ThemeMode.system,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

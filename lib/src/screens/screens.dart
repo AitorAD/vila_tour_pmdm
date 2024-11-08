@@ -1,0 +1,1 @@
+export 'package:vila_tour_pmdm/src/screens/map_screen.dart';
