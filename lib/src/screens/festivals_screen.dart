@@ -13,6 +13,7 @@ class FestivalsScreen extends StatelessWidget {
     final festivasProvider = Provider.of<FestivalsProvider>(context);
 
     return Scaffold(
+        bottomNavigationBar: CustomNavigationBar(),
         appBar: CustomAppBar(title: 'Festivales y Tradiciones'),
         body: Stack(
           children: [
@@ -24,7 +25,9 @@ class FestivalsScreen extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: festivasProvider.festivals.length,
                     itemBuilder: (context, index) {
-                      return ArticleBox(article: festivasProvider.festivals[index],);
+                      return ArticleBox(
+                        article: festivasProvider.festivals[index],
+                      );
                     },
                   ),
                 ),

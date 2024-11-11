@@ -30,7 +30,7 @@ class CustomButton extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: textStyleVilaTour, // Color del texto
+              style: textStyleVilaTour(color: Colors.white), // Color del texto
             ),
           ),
         )
