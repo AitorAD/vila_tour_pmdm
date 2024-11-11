@@ -20,7 +20,7 @@ class BarScreenLogin extends StatelessWidget {
         children: [
           Text(
             labelText ?? "",
-            style: textStyleVilaTourTitle,
+            style: textStyleVilaTourTitle(color: Colors.white),
           ),
         ],
       ),
