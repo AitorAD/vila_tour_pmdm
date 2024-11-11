@@ -4,6 +4,7 @@ import 'package:vila_tour_pmdm/src/providers/menu.dart';
 import 'package:vila_tour_pmdm/src/providers/theme_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_app_bar.dart';
+import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 import '../providers/providers.dart';

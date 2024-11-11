@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-TextStyle textStyleVilaTour =
-    const TextStyle(color: Colors.white, fontFamily: 'PontanoSans');
-TextStyle textStyleVilaTourTitle = const TextStyle(
-    color: Colors.white, fontFamily: 'PontanoSans', fontSize: 25);
+// Función que devuelve el estilo de texto con color personalizado
+TextStyle textStyleVilaTour({Color color = Colors.white}) {
+  return TextStyle(color: color, fontFamily: 'PontanoSans');
+}
 
+TextStyle textStyleVilaTourTitle({Color color = Colors.white, double fontSize = 25}) {
+  return TextStyle(color: color, fontFamily: 'PontanoSans', fontSize: fontSize);
+}
+
+// Función que devuelve la decoración predeterminada con el radio personalizado
 BoxDecoration defaultDecoration(double radius) {
   return BoxDecoration(
     borderRadius: BorderRadius.all(Radius.circular(radius)),

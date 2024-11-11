@@ -27,13 +27,50 @@ Future<List<Map<String, dynamic>>> _getRecipes() async {
   // Provisional hasta cargar la API
   return [
     {
-      "imagePath":
-          "https://www.turismolavilajoiosa.com/img/disfruta/Gastronomia/GastronomiaRecetario/mostralavila2.62.jpg",
-      "name": "Bollets a la lloseta",
-      "averageScore": 4.7,
-      "favourite": true,
-      "description":
-          "1. Amasar la harina con agua hirviendo y un pellizco de sal. 2. Cocer en agua las acelgas limpias y troceadas, y dejarlas escurrir hasta que estén bien secas. 3. Formar discos delgados de masa, de unos 12 centímetros de diámetro, y cubrir la mitad de ellos de acelgas. 4. Espolvorear con pimentón y con unas migas de melva previamente desalada. 5. Cubrir con los otros discos de pasta y cerrar los bordes. 6. Untar con aceite y asar los 'bollos' en una 'lloseta' o sartén antiadherente."
+        "id": 1,
+        "name": "Pebrereta",
+        "description": "1. Freír los pimientos a trozos con los ajos enteros: no hace falta pelarlos, basta con darles a cada uno un golpe con la mano del mortero o hacerles un corte. Reservar. \n\n2. Sofreír la calabaza y echar el tomate pelado y troceado sin semillas. \n\n3. Cuando esté casi hecho, incorporar el sangatxo puesto a remojo desde la víspera. \n\n4. Después de unos minutos, añadir el pimiento y los ajos, probar y añadir sal si fuera necesario",
+        "imagePath": "https://www.turismolavilajoiosa.com/img/disfruta/Gastronomia/GastronomiaRecetario/Pebrereta/5.jpg",
+        "averageScore": 4.0,
+        "reviews": [],
+        "approved": true,
+        "ingredients": [
+            {
+                "idIngredient": 7,
+                "name": "Sal",
+                "category": "DAIRY"
+            },
+            {
+                "idIngredient": 4,
+                "name": "Sangatxo",
+                "category": "FISH_AND_SEAFOOD"
+            },
+            {
+                "idIngredient": 1,
+                "name": "Pimiento verde",
+                "category": "FRUITS_AND_VEGETABLES"
+            },
+            {
+                "idIngredient": 2,
+                "name": "Calabaza",
+                "category": "FRUITS_AND_VEGETABLES"
+            },
+            {
+                "idIngredient": 3,
+                "name": "Tomate",
+                "category": "FRUITS_AND_VEGETABLES"
+            },
+            {
+                "idIngredient": 5,
+                "name": "Aceite de oliva",
+                "category": "OILS_AND_FATS"
+            },
+            {
+                "idIngredient": 6,
+                "name": "Ajo",
+                "category": "SPICES_AND_HERBS"
+            }
+        ]
     },
     {
       "imagePath":
@@ -46,12 +83,12 @@ Future<List<Map<String, dynamic>>> _getRecipes() async {
     },
     {
       "imagePath":
-          "https://www.turismolavilajoiosa.com/img/disfruta/Gastronomia/GastronomiaRecetario/Pebrereta/5.jpg",
-      "name": "Pebrereta",
-      "averageScore": 4.8,
-      "favourite": false,
+          "https://www.turismolavilajoiosa.com/img/disfruta/Gastronomia/GastronomiaRecetario/mostralavila2.62.jpg",
+      "name": "Bollets a la lloseta",
+      "averageScore": 4.7,
+      "favourite": true,
       "description":
-          "1. Freír los pimientos a trozos con los ajos enteros: no hace falta pelarlos, basta con darles a cada uno un golpe con la mano del mortero o hacerles un corte. Reservar. 2. Sofreír la calabaza y echar el tomate pelado y troceado sin semillas. 3. Cuando esté casi hecho, incorporar el sangatxo puesto a remojo desde la víspera. 4. Después de unos minutos, añadir el pimiento y los ajos, probar y añadir sal si fuera necesario."
+          "1. Amasar la harina con agua hirviendo y un pellizco de sal. 2. Cocer en agua las acelgas limpias y troceadas, y dejarlas escurrir hasta que estén bien secas. 3. Formar discos delgados de masa, de unos 12 centímetros de diámetro, y cubrir la mitad de ellos de acelgas. 4. Espolvorear con pimentón y con unas migas de melva previamente desalada. 5. Cubrir con los otros discos de pasta y cerrar los bordes. 6. Untar con aceite y asar los 'bollos' en una 'lloseta' o sartén antiadherente."
     },
     {
       "imagePath":
