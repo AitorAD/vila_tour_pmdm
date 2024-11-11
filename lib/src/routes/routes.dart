@@ -3,9 +3,11 @@ import 'package:vila_tour_pmdm/src/screens/festivals_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/festivals_details_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/map_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/recipes_details_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/recipes_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/upload_screen.dart';
 
 Map<String, WidgetBuilder> getApplicationRoutes() {
   return <String, WidgetBuilder>{
@@ -16,5 +18,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     'login': (BuildContext context) => LoginScreen(),
     'registrer_screen': (BuildContext context) => RegistrerScreen(),
     'recipes': (BuildContext context) => RecipesScreen(),
+    'map': (BuildContext context) => MapScreen(),
+    'uploadRecipe': (BuildContext context) => UploadRecipe(),
   };
 }
