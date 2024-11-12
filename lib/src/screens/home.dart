@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/menu.dart';
 import 'package:vila_tour_pmdm/src/providers/theme_provider.dart';
-import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/widgets/custom_app_bar.dart';
-import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 import '../providers/providers.dart';
@@ -63,18 +60,6 @@ class HomePage extends StatelessWidget {
   }
 
   Widget home(context) {
-    final uiProvider = Provider.of<UiProvider>(context);
-
-    switch (uiProvider.selectedMenuOpt) {
-      case 0:
-        _lista();
-        break;
-      case 2:
-        return MapScreen();
-      default:
-        _lista();
-        break;
-    }
 
     return FutureBuilder(
       future: menuProvider.cargarData(),
