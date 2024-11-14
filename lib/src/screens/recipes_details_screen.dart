@@ -96,8 +96,8 @@ class _RecipeDetailsState extends State<RecipeDetails>
                       ),
                       SizedBox(height: 20),
                       Image.network(
-                        recipe
-                            .imagePath, // Asegúrate de que `Recipe` tiene `imageUrl`
+                        ''
+                        // recipe.imagePath, // Asegúrate de que `Recipe` tiene `imageUrl`
                         height: 200,
                         fit: BoxFit.cover,
                       ),

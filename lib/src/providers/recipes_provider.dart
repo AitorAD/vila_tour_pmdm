@@ -16,10 +16,12 @@ class RecipesProvider with ChangeNotifier {
     notifyListeners();
   }
 
+/*
   void toggleFavorite(Recipe recipe) {
     recipe.favourite = !recipe.favourite;
     notifyListeners();
   }
+  */
 }
 
 
