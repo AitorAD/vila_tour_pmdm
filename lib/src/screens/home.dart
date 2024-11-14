@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/menu.dart';
-import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/screens/upload_screen.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 import '../providers/providers.dart';
