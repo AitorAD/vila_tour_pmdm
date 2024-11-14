@@ -40,8 +40,14 @@ class Festival extends Article {
         creationDate: DateTime.parse(json["creationDate"]),
         lastModificationDate: DateTime.parse(json["lastModificationDate"]),
         reviews: List<dynamic>.from(json["reviews"].map((x) => x)),
-        startDate: DateTime.parse(json["startDate"]),
-        endDate: DateTime.parse(json["endDate"]),
+        // startDate: DateTime.parse(json["startDate"]),
+        // endDate: DateTime.parse(json["endDate"]),
+        startDate: json["startDate"] is String
+            ? DateTime.tryParse(json["startDate"]) ?? DateTime.now()
+            : DateTime.now(),
+        endDate: json["endDate"] is String
+            ? DateTime.tryParse(json["endDate"]) ?? DateTime.now()
+            : DateTime.now(),
         coordinade: json["coordinade"],
       );
 
@@ -49,6 +55,22 @@ class Festival extends Article {
   static List<Festival> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((item) => Festival.fromMap(item)).toList();
   }
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "imagensPaths": imagensPaths,
+        "averageScore": averageScore,
+        "creationDate": creationDate.toIso8601String(),
+        "lastModificationDate": lastModificationDate.toIso8601String(),
+        "reviews": List<dynamic>.from(reviews.map((x) => x)),
+        "startDate":
+            "${startDate!.year.toString().padLeft(4, '0')}-${startDate!.month.toString().padLeft(2, '0')}-${startDate!.day.toString().padLeft(2, '0')}",
+        "endDate":
+            "${endDate!.year.toString().padLeft(4, '0')}-${endDate!.month.toString().padLeft(2, '0')}-${endDate!.day.toString().padLeft(2, '0')}",
+        "coordinade": coordinade,
+      };
 
   @override
   String toString() {

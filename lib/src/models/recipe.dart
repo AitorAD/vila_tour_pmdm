@@ -37,8 +37,15 @@ class Recipe extends Article {
       imagensPaths: map['imagensPaths'] ??
           'https://www.cams-it.com/wp-content/uploads/2015/05/default-placeholder-300x200.png',
       averageScore: map['averageScore'] ?? 0.0,
-      creationDate: DateTime.parse(map['creationDate']),
-      lastModificationDate: DateTime.parse(map['lastModificationDate']),
+      // creationDate: DateTime.parse(map['creationDate']),
+      // lastModificationDate: DateTime.parse(map['lastModificationDate']),
+      creationDate: map['creationDate'] is String
+          ? DateTime.tryParse(map['creationDate']) ?? DateTime.now()
+          : DateTime.now(),
+      lastModificationDate: map['lastModificationDate'] is String
+          ? DateTime.tryParse(map['lastModificationDate']) ?? DateTime.now()
+          : DateTime.now(),
+
       reviews: List<dynamic>.from(map['reviews'] ?? []),
       approved: map['approved'] ?? false,
       recent: map['recent'] ?? false,

@@ -57,15 +57,13 @@ class _RecipeDetailsState extends State<RecipeDetails>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        IngredientsWrap(ingredients: recipe.ingredients),
+                        // IngredientsWrap(ingredients: recipe.ingredients),
                         const SizedBox(height: 16),
                         const Divider(
                           color: Colors.black,
-                          thickness: 1.0, 
-                          indent:
-                              0,
-                          endIndent:
-                              0,
+                          thickness: 1.0,
+                          indent: 0,
+                          endIndent: 0,
                         ),
                         const SizedBox(height: 10),
                         Text(
@@ -96,13 +94,13 @@ class _RecipeDetailsState extends State<RecipeDetails>
                       ),
                       SizedBox(height: 20),
                       Image.network(
-                        ''
+                        'https://tribe-s3-production.imgix.net/C5yUOy3RzAZV9mFvgXoq5?auto=compress,format&dl',
                         // recipe.imagePath, // Asegúrate de que `Recipe` tiene `imageUrl`
                         height: 200,
                         fit: BoxFit.cover,
                       ),
                       SizedBox(height: 20),
-                      IngredientsWrap(ingredients: recipe.ingredients),
+                      // IngredientsWrap(ingredients: recipe.ingredients),
                     ],
                   ),
                 ),
@@ -114,10 +112,10 @@ class _RecipeDetailsState extends State<RecipeDetails>
           ),
         ],
       ),
+      /*
       floatingActionButton: Consumer<RecipesProvider>(
         builder: (context, recipesProvider, child) {
-          final isFavourite = recipesProvider.recipes
-              .any((r) => r.name == recipe.name && r.favourite);
+          final isFavourite = recipesProvider.recipes.any((r) => r.name == recipe.name && r.favourite);
 
           return FloatingActionButton(
             onPressed: () {
@@ -130,6 +128,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
           );
         },
       ),
+      */
     );
   }
 }

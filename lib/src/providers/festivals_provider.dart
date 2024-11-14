@@ -6,6 +6,7 @@ import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class FestivalsProvider with ChangeNotifier {
   String _baseUrl = 'http://10.0.2.2:8080'; // En Android Emulator
+  // String _baseUrl = 'http://192.168.x.x:8080'; // En Dispositivo físico
   // String _baseUrl = 'http://localhost:8080'; // En iOS o navegador
 
   List<Festival> _festivals = [];
@@ -13,6 +14,8 @@ class FestivalsProvider with ChangeNotifier {
   set festivals(List<Festival> list) => _festivals = list;
 
   FestivalsProvider() {
+    _deleteAllFestivals();
+    _makeFestivals();
     loadFestivals();
     print('Festivals Provider Iniciado');
   }
@@ -24,8 +27,11 @@ class FestivalsProvider with ChangeNotifier {
   }
 
   void loadFestivals() async {
+
     final jsonData = await _getJsonData('festivals');
+    print('JSON recibido: $jsonData');
     final festivalList = Festival.fromJsonList(json.decode(jsonData));
+    print('Festival list: ${festivalList}');
     festivals = festivalList;
     notifyListeners();
   }
@@ -36,6 +42,106 @@ class FestivalsProvider with ChangeNotifier {
     notifyListeners();
   }
   */
+
+  Future<void> _addFestival(Festival festival) async {
+    final url = Uri.parse('$_baseUrl/festivals');
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode(festival.toMap()),
+    );
+    notifyListeners();
+  }
+
+  Future<void> _deleteFestival(int festivalId) async {
+    final url = Uri.parse('$_baseUrl/festivals/$festivalId');
+    final response = await http.delete(
+      url,
+      headers: {"Content-Type": "application/json"},
+    );
+    notifyListeners();
+  }
+
+  void _deleteAllFestivals() {
+    loadFestivals();
+    festivals.forEach((f) => _deleteFestival(f.id));
+  }
+
+  void _makeFestivals() {
+    List<Festival> festivales = [
+      Festival(
+        id: 0,
+        name: "Moros y Cristianos",
+        description:
+            "La fiesta principal de Villajoyosa, en la que se recrea la batalla entre moros y cristianos, incluyendo un espectacular desembarco en la playa.",
+        imagensPaths: null,
+        averageScore: 4.8,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-07-24"),
+        endDate: DateTime.parse("2024-07-31"),
+        coordinade: null,
+      ),
+      Festival(
+        id: 0,
+        name: "Fiesta de Santa Marta",
+        description:
+            "Fiesta en honor a Santa Marta, patrona de Villajoyosa, con procesiones y eventos religiosos y culturales.",
+        imagensPaths: null,
+        averageScore: 4.6,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-07-25"),
+        endDate: DateTime.parse("2024-07-29"),
+        coordinade: null,
+      ),
+      Festival(
+        id: 0,
+        name: "Semana Santa",
+        description:
+            "Celebración religiosa que incluye procesiones tradicionales por las calles de Villajoyosa.",
+        imagensPaths: null,
+        averageScore: 4.3,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-03-25"),
+        endDate: DateTime.parse("2024-04-01"),
+        coordinade: null,
+      ),
+      Festival(
+        id: 0,
+        name: "Fiesta de San Antonio",
+        description:
+            "Festividad popular en honor a San Antonio, con actividades tradicionales y bendición de animales.",
+        imagensPaths: null,
+        averageScore: 4.1,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-01-17"),
+        endDate: DateTime.parse("2024-01-17"),
+        coordinade: null,
+      ),
+      Festival(
+        id: 0,
+        name: "Carnaval de Villajoyosa",
+        description:
+            "Desfiles y celebraciones en las calles para celebrar el carnaval, incluyendo disfraces y música.",
+        imagensPaths: null,
+        averageScore: 4.2,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-02-09"),
+        endDate: DateTime.parse("2024-02-11"),
+        coordinade: null,
+      ),
+    ];
+    festivales.forEach((f) => _addFestival(f));
+  }
 }
 
 /*

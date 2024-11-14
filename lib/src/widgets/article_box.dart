@@ -67,6 +67,7 @@ class __FavoriteState extends State<_Favorite> {
           });
         },
         child: Icon(
+          Icons.favorite,
           // widget.article.favourite ? Icons.favorite : Icons.favorite_border,
           color: Colors.white,
           size: 30,
@@ -220,8 +221,10 @@ class _BackgroundImage extends StatelessWidget {
                     child: FadeInImage(
                       placeholder: AssetImage('assets/logo.ico'),
                       image: NetworkImage(
-                          // widget.article.imagePath
-                          ),
+                        'https://tribe-s3-production.imgix.net/C5yUOy3RzAZV9mFvgXoq5?auto=compress,format&dl',
+
+                        // widget.article.imagePath
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -231,8 +234,10 @@ class _BackgroundImage extends StatelessWidget {
           : FadeInImage(
               placeholder: AssetImage('assets/logo.ico'),
               image: NetworkImage(
-                  // widget.article.imagePath
-                  ),
+                'https://static.nationalgeographic.es/files/styles/image_3200/public/nationalgeographic_1468962.webp?w=1600&h=900',
+
+                // widget.article.imagePath
+              ),
               width: double.infinity,
               height: 150,
               fit: BoxFit.cover,
