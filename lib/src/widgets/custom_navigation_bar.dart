@@ -41,7 +41,7 @@ class CustomNavigationBar extends StatelessWidget {
             routeName = 'profile';
             break;
           default:
-            routeName = 'home';
+            routeName = '/';
         }
 
         Navigator.pushNamed(context, routeName);

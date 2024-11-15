@@ -5,11 +5,18 @@ import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
-class UploadRecipe extends StatelessWidget {
+class UploadRecipe extends StatefulWidget {
   UploadRecipe({super.key});
 
+  @override
+  State<UploadRecipe> createState() => _UploadRecipeState();
+}
+
+class _UploadRecipeState extends State<UploadRecipe> {
   final ValueNotifier<String?> _imagePath = ValueNotifier(null);
-  final ValueNotifier<List<Ingredient>> _selectedIngredients = ValueNotifier([]);
+
+  final ValueNotifier<List<Ingredient>> _selectedIngredients =
+      ValueNotifier([]);
 
   void _selectImage() {
     _imagePath.value = 'assets/logo_foreground.png'; // Imagen de ejemplo
@@ -35,34 +42,45 @@ class UploadRecipe extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     'Ingredientes',
-                    style: textStyleVilaTourTitle(color: Colors.black, fontSize: 20),
+                    style: textStyleVilaTourTitle(
+                        color: Colors.black, fontSize: 20),
                   ),
                   const SizedBox(height: 10),
 
-                  // Barra de búsqueda para ingredientes usando SearchBar
-                  SearchBar<Ingredient>(
-                    hintText: 'Buscar Ingrediente',
-                    onSearch: (query) async {
-                      ingredientsProvider.filterIngredients(query);
-                      return ingredientsProvider.filteredIngredients;
-                    },
-                    onItemSelected: (ingredient) {
-                      _selectedIngredients.value = List.from(_selectedIngredients.value)
-                        ..add(ingredient);
-                      _selectedIngredients.notifyListeners();
-                    },
-                    itemBuilder: (context, ingredient) {
-                      return ListTile(
-                        title: Text(ingredient.name),
-                        onTap: () {
-                          _selectedIngredients.value = List.from(_selectedIngredients.value)
-                            ..add(ingredient);
-                          _selectedIngredients.notifyListeners();
+                  SearchAnchor(
+                    builder:
+                        (BuildContext context, SearchController controller) {
+                      return SearchBar(
+                        controller: controller,
+                        hintText: 'Buscar ingrediente',
+                        onChanged: (query) {
+                          ingredientsProvider.filterIngredients(query);
                         },
+                        leading: const Icon(Icons.search),
                       );
                     },
-                    noItemsFoundBuilder: (context) => _emptyContainer(),
+                    //TODO esto no funciona
+                    suggestionsBuilder:
+                        (BuildContext context, SearchController controller) {
+                      return ingredientsProvider.filteredIngredients
+                          .map((ingredient) {
+                        return ListTile(
+                          title: Text(ingredient.name),
+                          onTap: () {
+                            setState(() {
+                              _selectedIngredients.value =
+                                List.from(_selectedIngredients.value)
+                                  ..add(ingredient);
+                            _selectedIngredients.value = List.from(_selectedIngredients.value);
+                            controller.closeView(ingredient.name);
+                            });
+                          },
+                        );
+                      }).toList();
+                       
+                    },
                   ),
+
                   const SizedBox(height: 16),
 
                   // Ingredientes seleccionados
@@ -85,8 +103,10 @@ class UploadRecipe extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 8),
                                 GestureDetector(
-                                  onTap: () => _addOrRemoveIngredient(ingredient),
-                                  child: const Icon(Icons.close, size: 16, color: Colors.red),
+                                  onTap: () =>
+                                      _addOrRemoveIngredient(ingredient),
+                                  child: const Icon(Icons.close,
+                                      size: 16, color: Colors.red),
                                 ),
                               ],
                             ),
@@ -100,7 +120,8 @@ class UploadRecipe extends StatelessWidget {
                   ElevatedButton(
                     onPressed: _selectImage,
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 24),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -108,7 +129,9 @@ class UploadRecipe extends StatelessWidget {
                     ),
                     child: const Text('Cargar foto'),
                   ),
+
                   const SizedBox(height: 16),
+
                   ValueListenableBuilder<String?>(
                     valueListenable: _imagePath,
                     builder: (context, imagePath, child) {
@@ -122,7 +145,9 @@ class UploadRecipe extends StatelessWidget {
                       );
                     },
                   ),
+
                   const SizedBox(height: 16),
+                  
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -132,7 +157,8 @@ class UploadRecipe extends StatelessWidget {
                           Navigator.pushNamed(context, '/nextStep');
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 30),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -162,7 +188,9 @@ class UploadRecipe extends StatelessWidget {
   }
 
   void _addOrRemoveIngredient(Ingredient ingredient) {
-    _selectedIngredients.value = List.from(_selectedIngredients.value)..remove(ingredient);
-    _selectedIngredients.notifyListeners();
+    _selectedIngredients.value = List.from(_selectedIngredients.value)
+      ..remove(ingredient);
+    _selectedIngredients.value = List.from(_selectedIngredients.value); // Reasigna para disparar la notificación
+
   }
 }
