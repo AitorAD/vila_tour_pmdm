@@ -63,11 +63,12 @@ class __FavoriteState extends State<_Favorite> {
       child: GestureDetector(
         onTap: () {
           setState(() {
-            widget.article.favourite = !widget.article.favourite;
+            // widget.article.favourite = !widget.article.favourite;
           });
         },
         child: Icon(
-          widget.article.favourite ? Icons.favorite : Icons.favorite_border,
+          Icons.favorite,
+          // widget.article.favourite ? Icons.favorite : Icons.favorite_border,
           color: Colors.white,
           size: 30,
         ),
@@ -110,11 +111,13 @@ class _FestivalInfo extends StatelessWidget {
               ),
             ),
             Text(
-              (widget.article as Festival).location,
+              'location (provisional)',
+              // (widget.article as Festival).location,
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             Text(
-              (widget.article as Festival).date,
+              'fecha (provisional)',
+              // (widget.article as Festival).date,
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             SizedBox(height: 10),
@@ -156,7 +159,8 @@ class _RecipeInfo extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(left: 135),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
           color: Colors.black.withOpacity(0.4),
         ),
         padding: EdgeInsets.all(20),
@@ -216,7 +220,7 @@ class _BackgroundImage extends StatelessWidget {
                     height: 150,
                     child: FadeInImage(
                       placeholder: AssetImage('assets/logo.ico'),
-                      image: NetworkImage(widget.article.imagePath),
+                      image: NetworkImage(widget.article.imagensPaths[0]),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -225,7 +229,7 @@ class _BackgroundImage extends StatelessWidget {
             )
           : FadeInImage(
               placeholder: AssetImage('assets/logo.ico'),
-              image: NetworkImage(widget.article.imagePath),
+              image: NetworkImage(widget.article.imagensPaths[0]),
               width: double.infinity,
               height: 150,
               fit: BoxFit.cover,
