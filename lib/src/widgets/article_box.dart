@@ -111,12 +111,12 @@ class _FestivalInfo extends StatelessWidget {
               ),
             ),
             Text(
-              'Provisional',
+              'location (provisional)',
               // (widget.article as Festival).location,
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             Text(
-              'fecha provisional',
+              'fecha (provisional)',
               // (widget.article as Festival).date,
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
@@ -220,11 +220,7 @@ class _BackgroundImage extends StatelessWidget {
                     height: 150,
                     child: FadeInImage(
                       placeholder: AssetImage('assets/logo.ico'),
-                      image: NetworkImage(
-                        'https://tribe-s3-production.imgix.net/C5yUOy3RzAZV9mFvgXoq5?auto=compress,format&dl',
-
-                        // widget.article.imagePath
-                      ),
+                      image: NetworkImage(widget.article.imagensPaths[0]),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -233,11 +229,7 @@ class _BackgroundImage extends StatelessWidget {
             )
           : FadeInImage(
               placeholder: AssetImage('assets/logo.ico'),
-              image: NetworkImage(
-                'https://static.nationalgeographic.es/files/styles/image_3200/public/nationalgeographic_1468962.webp?w=1600&h=900',
-
-                // widget.article.imagePath
-              ),
+              image: NetworkImage(widget.article.imagensPaths[0]),
               width: double.infinity,
               height: 150,
               fit: BoxFit.cover,

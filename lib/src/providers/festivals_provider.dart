@@ -14,9 +14,9 @@ class FestivalsProvider with ChangeNotifier {
   set festivals(List<Festival> list) => _festivals = list;
 
   FestivalsProvider() {
+    loadFestivals();
     _deleteAllFestivals();
     _makeFestivals();
-    loadFestivals();
     print('Festivals Provider Iniciado');
   }
 
@@ -27,11 +27,10 @@ class FestivalsProvider with ChangeNotifier {
   }
 
   void loadFestivals() async {
-
     final jsonData = await _getJsonData('festivals');
     print('JSON recibido: $jsonData');
     final festivalList = Festival.fromJsonList(json.decode(jsonData));
-    print('Festival list: ${festivalList}');
+    // print('Festival list: ${festivalList}');
     festivals = festivalList;
     notifyListeners();
   }
@@ -74,7 +73,9 @@ class FestivalsProvider with ChangeNotifier {
         name: "Moros y Cristianos",
         description:
             "La fiesta principal de Villajoyosa, en la que se recrea la batalla entre moros y cristianos, incluyendo un espectacular desembarco en la playa.",
-        imagensPaths: null,
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
         averageScore: 4.8,
         creationDate: DateTime.parse("2024-11-14T20:28:24"),
         lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
@@ -88,7 +89,9 @@ class FestivalsProvider with ChangeNotifier {
         name: "Fiesta de Santa Marta",
         description:
             "Fiesta en honor a Santa Marta, patrona de Villajoyosa, con procesiones y eventos religiosos y culturales.",
-        imagensPaths: null,
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
         averageScore: 4.6,
         creationDate: DateTime.parse("2024-11-14T20:28:24"),
         lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
@@ -102,7 +105,9 @@ class FestivalsProvider with ChangeNotifier {
         name: "Semana Santa",
         description:
             "Celebración religiosa que incluye procesiones tradicionales por las calles de Villajoyosa.",
-        imagensPaths: null,
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
         averageScore: 4.3,
         creationDate: DateTime.parse("2024-11-14T20:28:24"),
         lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
@@ -116,7 +121,9 @@ class FestivalsProvider with ChangeNotifier {
         name: "Fiesta de San Antonio",
         description:
             "Festividad popular en honor a San Antonio, con actividades tradicionales y bendición de animales.",
-        imagensPaths: null,
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
         averageScore: 4.1,
         creationDate: DateTime.parse("2024-11-14T20:28:24"),
         lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
@@ -130,7 +137,9 @@ class FestivalsProvider with ChangeNotifier {
         name: "Carnaval de Villajoyosa",
         description:
             "Desfiles y celebraciones en las calles para celebrar el carnaval, incluyendo disfraces y música.",
-        imagensPaths: null,
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
         averageScore: 4.2,
         creationDate: DateTime.parse("2024-11-14T20:28:24"),
         lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
@@ -141,6 +150,7 @@ class FestivalsProvider with ChangeNotifier {
       ),
     ];
     festivales.forEach((f) => _addFestival(f));
+    loadFestivals();
   }
 }
 

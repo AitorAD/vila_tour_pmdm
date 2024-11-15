@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:vila_tour_pmdm/src/models/ingredient.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 
@@ -29,6 +31,8 @@ class Recipe extends Article {
           reviews: reviews,
         );
 
+  factory Recipe.fromJson(String str) => Recipe.fromMap(json.decode(str));
+
   factory Recipe.fromMap(Map<String, dynamic> map) {
     return Recipe(
       id: map['id'] ?? 0,
@@ -55,5 +59,10 @@ class Recipe extends Article {
               Ingredient.fromMap(ingredientMap as Map<String, dynamic>))
           .toList(),
     );
+  }
+
+  // Método de fábrica para una lista de Festival
+  static List<Recipe> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((item) => Recipe.fromMap(item)).toList();
   }
 }

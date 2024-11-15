@@ -1,18 +1,33 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class RecipesProvider with ChangeNotifier {
-  List<Recipe> _recipes = [];
+  String _baseUrl = 'http://10.0.2.2:8080'; // En Android Emulator
+  // String _baseUrl = 'http://192.168.x.x:8080'; // En Dispositivo físico
+  // String _baseUrl = 'http://localhost:8080'; // En iOS o navegador
 
+  List<Recipe> _recipes = [];
   List<Recipe> get recipes => _recipes;
+  set recipes(List<Recipe> list) => _recipes = list;
 
   RecipesProvider() {
-    loadRecipes(); 
+    loadRecipes();
+  }
+
+  Future<String> _getJsonData(String endpoint) async {
+    var url = Uri.parse('$_baseUrl/$endpoint');
+    final response = await http.get(url);
+    return response.body;
   }
 
   Future<void> loadRecipes() async {
-    final recipesData = await _getRecipes();
-    _recipes = recipesData.map((data) => Recipe.fromMap(data)).toList();
+    final jsonData = await _getJsonData('recipes');
+    print('JSON recibido: $jsonData');
+    final recipesList = Recipe.fromJsonList(json.decode(jsonData));
+    recipes = recipesList;
     notifyListeners();
   }
 
@@ -24,55 +39,45 @@ class RecipesProvider with ChangeNotifier {
   */
 }
 
-
+/*
 Future<List<Map<String, dynamic>>> _getRecipes() async {
   // Provisional hasta cargar la API
   return [
     {
-        "id": 1,
-        "name": "Pebrereta",
-        "description": "1. Freír los pimientos a trozos con los ajos enteros: no hace falta pelarlos, basta con darles a cada uno un golpe con la mano del mortero o hacerles un corte. Reservar. \n\n2. Sofreír la calabaza y echar el tomate pelado y troceado sin semillas. \n\n3. Cuando esté casi hecho, incorporar el sangatxo puesto a remojo desde la víspera. \n\n4. Después de unos minutos, añadir el pimiento y los ajos, probar y añadir sal si fuera necesario",
-        "imagePath": "https://www.turismolavilajoiosa.com/img/disfruta/Gastronomia/GastronomiaRecetario/Pebrereta/5.jpg",
-        "averageScore": 4.0,
-        "reviews": [],
-        "approved": true,
-        "ingredients": [
-            {
-                "idIngredient": 7,
-                "name": "Sal",
-                "category": "DAIRY"
-            },
-            {
-                "idIngredient": 4,
-                "name": "Sangatxo",
-                "category": "FISH_AND_SEAFOOD"
-            },
-            {
-                "idIngredient": 1,
-                "name": "Pimiento verde",
-                "category": "FRUITS_AND_VEGETABLES"
-            },
-            {
-                "idIngredient": 2,
-                "name": "Calabaza",
-                "category": "FRUITS_AND_VEGETABLES"
-            },
-            {
-                "idIngredient": 3,
-                "name": "Tomate",
-                "category": "FRUITS_AND_VEGETABLES"
-            },
-            {
-                "idIngredient": 5,
-                "name": "Aceite de oliva",
-                "category": "OILS_AND_FATS"
-            },
-            {
-                "idIngredient": 6,
-                "name": "Ajo",
-                "category": "SPICES_AND_HERBS"
-            }
-        ]
+      "id": 1,
+      "name": "Pebrereta",
+      "description":
+          "1. Freír los pimientos a trozos con los ajos enteros: no hace falta pelarlos, basta con darles a cada uno un golpe con la mano del mortero o hacerles un corte. Reservar. \n\n2. Sofreír la calabaza y echar el tomate pelado y troceado sin semillas. \n\n3. Cuando esté casi hecho, incorporar el sangatxo puesto a remojo desde la víspera. \n\n4. Después de unos minutos, añadir el pimiento y los ajos, probar y añadir sal si fuera necesario",
+      "imagePath":
+          "https://www.turismolavilajoiosa.com/img/disfruta/Gastronomia/GastronomiaRecetario/Pebrereta/5.jpg",
+      "averageScore": 4.0,
+      "reviews": [],
+      "approved": true,
+      "ingredients": [
+        {"idIngredient": 7, "name": "Sal", "category": "DAIRY"},
+        {"idIngredient": 4, "name": "Sangatxo", "category": "FISH_AND_SEAFOOD"},
+        {
+          "idIngredient": 1,
+          "name": "Pimiento verde",
+          "category": "FRUITS_AND_VEGETABLES"
+        },
+        {
+          "idIngredient": 2,
+          "name": "Calabaza",
+          "category": "FRUITS_AND_VEGETABLES"
+        },
+        {
+          "idIngredient": 3,
+          "name": "Tomate",
+          "category": "FRUITS_AND_VEGETABLES"
+        },
+        {
+          "idIngredient": 5,
+          "name": "Aceite de oliva",
+          "category": "OILS_AND_FATS"
+        },
+        {"idIngredient": 6, "name": "Ajo", "category": "SPICES_AND_HERBS"}
+      ]
     },
     {
       "imagePath":
@@ -160,3 +165,4 @@ Future<List<Map<String, dynamic>>> _getRecipes() async {
     }
   ];
 }
+*/

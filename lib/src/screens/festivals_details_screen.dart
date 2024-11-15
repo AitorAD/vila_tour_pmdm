@@ -31,9 +31,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                 // Image
                 FadeInImage(
                   placeholder: AssetImage('assets/logo.ico'),
-                  image: NetworkImage(
-                      'https://static.nationalgeographic.es/files/styles/image_3200/public/nationalgeographic_1468962.webp?w=1600&h=900'),
-                  // image: NetworkImage(festival.imagePath),
+                  image: NetworkImage(festival.imagensPaths[0]),
                   width: double.infinity,
                   height: 400,
                   fit: BoxFit.cover,
