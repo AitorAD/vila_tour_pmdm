@@ -19,7 +19,6 @@ class HomePage extends StatelessWidget {
           },
           child: Icon(Icons.dark_mode),
         ),
-        // appBar: AppBar(title: const Text('VILATOUR')),
         appBar: CustomAppBar(title: 'VILATOUR'),
         body: home(context));
   }

@@ -10,8 +10,7 @@ class FestivalsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provisional hasta conectar con la API
-    final festivasProvider = Provider.of<FestivalsProvider>(context);
+    final festivalsProvider = Provider.of<FestivalsProvider>(context);
 
     return Scaffold(
         bottomNavigationBar: CustomNavigationBar(),
@@ -24,11 +23,9 @@ class FestivalsScreen extends StatelessWidget {
                 SearchBox(),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: festivasProvider.festivals.length,
+                    itemCount: festivalsProvider.festivals.length,
                     itemBuilder: (context, index) {
-                      return ArticleBox(
-                        article: festivasProvider.festivals[index],
-                      );
+                      return ArticleBox(article: festivalsProvider.festivals[index]);
                     },
                   ),
                 ),

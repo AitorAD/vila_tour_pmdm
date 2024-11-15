@@ -29,7 +29,7 @@ class CustomNavigationBar extends StatelessWidget {
         String routeName;
         switch (i) {
           case 0:
-            routeName = '/';
+            routeName = 'home';
             break;
           case 1:
             routeName = 'uploadRecipe';
@@ -48,6 +48,7 @@ class CustomNavigationBar extends StatelessWidget {
         Navigator.pushNamedAndRemoveUntil(context, routeName, (route) => false);
         // Determinar cual de los 2 metodos usar
         // Navigator.pushReplacementNamed(context, routeName);
+
       },
       showSelectedLabels: false,
       showUnselectedLabels: false,
