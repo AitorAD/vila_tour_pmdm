@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/providers/ui_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
@@ -22,7 +23,8 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => FestivalsProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => ThemeProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => RecipesProvider(), lazy: false),
-      ChangeNotifierProvider(create: (_) => UiProvider(), lazy: false)
+      ChangeNotifierProvider(create: (_) => UiProvider(), lazy: false),
+      ChangeNotifierProvider(create: (_) => IngredientsProvider(), lazy: false)
 
     ], child: MyApp());
   }

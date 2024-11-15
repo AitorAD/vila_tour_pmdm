@@ -12,6 +12,10 @@
         {
             "ruta" : "recipes",
             "texto": "Recetas"
+        },
+        {
+            "ruta" : "uploadRecipe",
+            "texto" : "Subir receta"
         }
      ]
 }
