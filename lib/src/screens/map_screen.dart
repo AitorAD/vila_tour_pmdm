@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
-
 import 'package:vila_tour_pmdm/src/widgets/custom_app_bar.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 
