@@ -31,7 +31,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                 // Image
                 FadeInImage(
                   placeholder: AssetImage('assets/logo.ico'),
-                  image: NetworkImage(festival.imagePath),
+                  image: NetworkImage(festival.imagensPaths[0]),
                   width: double.infinity,
                   height: 400,
                   fit: BoxFit.cover,
@@ -108,7 +108,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                       const Icon(Icons.location_on, color: Colors.redAccent),
                       const SizedBox(width: 4),
                       Text(
-                        festival.location,
+                        festival.coordinade = 'Lugar Coordenada',
                         style: const TextStyle(
                           fontSize: 18,
                           fontFamily: 'PontanoSans',
@@ -124,6 +124,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
           ),
         ],
       ),
+      /*
 
       // Floating action button for "favorite"
 
@@ -146,6 +147,8 @@ class _DetailsFestivalState extends State<DetailsFestival> {
           );
         },
       ),
+
+      */
     );
   }
 }

@@ -1,28 +1,160 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class FestivalsProvider with ChangeNotifier {
-  List<Festival> _festivals = [];
+  String _baseUrl = 'http://10.0.2.2:8080'; // En Android Emulator
+  // String _baseUrl = 'http://192.168.x.x:8080'; // En Dispositivo físico
+  // String _baseUrl = 'http://localhost:8080'; // En iOS o navegador
 
+  List<Festival> _festivals = [];
   List<Festival> get festivals => _festivals;
+  set festivals(List<Festival> list) => _festivals = list;
 
   FestivalsProvider() {
-    loadFestivals(); 
+    loadFestivals();
+    _deleteAllFestivals();
+    _makeFestivals();
+    print('Festivals Provider Iniciado');
   }
 
-  Future<void> loadFestivals() async {
-    final festivalData = await _getFestivals();
-    _festivals = festivalData.map((data) => Festival.fromMap(data)).toList();
+  Future<String> _getJsonData(String endpoint) async {
+    var url = Uri.parse('$_baseUrl/$endpoint');
+    final response = await http.get(url);
+    return response.body;
+  }
+
+  void loadFestivals() async {
+    final jsonData = await _getJsonData('festivals');
+    print('JSON recibido: $jsonData');
+    final festivalList = Festival.fromJsonList(json.decode(jsonData));
+    // print('Festival list: ${festivalList}');
+    festivals = festivalList;
     notifyListeners();
   }
 
+  /*
   void toggleFavorite(Festival festival) {
     festival.favourite = !festival.favourite;
     notifyListeners();
   }
+  */
+
+  Future<void> _addFestival(Festival festival) async {
+    final url = Uri.parse('$_baseUrl/festivals');
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode(festival.toMap()),
+    );
+    notifyListeners();
+  }
+
+  Future<void> _deleteFestival(int festivalId) async {
+    final url = Uri.parse('$_baseUrl/festivals/$festivalId');
+    final response = await http.delete(
+      url,
+      headers: {"Content-Type": "application/json"},
+    );
+    notifyListeners();
+  }
+
+  void _deleteAllFestivals() {
+    loadFestivals();
+    festivals.forEach((f) => _deleteFestival(f.id));
+  }
+
+  void _makeFestivals() {
+    List<Festival> festivales = [
+      Festival(
+        id: 0,
+        name: "Moros y Cristianos",
+        description:
+            "La fiesta principal de Villajoyosa, en la que se recrea la batalla entre moros y cristianos, incluyendo un espectacular desembarco en la playa.",
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
+        averageScore: 4.8,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-07-24"),
+        endDate: DateTime.parse("2024-07-31"),
+        coordinade: null,
+      ),
+      Festival(
+        id: 0,
+        name: "Fiesta de Santa Marta",
+        description:
+            "Fiesta en honor a Santa Marta, patrona de Villajoyosa, con procesiones y eventos religiosos y culturales.",
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
+        averageScore: 4.6,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-07-25"),
+        endDate: DateTime.parse("2024-07-29"),
+        coordinade: null,
+      ),
+      Festival(
+        id: 0,
+        name: "Semana Santa",
+        description:
+            "Celebración religiosa que incluye procesiones tradicionales por las calles de Villajoyosa.",
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
+        averageScore: 4.3,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-03-25"),
+        endDate: DateTime.parse("2024-04-01"),
+        coordinade: null,
+      ),
+      Festival(
+        id: 0,
+        name: "Fiesta de San Antonio",
+        description:
+            "Festividad popular en honor a San Antonio, con actividades tradicionales y bendición de animales.",
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
+        averageScore: 4.1,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-01-17"),
+        endDate: DateTime.parse("2024-01-17"),
+        coordinade: null,
+      ),
+      Festival(
+        id: 0,
+        name: "Carnaval de Villajoyosa",
+        description:
+            "Desfiles y celebraciones en las calles para celebrar el carnaval, incluyendo disfraces y música.",
+        imagensPaths: [
+          'https://upload.wikimedia.org/wikipedia/commons/2/2b/Jaleo_en_Mercadal_5.jpg',
+        ],
+        averageScore: 4.2,
+        creationDate: DateTime.parse("2024-11-14T20:28:24"),
+        lastModificationDate: DateTime.parse("2024-11-14T20:28:24"),
+        reviews: [],
+        startDate: DateTime.parse("2024-02-09"),
+        endDate: DateTime.parse("2024-02-11"),
+        coordinade: null,
+      ),
+    ];
+    festivales.forEach((f) => _addFestival(f));
+    loadFestivals();
+  }
 }
 
-
+/*
 Future<List<Map<String, dynamic>>> _getFestivals() async {
   // Provisional hasta cargar la API
   return [
@@ -127,3 +259,4 @@ Future<List<Map<String, dynamic>>> _getFestivals() async {
     }
   ];
 }
+*/
