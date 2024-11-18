@@ -258,5 +258,6 @@ Future<List<Map<String, dynamic>>> _getFestivals() async {
           "La Festa dels Trons, que se celebra el segundo fin de semana de octubre en la Plaza del Ayuntamiento, es una festividad vibrante que destaca por sus impresionantes espectáculos pirotécnicos. Durante este evento, se realizan exhibiciones de fuegos artificiales y tracas que iluminan el cielo y llenan el ambiente de emoción. Los asistentes disfrutan de una variedad de actividades culturales, ferias gastronómicas y música en vivo, convirtiendo la Festa dels Trons en un evento imperdible."
     }
   ];
+
 }
 */

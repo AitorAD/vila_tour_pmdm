@@ -14,23 +14,47 @@ class CustomNavigationBar extends StatelessWidget {
     final currentIndex = uiProvider.selectedMenuOpt;
 
     return BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded), label: 'home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.add_box_rounded), label: 'add'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.location_on_rounded), label: 'map'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'person')
-        ],
-        currentIndex: currentIndex,
-        elevation: 0,
-        type: BottomNavigationBarType.fixed,
-        onTap: (int i) => uiProvider.selectedMenuOpt = i,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFF25C1CE));
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.add_box_rounded), label: 'Add'),
+        BottomNavigationBarItem(icon: Icon(Icons.location_on_rounded), label: 'Map'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+      ],
+      currentIndex: currentIndex,
+      elevation: 0,
+      type: BottomNavigationBarType.fixed,
+      onTap: (int i) {
+        uiProvider.selectedMenuOpt = i;
+
+        String routeName;
+        switch (i) {
+          case 0:
+            routeName = 'home';
+            break;
+          case 1:
+            routeName = 'uploadRecipe';
+            break;
+          case 2:
+            routeName = 'map';
+            break;
+          case 3:
+            routeName = 'profile';
+            break;
+          default:
+            routeName = 'home';
+            break;
+        }
+
+        Navigator.pushNamedAndRemoveUntil(context, routeName, (route) => false);
+        // Determinar cual de los 2 metodos usar
+        // Navigator.pushReplacementNamed(context, routeName);
+
+      },
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.black54,
+      backgroundColor: const Color(0xFF25C1CE),
+    );
   }
 }

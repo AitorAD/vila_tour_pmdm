@@ -16,4 +16,9 @@ class Ingredient {
       category: map['category'] ?? 'Unknown',
     );
   }
+
+   @override
+  String toString() {
+    return name;  // Devuelve el nombre del ingrediente
+  }
 }
