@@ -93,9 +93,11 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         style: textStyleVilaTourTitle(color: Colors.black),
                       ),
                       SizedBox(height: 20),
-                      Image.network(
-                        'https://tribe-s3-production.imgix.net/C5yUOy3RzAZV9mFvgXoq5?auto=compress,format&dl',
-                        // recipe.imagePath, // Asegúrate de que `Recipe` tiene `imageUrl`
+                      FadeInImage(
+                        placeholder: AssetImage('assets/logo.ico'),
+                        image:
+                            MemoryImage(decodeImageBase64(recipe.imagensPaths)),
+                        width: double.infinity,
                         height: 200,
                         fit: BoxFit.cover,
                       ),

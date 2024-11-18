@@ -10,7 +10,7 @@ class Festival extends Article {
     required int id,
     required String name,
     required String description,
-    required dynamic imagensPaths,
+    required String imagensPaths,
     required double averageScore,
     required DateTime creationDate,
     required DateTime lastModificationDate,

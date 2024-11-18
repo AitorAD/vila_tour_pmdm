@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class ArticleBox extends StatefulWidget {
@@ -207,6 +212,7 @@ class _BackgroundImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: widget.article is Recipe
@@ -220,7 +226,9 @@ class _BackgroundImage extends StatelessWidget {
                     height: 150,
                     child: FadeInImage(
                       placeholder: AssetImage('assets/logo.ico'),
-                      image: NetworkImage(widget.article.imagensPaths[0]),
+                      image: MemoryImage(
+                          decodeImageBase64(widget.article.imagensPaths)),
+                      // image: NetworkImage(widget.article.imagensPaths),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -229,7 +237,10 @@ class _BackgroundImage extends StatelessWidget {
             )
           : FadeInImage(
               placeholder: AssetImage('assets/logo.ico'),
-              image: NetworkImage(widget.article.imagensPaths[0]),
+              image:
+                  MemoryImage(decodeImageBase64(widget.article.imagensPaths)),
+
+              // NetworkImage(widget.article.imagensPaths),
               width: double.infinity,
               height: 150,
               fit: BoxFit.cover,

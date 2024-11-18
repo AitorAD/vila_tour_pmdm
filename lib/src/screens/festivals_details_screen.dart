@@ -31,7 +31,8 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                 // Image
                 FadeInImage(
                   placeholder: AssetImage('assets/logo.ico'),
-                  image: NetworkImage(festival.imagensPaths[0]),
+                  image: MemoryImage(decodeImageBase64(festival.imagensPaths)),
+                  // image: NetworkImage(festival.imagensPaths),
                   width: double.infinity,
                   height: 400,
                   fit: BoxFit.cover,

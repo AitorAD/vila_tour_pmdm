@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,7 @@ class RecipesProvider with ChangeNotifier {
 
   RecipesProvider() {
     loadRecipes();
+    print('Recipes Provider Iniciado');
   }
 
   Future<String> _getJsonData(String endpoint) async {
@@ -29,6 +31,14 @@ class RecipesProvider with ChangeNotifier {
     final recipesList = Recipe.fromJsonList(json.decode(jsonData));
     recipes = recipesList;
     notifyListeners();
+  }
+
+  static String getBase64FormateFile(String path) {
+    File file = File(path);
+    print('File is = ' + file.toString());
+    List<int> fileInByte = file.readAsBytesSync();
+    String fileInBase64 = base64Encode(fileInByte);
+    return fileInBase64;
   }
 
 /*
