@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -57,7 +55,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // IngredientsWrap(ingredients: recipe.ingredients),
+                        IngredientsWrap(ingredients: recipe.ingredients),
                         const SizedBox(height: 16),
                         const Divider(
                           color: Colors.black,
@@ -73,7 +71,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         const SizedBox(height: 8),
                         Text(
                           recipe.description,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -82,9 +80,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
 
                 // Tab 2: Visión General
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal:
-                          16.0), // Agrega el padding a izquierda y derecha
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -92,21 +88,24 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         recipe.name,
                         style: textStyleVilaTourTitle(color: Colors.black),
                       ),
-                      SizedBox(height: 20),
-                      Image.network(
-                        'https://tribe-s3-production.imgix.net/C5yUOy3RzAZV9mFvgXoq5?auto=compress,format&dl',
-                        // recipe.imagePath, // Asegúrate de que `Recipe` tiene `imageUrl`
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(height: 20),
-                      // IngredientsWrap(ingredients: recipe.ingredients),
+                      const SizedBox(height: 20),
+                      recipe.imagensPaths.isNotEmpty
+                          ? Image.network(
+                              recipe.imagensPaths
+                                  .first,
+                              fit: BoxFit.cover,
+                              height: 200,
+                              width: double.infinity,
+                            )
+                          : Image.network("assets/logo_foregrouns.png"),
+                      const SizedBox(height: 20),
+                      IngredientsWrap(ingredients: recipe.ingredients),
                     ],
                   ),
                 ),
 
                 // Tab 3: Reseñas
-                Center(child: Text('Contenido de las reseñas aquí')),
+                const Center(child: Text('Contenido de las reseñas aquí')),
               ],
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/models/categoryIngredient.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class IngredientSearchDelegate extends SearchDelegate<Ingredient> {
     return IconButton(
       icon: Icon(Icons.arrow_back),
       onPressed: () {
-        close(context, Ingredient(id: 1, name: "", category: "")); // Cierra el buscador
+        close(context, Ingredient(id: 1, name: "", category: CategoryIngredient(id: 0, name: "")));
       },
     );
   }
@@ -40,9 +41,11 @@ class IngredientSearchDelegate extends SearchDelegate<Ingredient> {
     final suggestions = query.isEmpty
         ? filteredIngredients
         : filteredIngredients
-            .where((ingredient) => ingredient.name
-                .toLowerCase()
-                .contains(query.toLowerCase())) // Filtrar por nombre
+            .where((ingredient) {
+              // Filtrar por nombre de ingrediente y también por categoría si el nombre de la categoría contiene la búsqueda
+              return ingredient.name.toLowerCase().contains(query.toLowerCase()) ||
+                     ingredient.category.name.toLowerCase().contains(query.toLowerCase());
+            })
             .toList();
 
     return ListView.builder(
@@ -51,6 +54,7 @@ class IngredientSearchDelegate extends SearchDelegate<Ingredient> {
         final ingredient = suggestions[index];
         return ListTile(
           title: Text(ingredient.name),
+          subtitle: Text(ingredient.category.name),  // Mostrar la categoría del ingrediente
           onTap: () {
             close(context, ingredient); // Selecciona el ingrediente
           },

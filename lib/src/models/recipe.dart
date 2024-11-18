@@ -1,18 +1,17 @@
 import 'dart:convert';
 
-import 'package:vila_tour_pmdm/src/models/ingredient.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class Recipe extends Article {
   bool approved;
   bool recent;
-  List<dynamic> ingredients;
+  List<Ingredient> ingredients;
 
   Recipe({
     required int id,
     required String name,
     required String description,
-    required dynamic imagensPaths,
+    required List<String> imagensPaths,
     required double averageScore,
     required DateTime creationDate,
     required DateTime lastModificationDate,
@@ -38,30 +37,29 @@ class Recipe extends Article {
       id: map['id'] ?? 0,
       name: map['name'] ?? 'No name',
       description: map['description'] ?? 'No description available',
-      imagensPaths: map['imagensPaths'] ??
-          'https://www.cams-it.com/wp-content/uploads/2015/05/default-placeholder-300x200.png',
+      imagensPaths: List<String>.from(
+        map['imagensPaths'] ?? [
+          'https://www.cams-it.com/wp-content/uploads/2015/05/default-placeholder-300x200.png'
+        ],
+      ),
       averageScore: map['averageScore'] ?? 0.0,
-      // creationDate: DateTime.parse(map['creationDate']),
-      // lastModificationDate: DateTime.parse(map['lastModificationDate']),
       creationDate: map['creationDate'] is String
           ? DateTime.tryParse(map['creationDate']) ?? DateTime.now()
           : DateTime.now(),
       lastModificationDate: map['lastModificationDate'] is String
           ? DateTime.tryParse(map['lastModificationDate']) ?? DateTime.now()
           : DateTime.now(),
-
       reviews: List<dynamic>.from(map['reviews'] ?? []),
       approved: map['approved'] ?? false,
       recent: map['recent'] ?? false,
-      ingredients: (map['ingredients'] as List<dynamic>? ?? [])
-          .where((ingredient) => ingredient is Map<String, dynamic>)
-          .map((ingredientMap) =>
-              Ingredient.fromMap(ingredientMap as Map<String, dynamic>))
-          .toList(),
+      ingredients: map['ingredients'] != null
+          ? (map['ingredients'] as List)
+              .map((item) => Ingredient.fromMap(item as Map<String, dynamic>))
+              .toList()
+          : [],
     );
   }
 
-  // Método de fábrica para una lista de Festival
   static List<Recipe> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((item) => Recipe.fromMap(item)).toList();
   }
