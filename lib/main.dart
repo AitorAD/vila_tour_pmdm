@@ -48,8 +48,6 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [Locale('en', ''), Locale('es', 'ES')],
       routes: getApplicationRoutes(),
       onGenerateRoute: (RouteSettings settings) {
-        print('Ruta llamada: ${settings.name}');
-
         return MaterialPageRoute(builder: (BuildContext context) => HomePage());
       },
     );

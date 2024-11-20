@@ -16,7 +16,7 @@ class FestivalsProvider with ChangeNotifier {
   FestivalsProvider() {
     loadFestivals();
     _deleteAllFestivals();
-    _makeFestivals();
+    //_makeFestivals();
     print('Festivals Provider Iniciado');
   }
 

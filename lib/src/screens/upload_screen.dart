@@ -19,7 +19,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
       ValueNotifier([]);
 
   void _selectImage() {
-    _imagePath.value = 'assets/logo_foreground.png'; // Imagen de ejemplo
+    _imagePath.value =
+        'assets/logo_foreground.png'; //Imagen de ejemplo hasta implementar
   }
 
   @override
@@ -69,15 +70,15 @@ class _UploadRecipeState extends State<UploadRecipe> {
                           onTap: () {
                             setState(() {
                               _selectedIngredients.value =
-                                List.from(_selectedIngredients.value)
-                                  ..add(ingredient);
-                            _selectedIngredients.value = List.from(_selectedIngredients.value);
-                            controller.closeView(ingredient.name);
+                                  List.from(_selectedIngredients.value)
+                                    ..add(ingredient);
+                              _selectedIngredients.value =
+                                  List.from(_selectedIngredients.value);
+                              controller.closeView(ingredient.name);
                             });
                           },
                         );
                       }).toList();
-                       
                     },
                   ),
 
@@ -117,17 +118,20 @@ class _UploadRecipeState extends State<UploadRecipe> {
                   ),
 
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _selectImage,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 24),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                      child: ElevatedButton(
+                        onPressed: () => _selectImage(),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          backgroundColor: Colors.blue
+                        ),
+                        child: const Text('Añadir imagen'),
                       ),
-                      backgroundColor: const Color(0xFF25C1CE),
-                    ),
-                    child: const Text('Cargar foto'),
                   ),
 
                   const SizedBox(height: 16),
@@ -147,7 +151,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                   ),
 
                   const SizedBox(height: 16),
-                  
+
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -190,7 +194,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
   void _addOrRemoveIngredient(Ingredient ingredient) {
     _selectedIngredients.value = List.from(_selectedIngredients.value)
       ..remove(ingredient);
-    _selectedIngredients.value = List.from(_selectedIngredients.value); // Reasigna para disparar la notificación
-
+    _selectedIngredients.value = List.from(
+        _selectedIngredients.value); // Reasigna para disparar la notificación
   }
 }
