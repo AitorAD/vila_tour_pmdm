@@ -7,6 +7,7 @@ class Festival extends Article {
   dynamic coordinade;
 
   Festival({
+
     required int id,
     required String name,
     required String description,
@@ -18,16 +19,7 @@ class Festival extends Article {
     required this.startDate,
     required this.endDate,
     required this.coordinade,
-  }) : super(
-          id: id,
-          name: name,
-          description: description,
-          imagensPaths: imagensPaths,
-          averageScore: averageScore,
-          creationDate: creationDate,
-          lastModificationDate: lastModificationDate,
-          reviews: reviews,
-        );
+  });
 
   factory Festival.fromJson(String str) => Festival.fromMap(json.decode(str));
 
@@ -66,9 +58,9 @@ class Festival extends Article {
         "lastModificationDate": lastModificationDate.toIso8601String(),
         "reviews": List<dynamic>.from(reviews.map((x) => x)),
         "startDate":
-            "${startDate!.year.toString().padLeft(4, '0')}-${startDate!.month.toString().padLeft(2, '0')}-${startDate!.day.toString().padLeft(2, '0')}",
+            "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
         "endDate":
-            "${endDate!.year.toString().padLeft(4, '0')}-${endDate!.month.toString().padLeft(2, '0')}-${endDate!.day.toString().padLeft(2, '0')}",
+            "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}",
         "coordinade": coordinade,
       };
 

@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-import 'package:vila_tour_pmdm/src/models/ingredient.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class Recipe extends Article {
   bool approved;
   bool recent;
-  List<dynamic> ingredients;
+  List<Ingredient> ingredients;
 
   Recipe({
     required int id,
     required String name,
     required String description,
+
     required String imagensPaths,
     required double averageScore,
     required DateTime creationDate,
@@ -48,7 +48,6 @@ class Recipe extends Article {
       lastModificationDate: json['lastModificationDate'] is String
           ? DateTime.tryParse(json['lastModificationDate']) ?? DateTime.now()
           : DateTime.now(),
-
       reviews: List<dynamic>.from(json['reviews'] ?? []),
       approved: json['approved'] ?? false,
       recent: json['recent'] ?? false,
@@ -60,7 +59,6 @@ class Recipe extends Article {
     );
   }
 
-  // Método de fábrica para una lista de Festival
   static List<Recipe> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((item) => Recipe.fromMap(item)).toList();
   }
