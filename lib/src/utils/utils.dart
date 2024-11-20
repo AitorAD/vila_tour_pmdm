@@ -32,6 +32,11 @@ BoxDecoration defaultDecoration(double radius) {
 }
 
 Uint8List decodeImageBase64(String image) {
-  Uint8List bytes = base64Decode(image.split(',')[1]);
-  return bytes;
+  try {
+    Uint8List bytes = base64Decode(image.split(',')[1]);
+    return bytes;
+  } catch (e) {
+    return base64Decode(image);
+  }
 }
+

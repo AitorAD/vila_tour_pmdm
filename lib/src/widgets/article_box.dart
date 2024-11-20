@@ -212,39 +212,39 @@ class _BackgroundImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
-      child: widget.article is Recipe
-          ? Container(
-              color: Colors.black.withOpacity(0.4),
-              height: 150,
-              child: Row(
-                children: [
-                  Container(
-                    width: 135,
-                    height: 150,
-                    child: FadeInImage(
-                      placeholder: AssetImage('assets/logo.ico'),
-                      image: MemoryImage(
-                          decodeImageBase64(widget.article.imagensPaths)),
-                      // image: NetworkImage(widget.article.imagensPaths),
-                      fit: BoxFit.cover,
+      child: Hero(
+        tag: widget.article.id,
+        child: widget.article is Recipe
+            ? Container(
+                color: Colors.black.withOpacity(0.4),
+                height: 150,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 135,
+                      height: 150,
+                      child: FadeInImage(
+                        placeholder: AssetImage('assets/logo.ico'),
+                        image: MemoryImage(
+                            decodeImageBase64(widget.article.imagensPaths)),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              )
+            : FadeInImage(
+                placeholder: AssetImage('assets/logo.ico'),
+                image: MemoryImage(
+                    decodeImageBase64(widget.article.imagensPaths)),
+                width: double.infinity,
+                height: 150,
+                fit: BoxFit.cover,
               ),
-            )
-          : FadeInImage(
-              placeholder: AssetImage('assets/logo.ico'),
-              image:
-                  MemoryImage(decodeImageBase64(widget.article.imagensPaths)),
-
-              // NetworkImage(widget.article.imagensPaths),
-              width: double.infinity,
-              height: 150,
-              fit: BoxFit.cover,
-            ),
+      ),
     );
   }
 }
+

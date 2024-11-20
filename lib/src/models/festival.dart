@@ -19,7 +19,7 @@ class Festival extends Article {
     required this.startDate,
     required this.endDate,
     required this.coordinade,
-  });
+  }) : super(id: id, name: name, description: description, imagensPaths: imagensPaths, averageScore: 0.0, creationDate: creationDate, lastModificationDate: lastModificationDate, reviews: reviews);
 
   factory Festival.fromJson(String str) => Festival.fromMap(json.decode(str));
 
