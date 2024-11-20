@@ -7,18 +7,19 @@ class Festival extends Article {
   dynamic coordinade;
 
   Festival({
-    required super.id,
-    required super.name,
-    required super.description,
-    required super.imagensPaths,
-    required super.averageScore,
-    required super.creationDate,
-    required super.lastModificationDate,
-    required super.reviews,
+
+    required int id,
+    required String name,
+    required String description,
+    required String imagensPaths,
+    required double averageScore,
+    required DateTime creationDate,
+    required DateTime lastModificationDate,
+    required List<dynamic> reviews,
     required this.startDate,
     required this.endDate,
     required this.coordinade,
-  });
+  }) : super(id: id, name: name, description: description, imagensPaths: imagensPaths, averageScore: 0.0, creationDate: creationDate, lastModificationDate: lastModificationDate, reviews: reviews);
 
   factory Festival.fromJson(String str) => Festival.fromMap(json.decode(str));
 

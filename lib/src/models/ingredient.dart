@@ -19,6 +19,16 @@ class Ingredient {
     );
   }
 
+  static List<Ingredient> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((item) => Ingredient.fromMap(item)).toList();
+  }
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "name": name,
+        "category": category,
+      };
+
   @override
   String toString() {
     return name; // Devuelve el nombre del ingrediente

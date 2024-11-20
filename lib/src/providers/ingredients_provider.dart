@@ -1,20 +1,35 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/ingredient.dart';
 
 class IngredientsProvider with ChangeNotifier {
+  String _baseUrl = 'http://10.0.2.2:8080'; // En Android Emulator
+  // String _baseUrl = 'http://192.168.x.x:8080'; // En Dispositivo físico
+  // String _baseUrl = 'http://localhost:8080'; // En iOS o navegador
+
   List<Ingredient> _ingredients = [];
   List<Ingredient> _filteredIngredients = [];
 
   List<Ingredient> get ingredients => _ingredients;
   List<Ingredient> get filteredIngredients => _filteredIngredients;
 
+  set ingredients(List<Ingredient> list) => _ingredients = list;
+
   IngredientsProvider() {
     loadIngredients(); 
   }
 
+  Future<String> _getJsonData(String endpoint) async {
+    var url = Uri.parse('$_baseUrl/$endpoint');
+    final response = await http.get(url);
+    return response.body;
+  }
+
   Future<void> loadIngredients() async {
-    final ingredientData = await _getIngredients();
-    _ingredients = ingredientData.map((data) => Ingredient.fromMap(data)).toList();
+    final jsonData = await _getJsonData('ingredients');
+    _ingredients = Ingredient.fromJsonList(json.decode(jsonData));
     _filteredIngredients = List.from(_ingredients);  // Inicializar también con todos los ingredientes
     notifyListeners();
   }
@@ -33,30 +48,4 @@ class IngredientsProvider with ChangeNotifier {
   notifyListeners();
 }
 
-}
-
-Future<List<Map<String, dynamic>>> _getIngredients() async {
-  // Provisional hasta conectar con la API
-  return [
-    {
-      "idIngredient": 1,
-      "name": "Pollo",
-      "category": "DAIRY",
-    },
-    {
-      "idIngredient": 2,
-      "name": "Arroz",
-      "category": "CEREALS",
-    },
-    {
-      "idIngredient": 3,
-      "name": "Aceite",
-      "category": "OILS_AND_FATS",
-    },
-    {
-      "idIngredient": 4,
-      "name": "Sal",
-      "category": "SPICES_AND_HERBS",
-    },
-  ];
 }

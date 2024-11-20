@@ -25,13 +25,15 @@ class _DetailsFestivalState extends State<DetailsFestival> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Image
-                FadeInImage(
-                  placeholder: AssetImage('assets/logo.ico'),
-                  image: NetworkImage(festival.imagensPaths[0]),
-                  width: double.infinity,
-                  height: 400,
-                  fit: BoxFit.cover,
+                Hero(
+                  tag: festival.id, // Asegúrate de usar el mismo `tag`
+                  child: FadeInImage(
+                    placeholder: AssetImage('assets/logo.ico'),
+                    image: MemoryImage(decodeImageBase64(festival.imagensPaths)),
+                    width: double.infinity,
+                    height: 400,
+                    fit: BoxFit.cover,
+                  ),
                 ),
 
                 const SizedBox(height: 16),
