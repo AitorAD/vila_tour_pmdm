@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 // Función que devuelve el estilo de texto con color personalizado
@@ -5,7 +8,8 @@ TextStyle textStyleVilaTour({Color color = Colors.white}) {
   return TextStyle(color: color, fontFamily: 'PontanoSans');
 }
 
-TextStyle textStyleVilaTourTitle({Color color = Colors.white, double fontSize = 25}) {
+TextStyle textStyleVilaTourTitle(
+    {Color color = Colors.white, double fontSize = 25}) {
   return TextStyle(color: color, fontFamily: 'PontanoSans', fontSize: fontSize);
 }
 
@@ -27,4 +31,7 @@ BoxDecoration defaultDecoration(double radius) {
   );
 }
 
-
+Uint8List decodeImageBase64(String image) {
+  Uint8List bytes = base64Decode(image.split(',')[1]);
+  return bytes;
+}

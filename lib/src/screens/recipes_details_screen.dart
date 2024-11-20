@@ -88,17 +88,16 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         recipe.name,
                         style: textStyleVilaTourTitle(color: Colors.black),
                       ),
-                      const SizedBox(height: 20),
-                      recipe.imagensPaths.isNotEmpty
-                          ? Image.network(
-                              recipe.imagensPaths
-                                  .first,
-                              fit: BoxFit.cover,
-                              height: 200,
-                              width: double.infinity,
-                            )
-                          : Image.network("assets/logo_foregrouns.png"),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20),
+                      FadeInImage(
+                        placeholder: AssetImage('assets/logo.ico'),
+                        image:
+                            MemoryImage(decodeImageBase64(recipe.imagensPaths)),
+                        width: double.infinity,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(height: 20),
                       IngredientsWrap(ingredients: recipe.ingredients),
                     ],
                   ),
