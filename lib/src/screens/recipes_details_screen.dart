@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -61,11 +59,9 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         const SizedBox(height: 16),
                         const Divider(
                           color: Colors.black,
-                          thickness: 1.0, 
-                          indent:
-                              0,
-                          endIndent:
-                              0,
+                          thickness: 1.0,
+                          indent: 0,
+                          endIndent: 0,
                         ),
                         const SizedBox(height: 10),
                         Text(
@@ -75,7 +71,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         const SizedBox(height: 8),
                         Text(
                           recipe.description,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -84,9 +80,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
 
                 // Tab 2: Visión General
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal:
-                          16.0), // Agrega el padding a izquierda y derecha
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -95,11 +89,16 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         style: textStyleVilaTourTitle(color: Colors.black),
                       ),
                       SizedBox(height: 20),
-                      Image.network(
-                        recipe
-                            .imagePath, // Asegúrate de que `Recipe` tiene `imageUrl`
-                        height: 200,
-                        fit: BoxFit.cover,
+                      Hero(
+                        tag: recipe.id, // Mismo tag que en ArticleBox
+                        child: FadeInImage(
+                          placeholder: AssetImage('assets/logo.ico'),
+                          image: MemoryImage(
+                              decodeImageBase64(recipe.imagensPaths)),
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       SizedBox(height: 20),
                       IngredientsWrap(ingredients: recipe.ingredients),
@@ -108,16 +107,16 @@ class _RecipeDetailsState extends State<RecipeDetails>
                 ),
 
                 // Tab 3: Reseñas
-                Center(child: Text('Contenido de las reseñas aquí')),
+                const Center(child: Text('Contenido de las reseñas aquí')),
               ],
             ),
           ),
         ],
       ),
+      /*
       floatingActionButton: Consumer<RecipesProvider>(
         builder: (context, recipesProvider, child) {
-          final isFavourite = recipesProvider.recipes
-              .any((r) => r.name == recipe.name && r.favourite);
+          final isFavourite = recipesProvider.recipes.any((r) => r.name == recipe.name && r.favourite);
 
           return FloatingActionButton(
             onPressed: () {
@@ -130,6 +129,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
           );
         },
       ),
+      */
     );
   }
 }

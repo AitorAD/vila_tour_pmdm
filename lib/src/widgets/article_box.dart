@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class ArticleBox extends StatefulWidget {
@@ -63,11 +68,12 @@ class __FavoriteState extends State<_Favorite> {
       child: GestureDetector(
         onTap: () {
           setState(() {
-            widget.article.favourite = !widget.article.favourite;
+            // widget.article.favourite = !widget.article.favourite;
           });
         },
         child: Icon(
-          widget.article.favourite ? Icons.favorite : Icons.favorite_border,
+          Icons.favorite,
+          // widget.article.favourite ? Icons.favorite : Icons.favorite_border,
           color: Colors.white,
           size: 30,
         ),
@@ -110,11 +116,13 @@ class _FestivalInfo extends StatelessWidget {
               ),
             ),
             Text(
-              (widget.article as Festival).location,
+              'location (provisional)',
+              // (widget.article as Festival).location,
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             Text(
-              (widget.article as Festival).date,
+              'fecha (provisional)',
+              // (widget.article as Festival).date,
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             SizedBox(height: 10),
@@ -156,7 +164,8 @@ class _RecipeInfo extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(left: 135),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
           color: Colors.black.withOpacity(0.4),
         ),
         padding: EdgeInsets.all(20),
@@ -205,31 +214,37 @@ class _BackgroundImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
-      child: widget.article is Recipe
-          ? Container(
-              color: Colors.black.withOpacity(0.4),
-              height: 150,
-              child: Row(
-                children: [
-                  Container(
-                    width: 135,
-                    height: 150,
-                    child: FadeInImage(
-                      placeholder: AssetImage('assets/logo.ico'),
-                      image: NetworkImage(widget.article.imagePath),
-                      fit: BoxFit.cover,
+      child: Hero(
+        tag: widget.article.id,
+        child: widget.article is Recipe
+            ? Container(
+                color: Colors.black.withOpacity(0.4),
+                height: 150,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 135,
+                      height: 150,
+                      child: FadeInImage(
+                        placeholder: AssetImage('assets/logo.ico'),
+                        image: MemoryImage(
+                            decodeImageBase64(widget.article.imagensPaths)),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              )
+            : FadeInImage(
+                placeholder: AssetImage('assets/logo.ico'),
+                image: MemoryImage(
+                    decodeImageBase64(widget.article.imagensPaths)),
+                width: double.infinity,
+                height: 150,
+                fit: BoxFit.cover,
               ),
-            )
-          : FadeInImage(
-              placeholder: AssetImage('assets/logo.ico'),
-              image: NetworkImage(widget.article.imagePath),
-              width: double.infinity,
-              height: 150,
-              fit: BoxFit.cover,
-            ),
+      ),
     );
   }
 }
+

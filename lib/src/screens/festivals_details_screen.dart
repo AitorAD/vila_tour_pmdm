@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/providers/festivals_provider.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -27,13 +25,15 @@ class _DetailsFestivalState extends State<DetailsFestival> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Image
-                FadeInImage(
-                  placeholder: AssetImage('assets/logo.ico'),
-                  image: NetworkImage(festival.imagePath),
-                  width: double.infinity,
-                  height: 400,
-                  fit: BoxFit.cover,
+                Hero(
+                  tag: festival.id, // Asegúrate de usar el mismo `tag`
+                  child: FadeInImage(
+                    placeholder: AssetImage('assets/logo.ico'),
+                    image: MemoryImage(decodeImageBase64(festival.imagensPaths)),
+                    width: double.infinity,
+                    height: 400,
+                    fit: BoxFit.cover,
+                  ),
                 ),
 
                 const SizedBox(height: 16),
@@ -107,7 +107,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                       const Icon(Icons.location_on, color: Colors.redAccent),
                       const SizedBox(width: 4),
                       Text(
-                        festival.location,
+                        festival.coordinade = 'Lugar Coordenada',
                         style: const TextStyle(
                           fontSize: 18,
                           fontFamily: 'PontanoSans',
@@ -123,6 +123,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
           ),
         ],
       ),
+      /*
 
       // Floating action button for "favorite"
 
@@ -145,6 +146,8 @@ class _DetailsFestivalState extends State<DetailsFestival> {
           );
         },
       ),
+
+      */
     );
   }
 }

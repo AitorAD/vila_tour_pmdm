@@ -1,37 +1,71 @@
-import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'dart:convert';
+import 'package:vila_tour_pmdm/src/models/article.dart';
 
 class Festival extends Article {
-  String location;
-  String date;
+  DateTime startDate;
+  DateTime endDate;
+  dynamic coordinade;
 
   Festival({
+
     required int id,
     required String name,
     required String description,
-    required String imagePath,
+    required String imagensPaths,
     required double averageScore,
-    required bool favourite,
-    required this.location,
-    required this.date,
-  }) : super(
-          id: id,
-          name: name,
-          description: description,
-          imagePath: imagePath,
-          averageScore: averageScore,
-          favourite: favourite,
-        );
+    required DateTime creationDate,
+    required DateTime lastModificationDate,
+    required List<dynamic> reviews,
+    required this.startDate,
+    required this.endDate,
+    required this.coordinade,
+  }) : super(id: id, name: name, description: description, imagensPaths: imagensPaths, averageScore: 0.0, creationDate: creationDate, lastModificationDate: lastModificationDate, reviews: reviews);
 
-  factory Festival.fromMap(Map<String, dynamic> map) {
-    return Festival(
-      id: map['id'] ?? 0,
-      name: map['name'] ?? 'No name',
-      description: map['description'] ?? 'No description available',
-      imagePath: map['imagePath'] ?? 'https://www.cams-it.com/wp-content/uploads/2015/05/default-placeholder-300x200.png',
-      averageScore: map['averageScore'] ?? 0.0,
-      favourite: map['favourite'] ?? false,
-      location: map['location'] ?? 'Unknown location',
-      date: map['date'] ?? 'No date',
-    );
+  factory Festival.fromJson(String str) => Festival.fromMap(json.decode(str));
+
+  factory Festival.fromMap(Map<String, dynamic> json) => Festival(
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        imagensPaths: json["imagensPaths"],
+        averageScore: json["averageScore"]?.toDouble(),
+        creationDate: DateTime.parse(json["creationDate"]),
+        lastModificationDate: DateTime.parse(json["lastModificationDate"]),
+        reviews: List<dynamic>.from(json["reviews"].map((x) => x)),
+        // startDate: DateTime.parse(json["startDate"]),
+        // endDate: DateTime.parse(json["endDate"]),
+        startDate: json["startDate"] is String
+            ? DateTime.tryParse(json["startDate"]) ?? DateTime.now()
+            : DateTime.now(),
+        endDate: json["endDate"] is String
+            ? DateTime.tryParse(json["endDate"]) ?? DateTime.now()
+            : DateTime.now(),
+        coordinade: json["coordinade"],
+      );
+
+  // Método de fábrica para una lista de Festival
+  static List<Festival> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((item) => Festival.fromMap(item)).toList();
+  }
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "imagensPaths": imagensPaths,
+        "averageScore": averageScore,
+        "creationDate": creationDate.toIso8601String(),
+        "lastModificationDate": lastModificationDate.toIso8601String(),
+        "reviews": List<dynamic>.from(reviews.map((x) => x)),
+        "startDate":
+            "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
+        "endDate":
+            "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}",
+        "coordinade": coordinade,
+      };
+
+  @override
+  String toString() {
+    return 'Festival(id: $id, name: $name, description: $description, averageScore: $averageScore, startDate: $startDate, endDate: $endDate)';
   }
 }

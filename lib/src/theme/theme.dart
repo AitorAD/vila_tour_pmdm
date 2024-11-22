@@ -23,8 +23,12 @@ ThemeData lightMode = ThemeData(
   appBarTheme: const AppBarTheme(
     centerTitle: true,
     color: Colors.white,
-    titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
-    iconTheme: IconThemeData(color: Colors.white),
+    titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
+    iconTheme: IconThemeData(color: Colors.black),
+  ),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    selectedItemColor: Colors.white,
+    unselectedItemColor: Colors.white,
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: tealGradientEnd,
@@ -54,9 +58,13 @@ ThemeData darkMode = ThemeData(
   scaffoldBackgroundColor: const Color(0xFF121212),
   appBarTheme: const AppBarTheme(
     centerTitle: true,
-    color: Colors.white,
+    color: Color(0xFF1E1E1E), // Fondo oscuro para el modo oscuro
     titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
     iconTheme: IconThemeData(color: Colors.white),
+  ),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    selectedItemColor: Colors.white,
+    unselectedItemColor: Colors.white,
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: tealGradientEnd,
