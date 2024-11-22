@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class CustomButton extends StatelessWidget {
   final String text; // Texto que se pasará al botón
@@ -27,11 +26,11 @@ class CustomButton extends StatelessWidget {
         height: height,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          decoration: DefaultDecoration().defaultDecoration(radius), // Aplica la decoración
+          decoration: defaultDecoration(radius), // Aplica la decoración
           child: Center(
             child: Text(
               text,
-              style: Utils.textStyleVilaTour, // Color del texto
+              style: textStyleVilaTour(color: Colors.white), // Color del texto
             ),
           ),
         )

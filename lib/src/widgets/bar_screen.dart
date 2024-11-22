@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class BarScreenArrow extends StatelessWidget {
   final String? labelText;
@@ -16,7 +15,7 @@ class BarScreenArrow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      decoration: DefaultDecoration().defaultDecoration(0),
+      decoration: defaultDecoration(0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
@@ -28,7 +27,7 @@ class BarScreenArrow extends StatelessWidget {
             ),
             Text(
               labelText ?? "",
-              style: Utils.textStyleVilaTourTitle,
+              style: textStyleVilaTourTitle(color: Colors.white),
             ),
             Icon(
               Icons.arrow_back,
