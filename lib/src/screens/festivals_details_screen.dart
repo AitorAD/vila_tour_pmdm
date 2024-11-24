@@ -71,7 +71,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      PaintStars(rating: festival.averageScore),
+                      PaintStars(rating: festival.averageScore, color: Colors.yellow),
                       const SizedBox(width: 4),
                       const Text(
                         '(281)',
