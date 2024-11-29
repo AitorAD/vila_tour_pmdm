@@ -4,6 +4,7 @@ import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class DetailsFestival extends StatefulWidget {
+  static final routeName = 'general_festival';
   const DetailsFestival({super.key});
 
   @override

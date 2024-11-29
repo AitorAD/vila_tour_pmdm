@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
+import 'package:vila_tour_pmdm/src/services/login_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
+  static final routeName = 'login_screen';
   const LoginScreen({super.key});
 
   @override
@@ -77,7 +80,7 @@ class LoginScreen extends StatelessWidget {
                                     GestureDetector(
                                       onTap: () {
                                         Navigator.pushNamed(
-                                            context, 'registrer_screen');
+                                            context, RegistrerScreen.routeName);
                                       },
                                       child: RichText(
                                         text: TextSpan(
@@ -92,7 +95,11 @@ class LoginScreen extends StatelessWidget {
                                             TextSpan(
                                               text: 'Registrate',
                                               style: TextStyle(
-                                                color: const Color.fromARGB(210, 11, 145, 185), // Color de la segunda frase
+                                                color: const Color.fromARGB(
+                                                    210,
+                                                    11,
+                                                    145,
+                                                    185), // Color de la segunda frase
                                               ),
                                             ),
                                           ],

@@ -6,6 +6,7 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import '../providers/festivals_provider.dart';
 
 class FestivalsScreen extends StatelessWidget {
+  static final routeName = 'festivals_screen';
   const FestivalsScreen({super.key});
 
   @override

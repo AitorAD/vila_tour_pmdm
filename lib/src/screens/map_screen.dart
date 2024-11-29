@@ -7,6 +7,7 @@ import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 
 
 class MapScreen extends StatelessWidget {
+  static final routeName = 'map_screen';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
