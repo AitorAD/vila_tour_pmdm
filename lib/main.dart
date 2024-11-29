@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
+import 'package:vila_tour_pmdm/src/providers/login_form_provider.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/providers/ui_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
@@ -20,6 +21,7 @@ class AppState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => LoginFormProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => FestivalsProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => ThemeProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => RecipesProvider(), lazy: false),
