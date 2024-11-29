@@ -27,7 +27,6 @@ class RecipesProvider with ChangeNotifier {
 
   Future<void> loadRecipes() async {
     final jsonData = await _getJsonData('recipes');
-    print('JSON recibido: $jsonData');
     final recipesList = Recipe.fromJsonList(json.decode(jsonData));
     recipes = recipesList;
     notifyListeners();
@@ -35,7 +34,6 @@ class RecipesProvider with ChangeNotifier {
 
   static String getBase64FormateFile(String path) {
     File file = File(path);
-    print('File is = ' + file.toString());
     List<int> fileInByte = file.readAsBytesSync();
     String fileInBase64 = base64Encode(fileInByte);
     return fileInBase64;

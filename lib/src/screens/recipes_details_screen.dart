@@ -89,13 +89,16 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         style: textStyleVilaTourTitle(color: Colors.black),
                       ),
                       SizedBox(height: 20),
-                      FadeInImage(
-                        placeholder: AssetImage('assets/logo.ico'),
-                        image:
-                            MemoryImage(decodeImageBase64(recipe.imagensPaths)),
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
+                      Hero(
+                        tag: recipe.id, // Mismo tag que en ArticleBox
+                        child: FadeInImage(
+                          placeholder: AssetImage('assets/logo.ico'),
+                          image: MemoryImage(
+                              decodeImageBase64(recipe.imagensPaths)),
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       SizedBox(height: 20),
                       IngredientsWrap(ingredients: recipe.ingredients),
