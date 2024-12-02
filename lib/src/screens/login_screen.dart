@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/login_form_provider.dart';
 import 'package:vila_tour_pmdm/src/ui/input_decorations.dart';
+import 'package:vila_tour_pmdm/src/screens/home.dart';
+import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
+import 'package:vila_tour_pmdm/src/services/login_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 class LoginScreen extends StatelessWidget {
+  static final routeName = 'login_screen';
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final loginService = Provider.of<LoginService>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(

@@ -7,6 +7,7 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import '../providers/providers.dart';
 
 class HomePage extends StatelessWidget {
+  static final routeName = 'home_screen';
   const HomePage({super.key});
 
   @override

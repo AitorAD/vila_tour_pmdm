@@ -6,6 +6,7 @@ import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class UploadRecipe extends StatefulWidget {
+  static final routeName = 'upload_recipe';
   UploadRecipe({super.key});
 
   @override
