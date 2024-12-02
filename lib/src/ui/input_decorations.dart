@@ -10,7 +10,7 @@ class InputDecorations {
       enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.black)),
       focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.black, width: 2)),
+        borderSide: BorderSide(color: const Color.fromARGB(255, 12, 163, 223), width: 2)),
       errorBorder: UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.red)),
       hintText: hintText,
