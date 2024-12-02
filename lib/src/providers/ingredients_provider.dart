@@ -33,7 +33,7 @@ class IngredientsProvider with ChangeNotifier {
     _filteredIngredients = List.from(_ingredients);  // Inicializar también con todos los ingredientes
     notifyListeners();
   }
-
+  
   void filterIngredients(String query) {
   print("Filtrando ingredientes con la query: $query"); // Verificar que la query se recibe
   if (query.isEmpty) {

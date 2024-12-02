@@ -4,6 +4,7 @@ import 'package:vila_tour_pmdm/src/screens/registrer_confirmation_screen.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RegistrerScreen extends StatelessWidget {
+  static final routeName = 'register_screen';
   const RegistrerScreen({super.key});
 
   @override

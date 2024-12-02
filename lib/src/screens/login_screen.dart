@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/screens/home.dart';
+import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
+import 'package:vila_tour_pmdm/src/services/login_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
+  static final routeName = 'login_screen';
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final loginService = Provider.of<LoginService>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -70,14 +77,16 @@ class LoginScreen extends StatelessWidget {
                                     CustomButton(
                                       text: 'Entrar',
                                       onPressed: () {
-                                        print('Botón "Entrar" presionado');
+                                        loginService.login("admin", "admin");
+                                        Navigator.pushReplacementNamed(context, HomePage.routeName);
+                                        // print('Botón "Entrar" presionado');
                                       },
                                     ),
                                     SizedBox(height: 50),
                                     GestureDetector(
                                       onTap: () {
                                         Navigator.pushNamed(
-                                            context, 'registrer_screen');
+                                            context, RegistrerScreen.routeName);
                                       },
                                       child: RichText(
                                         text: TextSpan(
@@ -92,7 +101,11 @@ class LoginScreen extends StatelessWidget {
                                             TextSpan(
                                               text: 'Registrate',
                                               style: TextStyle(
-                                                color: const Color.fromARGB(210, 11, 145, 185), // Color de la segunda frase
+                                                color: const Color.fromARGB(
+                                                    210,
+                                                    11,
+                                                    145,
+                                                    185), // Color de la segunda frase
                                               ),
                                             ),
                                           ],

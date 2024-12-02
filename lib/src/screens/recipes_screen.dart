@@ -5,6 +5,7 @@ import 'package:vila_tour_pmdm/src/widgets/custom_app_bar.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RecipesScreen extends StatelessWidget {
+  static final routeName = 'recipes_screen';
   const RecipesScreen({super.key});
 
   @override

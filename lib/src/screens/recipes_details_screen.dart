@@ -4,6 +4,7 @@ import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RecipeDetails extends StatefulWidget {
+  static final routeName = 'general_recipe';
   const RecipeDetails({super.key});
 
   @override
