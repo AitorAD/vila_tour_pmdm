@@ -13,6 +13,7 @@ class UserPreferences {
 
   Future<void> initPrefs() async {
     try {
+      deleteAllData();
       _token = await _prefs.read(key: 'token') ?? '';
       print("Token leido correctamente: $_token");
     } catch (e) {

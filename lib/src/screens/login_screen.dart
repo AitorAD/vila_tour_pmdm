@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
@@ -9,6 +11,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loginService = Provider.of<LoginService>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -73,7 +77,9 @@ class LoginScreen extends StatelessWidget {
                                     CustomButton(
                                       text: 'Entrar',
                                       onPressed: () {
-                                        print('Botón "Entrar" presionado');
+                                        loginService.login("admin", "admin");
+                                        Navigator.pushReplacementNamed(context, HomePage.routeName);
+                                        // print('Botón "Entrar" presionado');
                                       },
                                     ),
                                     SizedBox(height: 50),
