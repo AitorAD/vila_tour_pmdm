@@ -10,6 +10,8 @@ import 'package:vila_tour_pmdm/src/providers/ui_provider.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
+import 'package:vila_tour_pmdm/src/screens/user_screen.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';
 
 void main() async {

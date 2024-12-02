@@ -11,6 +11,7 @@ import 'package:vila_tour_pmdm/src/screens/recipes_details_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/recipes_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/upload_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/user_screen.dart';
 
 Map<String, WidgetBuilder> getApplicationRoutes() {
   return <String, WidgetBuilder>{
@@ -23,5 +24,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     RecipesScreen.routeName: (BuildContext context) => RecipesScreen(),
     MapScreen.routeName: (BuildContext context) => MapScreen(),
     UploadRecipe.routeName: (BuildContext context) => UploadRecipe(),
+    UserScreen.routeName: (BuildContext context) => UserScreen(),
   };
 }

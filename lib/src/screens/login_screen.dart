@@ -9,18 +9,19 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 class LoginScreen extends StatelessWidget {
-  static final routeName = 'login_screen';
-  const LoginScreen({super.key});
+  static const routeName = 'login_screen';
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final loginService = Provider.of<LoginService>(context);
+    final loginService = Provider.of<LoginService>(context, listen: false);
+    final loginForm = Provider.of<LoginFormProvider>(context, listen: false);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Positioned.fill(
+          const Positioned.fill(
             child: WavesWidget(),
           ),
           SafeArea(
@@ -34,8 +35,8 @@ class LoginScreen extends StatelessWidget {
                 child: IntrinsicHeight(
                   child: Column(
                     children: [
-                      HeaderLog(),
-                      BarScreenLogin(labelText: "Log In"),
+                      const HeaderLog(),
+                      const BarScreenLogin(labelText: "Log In"),
                       Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -47,14 +48,17 @@ class LoginScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _LoginForm(),
-                                  SizedBox(height: 10),
-                                  _RecoveryPassword(),
+                                  _LoginForm(
+                                    key: Key('login_form_${loginForm.hashCode}'),
+                                    loginForm: loginForm,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const _RecoveryPassword(),
                                 ],
                               ),
                             ),
                             // Buttons Section
-                            _Botones(),
+                            const _Botones(),
                           ],
                         ),
                       ),
@@ -71,75 +75,73 @@ class LoginScreen extends StatelessWidget {
 }
 
 class _LoginForm extends StatelessWidget {
-  const _LoginForm({Key? key}) : super(key: key);
+  final LoginFormProvider loginForm;
+  const _LoginForm({Key? key, required this.loginForm}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final loginForm = Provider.of<LoginFormProvider>(context);
-    return Container(
-      child: Form(
-          key: loginForm.formLogKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Usuario:',
-                  style: textStyleVilaTourTitle(color: Colors.black)),
-              TextFormField(
-                validator: (value) {
-                  // VALIDA
-                  if (value == null || value.isEmpty) {
-                    return 'El nombre de usuario es obligatorio';
-                  }
-                  return null; // Validación exitosa
-                },
-                autocorrect: false,
-                keyboardType: TextInputType.name,
-                decoration: InputDecorations.authInputDecoration(
-                    hintText: 'Nombre de Usuario'),
-                onChanged: (value) => loginForm.username = value,
-              ),
-              SizedBox(height: 30),
-              Text('Contraseña:',
-                  style: textStyleVilaTourTitle(color: Colors.black)),
-              TextFormField(
-                validator: (value) {
-                  // VALIDA
-                  if (value == null || value.isEmpty) {
-                    return 'La contraseña es obligatoria';
-                  }
-                  final regex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d).+$');
-                  if (!regex.hasMatch(value)) {
-                    return 'Debe contener al menos un numero';
-                  }
-                  return null;
-                },
-                autocorrect: false,
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-                decoration: InputDecorations.authInputDecoration(
-                    hintText: '**********'),
-                onChanged: (value) => loginForm.password = value,
-              )
-            ],
-          )),
+    return Form(
+      key: loginForm.formLogKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Usuario:',
+              style: textStyleVilaTourTitle(color: Colors.black)),
+          TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'El nombre de usuario es obligatorio';
+              }
+              return null;
+            },
+            autocorrect: false,
+            keyboardType: TextInputType.name,
+            decoration: InputDecorations.authInputDecoration(
+              hintText: 'Nombre de Usuario',
+            ),
+            onChanged: (value) => loginForm.username = value,
+          ),
+          const SizedBox(height: 30),
+          Text('Contraseña:',
+              style: textStyleVilaTourTitle(color: Colors.black)),
+          TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'La contraseña es obligatoria';
+              }
+              final regex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d).+$');
+              if (!regex.hasMatch(value)) {
+                return 'Debe contener al menos un número';
+              }
+              return null;
+            },
+            autocorrect: false,
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: true,
+            decoration: InputDecorations.authInputDecoration(
+              hintText: '**********',
+            ),
+            onChanged: (value) => loginForm.password = value,
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _RecoveryPassword extends StatelessWidget {
-  const _RecoveryPassword({
-    super.key,
-  });
+  const _RecoveryPassword({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Recuperar password");
+        debugPrint("Recuperar password");
       },
       child: Text(
         '¿Has olvidado tu contraseña? Haz click aquí',
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.black,
           decoration: TextDecoration.underline,
         ),
@@ -149,25 +151,30 @@ class _RecoveryPassword extends StatelessWidget {
 }
 
 class _Botones extends StatelessWidget {
+  const _Botones({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final loginForm = Provider.of<LoginFormProvider>(context);
+    final loginForm = Provider.of<LoginFormProvider>(context, listen: false);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Container(
+      child: SizedBox(
         height: 200,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LoginBtn(loginForm: loginForm),
-            SizedBox(height: 50),
+            LoginBtn(
+              key: Key('login_button_${loginForm.hashCode}'),
+              loginForm: loginForm,
+            ),
+            const SizedBox(height: 50),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, 'registrer_screen');
+                Navigator.pushNamed(context, RegistrerScreen.routeName);
               },
               child: RichText(
-                text: TextSpan(
+                text: const TextSpan(
                   children: [
                     TextSpan(
                       text: '¿No tienes cuenta? ',
@@ -178,7 +185,7 @@ class _Botones extends StatelessWidget {
                     TextSpan(
                       text: 'Regístrate',
                       style: TextStyle(
-                        color: const Color.fromARGB(210, 11, 145, 185),
+                        color: Color.fromARGB(210, 11, 145, 185),
                       ),
                     ),
                   ],
@@ -195,15 +202,18 @@ class _Botones extends StatelessWidget {
 class LoginBtn extends StatelessWidget {
   final LoginFormProvider loginForm;
 
-  const LoginBtn({super.key, required this.loginForm});
+  const LoginBtn({Key? key, required this.loginForm}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CustomButton(
       text: 'Entrar',
       onPressed: () {
-        // Ver como hacer la conexion, validarla y que pase
-        print('Botón "Entrar" presionado');
+        if (loginForm.isValidForm()) {
+          print('Formulario válido. Procesando login.');
+        } else {
+          print('Formulario inválido.');
+        }
       },
     );
   }
