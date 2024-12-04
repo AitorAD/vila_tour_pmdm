@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/register_form_provider.dart';
+import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';
+import 'package:vila_tour_pmdm/src/utils/result.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -25,6 +27,7 @@ class _RegisterScreenBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final registerForm = Provider.of<RegisterFormProvider>(context);
+    final loginService = Provider.of<LoginService>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -48,8 +51,8 @@ class _RegisterScreenBody extends StatelessWidget {
                           vertical: 50,
                         ),
                         child: _buildRegisterForm(
-                          registerForm: registerForm,
-                        ),
+                            registerForm: registerForm,
+                            loginService: loginService),
                       ),
                     ],
                   ),
@@ -75,13 +78,14 @@ class _RegisterScreenBody extends StatelessWidget {
 
   Widget _buildRegisterForm({
     required RegisterFormProvider registerForm,
+    required LoginService loginService,
   }) {
     String repeatedPassword = '';
 
     return Form(
       key: registerForm.formRegisterKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           buildTextField(
             label: 'Usuario:',
@@ -114,27 +118,102 @@ class _RegisterScreenBody extends StatelessWidget {
                 validateRepeatedPassword(value, registerForm.password),
           ),
           const SizedBox(height: 40),
-          _buildSubmitButton(registerForm),
+          // _buildSubmitButton(registerForm, loginService),
+          _RegisterButton(
+              registerForm: registerForm, loginService: loginService)
         ],
       ),
     );
   }
+}
 
-  Widget _buildSubmitButton(RegisterFormProvider registerForm) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        CustomButton(
-          text: 'Crear cuenta',
-          onPressed: () {
-            if (registerForm.isValidForm()) {
-              print('Formulario válido');
-            } else {
-              print('Formulario inválido');
-            }
-          },
-        ),
-      ],
+class _RegisterButton extends StatelessWidget {
+  RegisterFormProvider registerForm;
+  LoginService loginService;
+
+  _RegisterButton({
+    super.key,
+    required this.registerForm,
+    required this.loginService,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomButton(
+      text: 'Crear cuenta',
+      onPressed: () async {
+        if (registerForm.isValidForm()) {
+          // Mostrar un indicador de carga
+          /*
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+          */
+
+          // Intentar registrar al usuario
+          final result = await loginService.register(
+            registerForm.username,
+            registerForm.email,
+            registerForm.password,
+          );
+
+          // Manejar los resultados
+          switch (result) {
+            case Result.success:
+              Navigator.pushReplacementNamed(context, HomePage.routeName);
+              break;
+
+            case Result.invalidCredentials:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('El correo ya está en uso.'),
+                ),
+              );
+              break;
+
+            case Result.noConnection:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content:
+                      Text('Sin conexión. Por favor, inténtalo más tarde.'),
+                ),
+              );
+              break;
+
+            case Result.serverError:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Error en el servidor. Inténtalo más tarde.'),
+                ),
+              );
+              break;
+
+            case Result.unexpectedError:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Ocurrió un error inesperado.'),
+                ),
+              );
+              break;
+
+            default:
+              break;
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Por favor, completa todos los campos correctamente.'),
+            ),
+          );
+        }
+      },
     );
   }
 }

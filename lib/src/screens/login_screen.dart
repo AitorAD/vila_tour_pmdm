@@ -5,6 +5,7 @@ import 'package:vila_tour_pmdm/src/ui/input_decorations.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';
+import 'package:vila_tour_pmdm/src/utils/result.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
@@ -49,7 +50,8 @@ class LoginScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   _LoginForm(
-                                    key: Key('login_form_${loginForm.hashCode}'),
+                                    key:
+                                        Key('login_form_${loginForm.hashCode}'),
                                     loginForm: loginForm,
                                   ),
                                   const SizedBox(height: 10),
@@ -58,7 +60,9 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ),
                             // Buttons Section
-                            const _Botones(),
+                            _Botones(
+                                loginForm: loginForm,
+                                loginService: loginService),
                           ],
                         ),
                       ),
@@ -86,8 +90,7 @@ class _LoginForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Usuario:',
-              style: textStyleVilaTourTitle(color: Colors.black)),
+          Text('Usuario:', style: textStyleVilaTourTitle(color: Colors.black)),
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -151,11 +154,15 @@ class _RecoveryPassword extends StatelessWidget {
 }
 
 class _Botones extends StatelessWidget {
-  const _Botones({Key? key}) : super(key: key);
+  final LoginFormProvider loginForm;
+  final LoginService loginService;
+  const _Botones(
+      {Key? key, required this.loginForm, required this.loginService})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final loginForm = Provider.of<LoginFormProvider>(context, listen: false);
+    // final loginForm = Provider.of<LoginFormProvider>(context, listen: false);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -167,6 +174,7 @@ class _Botones extends StatelessWidget {
             LoginBtn(
               key: Key('login_button_${loginForm.hashCode}'),
               loginForm: loginForm,
+              loginService: loginService,
             ),
             const SizedBox(height: 50),
             GestureDetector(
@@ -201,18 +209,84 @@ class _Botones extends StatelessWidget {
 
 class LoginBtn extends StatelessWidget {
   final LoginFormProvider loginForm;
+  final LoginService loginService;
 
-  const LoginBtn({Key? key, required this.loginForm}) : super(key: key);
+  const LoginBtn({
+    Key? key,
+    required this.loginForm,
+    required this.loginService,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CustomButton(
       text: 'Entrar',
-      onPressed: () {
+      onPressed: () async {
         if (loginForm.isValidForm()) {
           print('Formulario válido. Procesando login.');
+
+          // Esperar el resultado del login
+          final loginResult = await loginService.login(
+            loginForm.username,
+            loginForm.password,
+          );
+
+          print('Resultado del login: $loginResult');
+
+          // Mostrar el mensaje correspondiente según el resultado
+          switch (loginResult) {
+            case Result.success:
+              print('Login exitoso.');
+              Navigator.pushReplacementNamed(context, HomePage.routeName);
+              break;
+
+            case Result.invalidCredentials:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'Credenciales incorrectas. Por favor, verifica tu usuario y contraseña.'),
+                ),
+              );
+              break;
+
+            case Result.noConnection:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'No se pudo conectar a la base de datos. Por favor, inténtalo más tarde.'),
+                ),
+              );
+              break;
+
+            case Result.serverError:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'Ocurrió un error en el servidor. Por favor, inténtalo más tarde.'),
+                ),
+              );
+              break;
+
+            case Result.unexpectedError:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'Ocurrió un error inesperado. Por favor, inténtalo más tarde.'),
+                ),
+              );
+              break;
+
+            default:
+              break;
+          }
         } else {
           print('Formulario inválido.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Por favor, completa todos los campos correctamente.'),
+            ),
+          );
         }
       },
     );
