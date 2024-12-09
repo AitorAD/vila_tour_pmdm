@@ -2,19 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:vila_tour_pmdm/src/models/user_log_data.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 import 'package:vila_tour_pmdm/src/utils/result.dart';
-
-import '../models/models.dart';
+import 'package:vila_tour_pmdm/src/services/config.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class LoginService extends ChangeNotifier {
-  final String _baseUrl = 'http://10.0.2.2:8080';
-
   bool isLoading = true;
 
   Future<Result> login(String username, String password) async {
     try {
-      final url = Uri.parse('$_baseUrl/auth/login');
+      final url = Uri.parse('$baseURL/auth/login');
 
       final response = await http.post(
         url,
@@ -24,18 +23,16 @@ class LoginService extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        // Guardar el token si el login es exitoso
         await UserPreferences.instance
             .writeData('token', responseData['token']);
+
+        currentAccount = UserLogData.fromMap(responseData);
         return Result.success;
       } else if (response.statusCode == 401) {
-        // Credenciales incorrectas
         return Result.invalidCredentials;
       } else if (response.statusCode >= 500) {
-        // Error en el servidor
         return Result.serverError;
       } else {
-        // Cualquier otro error no previsto
         return Result.unexpectedError;
       }
     } catch (e) {
@@ -45,7 +42,7 @@ class LoginService extends ChangeNotifier {
   }
 
   Future<void> logout(String token) async {
-    final url = Uri.parse('$_baseUrl/auth/singout');
+    final url = Uri.parse('$baseURL/auth/singout');
 
     final response = await http.post(
       url,
@@ -63,7 +60,7 @@ class LoginService extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      final url = Uri.parse('$_baseUrl/auth/register');
+      final url = Uri.parse('$baseURL/auth/register');
 
       final resp = await http.post(
         url,

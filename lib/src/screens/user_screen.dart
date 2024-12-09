@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/button.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_app_bar.dart';
@@ -10,6 +13,8 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context);
+    // final User? currentUser = await userService.getCurrentUser();
     return Scaffold(
       appBar: CustomAppBar(title: 'Perfil'),
       bottomNavigationBar: CustomNavigationBar(),
@@ -21,7 +26,7 @@ class UserScreen extends StatelessWidget {
           children: [
             _Header(),
             _ProfileForm(),
-            CustomButton(text: 'Guardar', onPressed: (){}),
+            CustomButton(text: 'Guardar', onPressed: () {}),
           ],
         ),
       ),
@@ -30,12 +35,15 @@ class UserScreen extends StatelessWidget {
 }
 
 class _ProfileForm extends StatelessWidget {
+  // final UserService userService;
   const _ProfileForm({
     super.key,
+    // required this.userService,
   });
 
   @override
   Widget build(BuildContext context) {
+    // if (currentUser != null) {
     return Container(
       child: Form(
         child: Column(
@@ -68,6 +76,7 @@ class _ProfileForm extends StatelessWidget {
         ),
       ),
     );
+    // }
   }
 }
 

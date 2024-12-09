@@ -13,6 +13,7 @@ import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/screens/user_screen.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';
+import 'package:vila_tour_pmdm/src/services/user_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,7 @@ class AppState extends StatelessWidget {
       // ChangeNotifierProvider(create: (_) => RecipesProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => UiProvider(), lazy: false),
       // ChangeNotifierProvider(create: (_) => IngredientsProvider(), lazy: false)
+      ChangeNotifierProvider(create: (_) => UserService(), lazy: false),
     ], child: MyApp());
   }
 }

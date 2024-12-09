@@ -42,6 +42,7 @@ Uint8List decodeImageBase64(String image) {
 }
 
 Widget buildTextField({
+  String? initialValue,
   required String label,
   required String hintText,
   required FormFieldValidator<String> validator,
@@ -53,6 +54,7 @@ Widget buildTextField({
     children: [
       Text(label, style: textStyleVilaTourTitle(color: Colors.black)),
       TextFormField(
+        initialValue: initialValue,
         validator: validator,
         onChanged: onChanged,
         obscureText: obscureText,
