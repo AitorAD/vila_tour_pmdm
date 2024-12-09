@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/bar_decoration.dart';
 import 'package:vila_tour_pmdm/src/widgets/button.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_app_bar.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
@@ -14,16 +18,22 @@ class UserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
-    // final User? currentUser = await userService.getCurrentUser();
+
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      appBar: CustomAppBar(title: 'Perfil'),
+      key: _scaffoldKey,
+      drawer: drawer(),
       bottomNavigationBar: CustomNavigationBar(),
       body: Container(
         width: double.infinity,
-        color: Colors.amber,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            BarScreenArrow(
+              labelText: 'Perfil',
+              arrowBack: false,
+              iconRight: iconRightBarMenu(_scaffoldKey),
+            ),
             _Header(),
             _ProfileForm(),
             CustomButton(text: 'Guardar', onPressed: () {}),
@@ -32,23 +42,50 @@ class UserScreen extends StatelessWidget {
       ),
     );
   }
+
+  IconButton iconRightBarMenu(GlobalKey<ScaffoldState> _scaffoldKey) {
+    return IconButton(
+      icon: Icon(Icons.more_vert, color: Colors.white, size: 28),
+      onPressed: () {
+        _scaffoldKey.currentState
+            ?.openDrawer(); // Abrir el Drawer al presionar el icono
+      },
+    );
+  }
+
+  Drawer drawer() {
+    return Drawer(
+      width: double.infinity,
+      child: Column(
+        children: [
+          BarScreenArrow(labelText: 'Configuración', arrowBack: true),
+          Row(
+            children: [
+              IconButton(onPressed: () {}, icon: Icon(Icons.sunny))
+
+            ],
+          )
+          
+        ],
+      ),
+    );
+    // Icons.more_vert
+  }
 }
 
 class _ProfileForm extends StatelessWidget {
-  // final UserService userService;
   const _ProfileForm({
     super.key,
-    // required this.userService,
   });
 
   @override
   Widget build(BuildContext context) {
-    // if (currentUser != null) {
     return Container(
       child: Form(
         child: Column(
           children: [
             buildTextField(
+              initialValue: currentUser.username,
               label: 'Usuario:',
               hintText: 'Nombre de usuario',
               onChanged: (value) {},
@@ -57,6 +94,7 @@ class _ProfileForm extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             buildTextField(
+              initialValue: currentUser.email,
               label: 'E-mail:',
               hintText: 'ejemplo@ejemplo.com',
               onChanged: (value) {},
@@ -65,6 +103,7 @@ class _ProfileForm extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             buildTextField(
+              initialValue: currentUser.password,
               label: 'Contraseña:',
               hintText: '**********',
               obscureText: true,
@@ -76,7 +115,6 @@ class _ProfileForm extends StatelessWidget {
         ),
       ),
     );
-    // }
   }
 }
 
@@ -98,8 +136,8 @@ class _Header extends StatelessWidget {
               alignment: Alignment.topCenter,
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: NetworkImage(
-                    'https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg'),
+                backgroundImage:
+                    MemoryImage(decodeImageBase64(currentUser.profilePicture!)),
 
                 // child: Text('AA', style: TextStyle(fontSize: 24)),
               ),
@@ -123,7 +161,7 @@ class _Header extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Text(
-                '@nombreUser',
+                '@${currentUser.username}',
                 style: TextStyle(fontSize: 24),
               ),
             )

@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:vila_tour_pmdm/src/models/user_log_data.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
+import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/result.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
-import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class LoginService extends ChangeNotifier {
   bool isLoading = true;
@@ -26,7 +25,9 @@ class LoginService extends ChangeNotifier {
         await UserPreferences.instance
             .writeData('token', responseData['token']);
 
-        currentAccount = UserLogData.fromMap(responseData);
+        int id = responseData['id'];
+        currentUser = await UserService().getCurrentUser(id);
+        print(currentUser);
         return Result.success;
       } else if (response.statusCode == 401) {
         return Result.invalidCredentials;
