@@ -11,6 +11,8 @@ class UserPreferences {
 
   String? _token;
 
+  get token => _token;
+
   Future<void> initPrefs() async {
     try {
       deleteAllData();

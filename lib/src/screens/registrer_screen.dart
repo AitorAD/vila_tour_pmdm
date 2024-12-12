@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/register_form_provider.dart';
-import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
-import 'package:vila_tour_pmdm/src/ui/input_decorations.dart';
+import 'package:vila_tour_pmdm/src/screens/home.dart';
+import 'package:vila_tour_pmdm/src/services/login_service.dart';
+import 'package:vila_tour_pmdm/src/utils/result.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RegistrerScreen extends StatelessWidget {
-  static final routeName = 'register_screen';
+  static const routeName = 'register_screen';
+
   const RegistrerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => RegisterFormProvider(),
+      child: const _RegisterScreenBody(),
+    );
+  }
+}
+
+class _RegisterScreenBody extends StatelessWidget {
+  const _RegisterScreenBody();
+
+  @override
+  Widget build(BuildContext context) {
     final registerForm = Provider.of<RegisterFormProvider>(context);
-    final formKey = GlobalKey<FormState>();
+    final loginService = Provider.of<LoginService>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -37,9 +51,8 @@ class RegistrerScreen extends StatelessWidget {
                           vertical: 50,
                         ),
                         child: _buildRegisterForm(
-                          formKey: formKey,
-                          registerForm: registerForm,
-                        ),
+                            registerForm: registerForm,
+                            loginService: loginService),
                       ),
                     ],
                   ),
@@ -60,143 +73,147 @@ class RegistrerScreen extends StatelessWidget {
   }
 
   Widget _buildHeaderBar(BuildContext context) {
-    return BarScreenArrow(
-      labelText: "Registrarse",
-      onBackPressed: () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      ),
-    );
+    return BarScreenArrow(labelText: 'Registrarse', arrowBack: true);
   }
 
   Widget _buildRegisterForm({
-    required GlobalKey<FormState> formKey,
     required RegisterFormProvider registerForm,
+    required LoginService loginService,
   }) {
+    String repeatedPassword = '';
+
     return Form(
-      key: formKey,
+      key: registerForm.formRegisterKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildTextField(
+          buildTextField(
             label: 'Usuario:',
             hintText: 'Nombre de usuario',
             onChanged: (value) => registerForm.username = value,
-            validator: _validateRequiredField,
+            validator: validateRequiredField,
           ),
           const SizedBox(height: 20),
-          _buildTextField(
+          buildTextField(
             label: 'E-mail:',
             hintText: 'ejemplo@ejemplo.com',
             onChanged: (value) => registerForm.email = value,
-            validator: _validateEmail,
+            validator: validateEmail,
           ),
           const SizedBox(height: 20),
-          _buildTextField(
+          buildTextField(
             label: 'Contraseña:',
             hintText: '**********',
             obscureText: true,
-            onChanged: (value) => registerForm.password = value,
-            validator: _validatePassword,
+            onChanged: (value) => registerForm.changePassword(value),
+            validator: validatePassword,
           ),
           const SizedBox(height: 20),
-          _buildTextField(
+          buildTextField(
             label: 'Repita la contraseña:',
             hintText: '**********',
             obscureText: true,
-            onChanged: (value) => registerForm.password = value,
-            validator: (value) => _validateRepeatedPassword(value, registerForm.password),
+            onChanged: (value) => repeatedPassword = value,
+            validator: (value) =>
+                validateRepeatedPassword(value, registerForm.password),
           ),
           const SizedBox(height: 40),
-          _buildSubmitButton(formKey),
+          // _buildSubmitButton(registerForm, loginService),
+          _RegisterButton(
+              registerForm: registerForm, loginService: loginService)
         ],
       ),
     );
   }
+}
 
-  Widget _buildTextField({
-    required String label,
-    required String hintText,
-    required FormFieldValidator<String> validator,
-    required ValueChanged<String> onChanged,
-    bool obscureText = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: textStyleVilaTourTitle(color: Colors.black)),
-        TextFormField(
-          validator: validator,
-          onChanged: onChanged,
-          obscureText: obscureText,
-          decoration: InputDecorations.authInputDecoration(hintText: hintText),
-        ),
-      ],
+class _RegisterButton extends StatelessWidget {
+  RegisterFormProvider registerForm;
+  LoginService loginService;
+
+  _RegisterButton({
+    super.key,
+    required this.registerForm,
+    required this.loginService,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomButton(
+      text: 'Crear cuenta',
+      onPressed: () async {
+        if (registerForm.isValidForm()) {
+          // Mostrar un indicador de carga
+          /*
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+          */
+
+          // Intentar registrar al usuario
+          final result = await loginService.register(
+            registerForm.username,
+            registerForm.email,
+            registerForm.password,
+          );
+
+          // Manejar los resultados
+          switch (result) {
+            case Result.success:
+              Navigator.pushReplacementNamed(context, HomePage.routeName);
+              break;
+
+            case Result.invalidCredentials:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('El correo ya está en uso.'),
+                ),
+              );
+              break;
+
+            case Result.noConnection:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content:
+                      Text('Sin conexión. Por favor, inténtalo más tarde.'),
+                ),
+              );
+              break;
+
+            case Result.serverError:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Error en el servidor. Inténtalo más tarde.'),
+                ),
+              );
+              break;
+
+            case Result.unexpectedError:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Ocurrió un error inesperado.'),
+                ),
+              );
+              break;
+
+            default:
+              break;
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Por favor, completa todos los campos correctamente.'),
+            ),
+          );
+        }
+      },
     );
-  }
-
-  Widget _buildSubmitButton(GlobalKey<FormState> formKey) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        CustomButton(
-          text: 'Crear cuenta',
-          onPressed: () {
-            if (formKey.currentState?.validate() ?? false) {
-              // Navega solo si el formulario es válido
-              print('Formulario válido');
-            } else {
-              print('Formulario inválido');
-            }
-          },
-        ),
-      ],
-    );
-  }
-
-  // Funciones validadoras reutilizables
-  String? _validateRequiredField(String? value) {
-    if (value == null || value.isEmpty){
-      return 'El nombre de usuario es obligatorio';
-    } 
-    if(value.length > 250){
-      return 'El nombre es demasiado largo';
-    }
-    return null;
-  }
-
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'El email es obligatorio';
-    }
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Ingrese un email válido';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'La contraseña es obligatoria';
-    }
-    if(value.length > 250){
-      return 'La contraseña es demasiado larga';
-    }
-    final regex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d).+$');
-    if (!regex.hasMatch(value)) {
-      return 'Debe contener al menos un número';
-    }
-    return null;
-  }
-
-  String? _validateRepeatedPassword(String? value, String password) {
-    if (value == null || value.isEmpty) {
-      return 'Debe repetir la contraseña';
-    }
-    if (value != password) {
-      return 'Las contraseñas no coinciden';
-    }
-    return null;
   }
 }

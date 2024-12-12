@@ -40,6 +40,9 @@ ThemeData lightMode = ThemeData(
       foregroundColor: MaterialStateProperty.all(Colors.white),
     ),
   ),
+  drawerTheme: DrawerThemeData(
+    backgroundColor: Colors.white, // Color de fondo del Drawer
+  ),
 );
 
 ThemeData darkMode = ThemeData(

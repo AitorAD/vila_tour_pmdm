@@ -1,5 +1,5 @@
 export 'package:vila_tour_pmdm/src/widgets/bar_login.dart';
-export 'package:vila_tour_pmdm/src/widgets/bar_screen.dart';
+export 'package:vila_tour_pmdm/src/widgets/bar_decoration.dart';
 export 'package:vila_tour_pmdm/src/widgets/button.dart';
 export 'package:vila_tour_pmdm/src/widgets/default_decoration.dart';
 export 'package:vila_tour_pmdm/src/widgets/header_log.dart';
