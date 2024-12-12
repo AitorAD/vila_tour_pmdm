@@ -128,7 +128,7 @@ class _FestivalInfo extends StatelessWidget {
             SizedBox(height: 10),
             Row(
               children: [
-                PaintStars(rating: (widget.article as Festival).averageScore),
+                PaintStars(rating: (widget.article as Festival).averageScore, color: Colors.yellow),
                 SizedBox(width: 10),
                 Text(
                   (widget.article as Festival).averageScore.toString(),
@@ -184,7 +184,7 @@ class _RecipeInfo extends StatelessWidget {
             SizedBox(height: 5),
             Row(
               children: [
-                PaintStars(rating: (widget.article as Recipe).averageScore),
+                PaintStars(rating: (widget.article as Recipe).averageScore, color: Colors.yellow),
                 SizedBox(width: 10),
                 Text(
                   (widget.article as Recipe).averageScore.toString(),
