@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/screens/password_recovery.dart';
 
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 
@@ -25,5 +26,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     MapScreen.routeName: (BuildContext context) => MapScreen(),
     UploadRecipe.routeName: (BuildContext context) => UploadRecipe(),
     UserScreen.routeName: (BuildContext context) => UserScreen(),
+    PasswordRecovery.routeName: (BuildContext context) => PasswordRecovery(),
   };
 }
