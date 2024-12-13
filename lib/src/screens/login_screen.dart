@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/login_form_provider.dart';
+import 'package:vila_tour_pmdm/src/screens/password_recovery.dart';
 import 'package:vila_tour_pmdm/src/ui/input_decorations.dart';
 import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
@@ -113,10 +114,10 @@ class _LoginForm extends StatelessWidget {
               if (value == null || value.isEmpty) {
                 return 'La contraseña es obligatoria';
               }
-              final regex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d).+$');
+              /*final regex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d).+$');
               if (!regex.hasMatch(value)) {
                 return 'Debe contener al menos un número';
-              }
+              }*/
               return null;
             },
             autocorrect: false,
@@ -140,7 +141,7 @@ class _RecoveryPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        debugPrint("Recuperar password");
+          Navigator.pushNamed(context, PasswordRecovery.routeName);
       },
       child: Text(
         '¿Has olvidado tu contraseña? Haz click aquí',
