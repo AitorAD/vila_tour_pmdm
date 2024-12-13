@@ -7,7 +7,6 @@ class Festival extends Article {
   dynamic coordinade;
 
   Festival({
-
     required int id,
     required String name,
     required String description,
@@ -19,7 +18,15 @@ class Festival extends Article {
     required this.startDate,
     required this.endDate,
     required this.coordinade,
-  }) : super(id: id, name: name, description: description, imagensPaths: imagensPaths, averageScore: 0.0, creationDate: creationDate, lastModificationDate: lastModificationDate, reviews: reviews);
+  }) : super(
+            id: id,
+            name: name,
+            description: description,
+            averageScore: 0.0,
+            creationDate: creationDate,
+            lastModificationDate: lastModificationDate,
+            reviews: reviews,
+            type: "festival");
 
   factory Festival.fromJson(String str) => Festival.fromMap(json.decode(str));
 
@@ -52,7 +59,6 @@ class Festival extends Article {
         "id": id,
         "name": name,
         "description": description,
-        "imagensPaths": imagensPaths,
         "averageScore": averageScore,
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),

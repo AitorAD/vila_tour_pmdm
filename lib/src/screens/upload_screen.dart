@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +19,17 @@ class _UploadRecipeState extends State<UploadRecipe> {
   final ValueNotifier<List<Ingredient>> _selectedIngredients =
       ValueNotifier([]);
   String? selectedImage;
+  bool _isSearchFocused = false;
+  final TextEditingController _descriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<IngredientsProvider>(context, listen: false)
+          .loadIngredients();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,52 +56,91 @@ class _UploadRecipeState extends State<UploadRecipe> {
                       });
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   const InputText(labelText: "Nombre"),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 15),
                   Text(
                     'Ingredientes',
                     style: textStyleVilaTourTitle(
-                        color: Colors.black, fontSize: 20),
+                        color: Colors.black, fontSize: 20)
                   ),
-
                   const SizedBox(height: 10),
-
-                  SearchAnchor(
-                    builder:
-                        (BuildContext context, SearchController controller) {
-                      return SearchBar(
-                        controller: controller,
-                        hintText: 'Buscar ingrediente',
-                        onChanged: (query) {
-                          ingredientsProvider.filterIngredients(query);
-                        },
-                        leading: const Icon(Icons.search),
-                      );
+                  FocusScope(
+                    onFocusChange: (hasFocus) {
+                      setState(() {
+                        _isSearchFocused = hasFocus;
+                      });
                     },
-                    suggestionsBuilder:
-                        (BuildContext context, SearchController controller) {
-                      return ingredientsProvider.filteredIngredients
-                          .map((ingredient) {
-                        return ListTile(
-                          title: Text(ingredient.name),
-                          onTap: () {
-                            setState(() {
-                              _selectedIngredients.value =
-                                  List.from(_selectedIngredients.value)
-                                    ..add(ingredient);
-                              _selectedIngredients.value =
-                                  List.from(_selectedIngredients.value);
-                              controller.closeView(ingredient.name);
-                            });
-                          },
-                        );
-                      }).toList();
-                    },
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Buscar ingredientes...',
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        ingredientsProvider.filterIngredients(value);
+                      },
+                    ),
                   ),
-
                   const SizedBox(height: 16),
+                  if (_isSearchFocused)
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final filteredIngredients = ingredientsProvider
+                            .filteredIngredients
+                            .where((ingredient) => !_selectedIngredients.value
+                                .contains(ingredient))
+                            .toList();
+                        final itemCount = filteredIngredients.length;
+                        final containerHeight =
+                            (itemCount > 3 ? 3 : itemCount) * 50.0;
 
+                        return Container(
+                          height: containerHeight,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: itemCount,
+                            itemBuilder: (context, index) {
+                              final ingredient = filteredIngredients[index];
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(ingredient.name,
+                                        style: textStyleVilaTour(
+                                            color: Colors.black)),
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                        _selectedIngredients.value = List.from(
+                                            _selectedIngredients.value)
+                                          ..add(ingredient);
+                                        ingredientsProvider.filterIngredients(
+                                            ingredientsProvider.currentFilter);
+
+                                        ingredientsProvider
+                                            .removeIngredientFromAvailable(
+                                                ingredient);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  const SizedBox(height: 16),
                   ValueListenableBuilder<List<Ingredient>>(
                     valueListenable: _selectedIngredients,
                     builder: (context, selectedIngredients, child) {
@@ -106,13 +154,20 @@ class _UploadRecipeState extends State<UploadRecipe> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  ingredient.name,
-                                  style: textStyleVilaTour(color: Colors.black),
-                                ),
+                                Text(ingredient.name,
+                                    style:
+                                        textStyleVilaTour(color: const Color.fromARGB(255, 0, 0, 0))),
                                 const SizedBox(width: 8),
                                 GestureDetector(
-                                  onTap: () => {},
+                                  onTap: () {
+                                    _selectedIngredients.value =
+                                        List.from(_selectedIngredients.value)
+                                          ..remove(ingredient);
+                                    ingredientsProvider.filterIngredients(
+                                        ingredientsProvider.currentFilter);
+                                    ingredientsProvider
+                                        .addIngredientToAvailable(ingredient);
+                                  },
                                   child: const Icon(Icons.close,
                                       size: 16, color: Colors.red),
                                 ),
@@ -123,20 +178,35 @@ class _UploadRecipeState extends State<UploadRecipe> {
                       );
                     },
                   ),
-
-                  const SizedBox(height: 16),
-
+                  const SizedBox(height: 20),
+                  Text(
+                    'Elaboración',
+                    style: textStyleVilaTourTitle(
+                        color: Colors.black, fontSize: 20),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: _descriptionController,
+                    maxLines: 6,
+                    decoration: InputDecoration(
+                      hintText: 'Escribe la descripción de la receta...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: CustomButton(
-                        text: "Siguiente", 
-                        onPressed: () {}
-                      )
+                        text: "Siguiente",
+                        onPressed: () {
+                        },
+                      ),
                     ),
-                    ),
-                  
+                  ),
                 ],
               ),
             ),
@@ -144,6 +214,12 @@ class _UploadRecipeState extends State<UploadRecipe> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
   }
 }
 
@@ -196,6 +272,7 @@ class _IconPositionedButton extends StatelessWidget {
     required this.onPressed,
     required this.position,
   });
+
   @override
   Widget build(BuildContext context) {
     return Positioned(

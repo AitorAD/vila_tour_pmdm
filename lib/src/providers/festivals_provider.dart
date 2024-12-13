@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/models.dart';
@@ -10,13 +9,12 @@ class FestivalsProvider with ChangeNotifier {
   // String _baseUrl = 'http://localhost:8080'; // En iOS o navegador
 
   List<Festival> _festivals = [];
-  List<Festival> get festivals => _festivals;
-  set festivals(List<Festival> list) => _festivals = list;
+  List<Festival> _filteredFestivals = [];
+  String _currentFilter = '';
 
-  FestivalsProvider() {
-    loadFestivals();
-    print('Festivals Provider Iniciado');
-  }
+  List<Festival> get festivals => _festivals;
+  List<Festival> get filteredFestivals => _filteredFestivals;
+  String get currentFilter => _currentFilter;
 
   Future<String> _getJsonData(String endpoint) async {
     var url = Uri.parse('$_baseUrl/$endpoint');
@@ -24,17 +22,42 @@ class FestivalsProvider with ChangeNotifier {
     return response.body;
   }
 
-  void loadFestivals() async {
-    final jsonData = await _getJsonData('festivals');
-    final festivalList = Festival.fromJsonList(json.decode(jsonData));
-    festivals = festivalList;
+  Future<void> loadFestivals() async {
+    try {
+      final jsonData = await _getJsonData('festivals');
+      final festivalList = Festival.fromJsonList(json.decode(jsonData));
+      _festivals = festivalList;
+      _filteredFestivals = List.from(_festivals);
+      notifyListeners();
+    } catch (e) {
+      print('Error loading festivals in provider: $e');
+    }
+  }
+
+  void filterFestivals(String query) {
+    _currentFilter = query;
+    if (query.isEmpty) {
+      _filteredFestivals = List.from(_festivals);
+    } else {
+      _filteredFestivals = _festivals
+          .where((festival) =>
+              festival.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
     notifyListeners();
   }
 
-  /*
-  void toggleFavorite(Festival festival) {
-    festival.favourite = !festival.favourite;
+  void addFestivalToAvailable(Festival festival) {
+    if (!_festivals.contains(festival)) {
+      _festivals.add(festival);
+      filterFestivals(_currentFilter);
+    }
     notifyListeners();
   }
-  */
+
+  void removeFestivalFromAvailable(Festival festival) {
+    _festivals.remove(festival);
+    _filteredFestivals.remove(festival);
+    notifyListeners();
+  }
 }

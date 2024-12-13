@@ -7,14 +7,17 @@ class IngredientsProvider with ChangeNotifier {
 
   List<Ingredient> _ingredients = [];
   List<Ingredient> _filteredIngredients = [];
+  String _currentFilter = '';
 
   List<Ingredient> get ingredients => _ingredients;
   List<Ingredient> get filteredIngredients => _filteredIngredients;
+  String get currentFilter => _currentFilter;
 
   Future<void> loadIngredients() async {
     try {
       _ingredients = await _ingredientService.fetchIngredients();
       _filteredIngredients = List.from(_ingredients);
+      debugPrint(_ingredients.toString());
       notifyListeners();
     } catch (e) {
       print('Error loading ingredients in provider: $e');
@@ -22,6 +25,7 @@ class IngredientsProvider with ChangeNotifier {
   }
 
   void filterIngredients(String query) {
+    _currentFilter = query;
     if (query.isEmpty) {
       _filteredIngredients = List.from(_ingredients);
     } else {
@@ -29,6 +33,21 @@ class IngredientsProvider with ChangeNotifier {
           .where((ingredient) =>
               ingredient.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
+      debugPrint(_filteredIngredients.toString());
+    }
+    notifyListeners();
+  }
+
+  void removeIngredientFromAvailable(Ingredient ingredient) {
+    _ingredients.remove(ingredient);
+    _filteredIngredients.remove(ingredient);
+    notifyListeners();
+  }
+
+  void addIngredientToAvailable(Ingredient ingredient) {
+    if (!_ingredients.contains(ingredient)) {
+      _ingredients.add(ingredient);
+      filterIngredients(currentFilter); // Para volver a mostrarlo si corresponde al filtro
     }
     notifyListeners();
   }

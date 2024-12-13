@@ -30,7 +30,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                   tag: festival.id, // Asegúrate de usar el mismo `tag`
                   child: FadeInImage(
                     placeholder: AssetImage('assets/logo.ico'),
-                    image: MemoryImage(decodeImageBase64(festival.imagensPaths)),
+                    image: AssetImage('assets/logo.ico'),//MemoryImage(decodeImageBase64(festival.imagensPaths)),
                     width: double.infinity,
                     height: 400,
                     fit: BoxFit.cover,

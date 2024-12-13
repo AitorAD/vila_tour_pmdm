@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class ArticleBox extends StatefulWidget {
@@ -220,8 +219,7 @@ class _BackgroundImage extends StatelessWidget {
                       height: 150,
                       child: FadeInImage(
                         placeholder: AssetImage('assets/logo.ico'),
-                        image: MemoryImage(
-                            decodeImageBase64(widget.article.imagensPaths)),
+                        image: AssetImage('assets/logo.ico'),//MemoryImage(decodeImageBase64(widget.article.imagensPaths)),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -230,8 +228,7 @@ class _BackgroundImage extends StatelessWidget {
               )
             : FadeInImage(
                 placeholder: AssetImage('assets/logo.ico'),
-                image: MemoryImage(
-                    decodeImageBase64(widget.article.imagensPaths)),
+                image: AssetImage('assets/logo.ico'),//MemoryImage(decodeImageBase64(widget.article.imagensPaths)),
                 width: double.infinity,
                 height: 150,
                 fit: BoxFit.cover,

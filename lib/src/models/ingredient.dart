@@ -31,6 +31,6 @@ class Ingredient {
 
   @override
   String toString() {
-    return name; // Devuelve el nombre del ingrediente
+    return name;
   }
 }
