@@ -11,8 +11,6 @@ class Recipe extends Article {
     required int id,
     required String name,
     required String description,
-
-    required String imagensPaths,
     required double averageScore,
     required DateTime creationDate,
     required DateTime lastModificationDate,
@@ -21,15 +19,14 @@ class Recipe extends Article {
     required this.recent,
     required this.ingredients,
   }) : super(
-          id: id,
-          name: name,
-          description: description,
-          imagensPaths: imagensPaths,
-          averageScore: averageScore,
-          creationDate: creationDate,
-          lastModificationDate: lastModificationDate,
-          reviews: reviews,
-        );
+            id: id,
+            name: name,
+            description: description,
+            averageScore: averageScore,
+            creationDate: creationDate,
+            lastModificationDate: lastModificationDate,
+            reviews: reviews,
+            type: "recipe");
 
   factory Recipe.fromJson(String str) => Recipe.fromMap(json.decode(str));
 
@@ -38,7 +35,6 @@ class Recipe extends Article {
       id: json['id'],
       name: json['name'] ?? 'No name',
       description: json['description'] ?? 'No description available',
-      imagensPaths: json["imagensPaths"] ?? 'https://res.cloudinary.com/heyset/image/upload/v1689582418/buukmenow-folder/no-image-icon-0.jpg',
       averageScore: json['averageScore'] ?? 0.0,
       // creationDate: DateTime.parse(map['creationDate']),
       // lastModificationDate: DateTime.parse(map['lastModificationDate']),
@@ -67,7 +63,6 @@ class Recipe extends Article {
         "id": id,
         "name": name,
         "description": description,
-        "imagensPaths": imagensPaths,
         "averageScore": averageScore,
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),

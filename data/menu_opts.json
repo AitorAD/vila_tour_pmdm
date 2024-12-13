@@ -2,19 +2,19 @@
     "nombreApp" : "VILATOUR",
      "rutas" : [
         {
-            "ruta" : "festivals",
+            "ruta" : "festivals_screen",
             "texto": "Festivales"
         },
         {
-            "ruta" : "login",
+            "ruta" : "login_screen",
             "texto": "Log In"
         },
         {
-            "ruta" : "recipes",
+            "ruta" : "recipes_screen",
             "texto": "Recetas"
         },
         {
-            "ruta" : "uploadRecipe",
+            "ruta" : "upload_recipe",
             "texto" : "Subir receta"
         }
      ]

@@ -6,3 +6,4 @@ export 'package:vila_tour_pmdm/src/screens/recipes_details_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/recipes_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/map_screen.dart';
+export 'package:vila_tour_pmdm/src/screens/upload_screen.dart';
