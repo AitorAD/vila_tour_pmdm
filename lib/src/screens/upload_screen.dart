@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/recipe_image.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class UploadRecipe extends StatefulWidget {
-  static final routeName = 'upload_recipe';
+  static const routeName = 'upload_recipe';
   UploadRecipe({super.key});
 
   @override
@@ -14,15 +18,9 @@ class UploadRecipe extends StatefulWidget {
 }
 
 class _UploadRecipeState extends State<UploadRecipe> {
-  final ValueNotifier<String?> _imagePath = ValueNotifier(null);
-
   final ValueNotifier<List<Ingredient>> _selectedIngredients =
       ValueNotifier([]);
-
-  void _selectImage() {
-    _imagePath.value =
-        'assets/logo_foreground.png'; //Imagen de ejemplo hasta implementar
-  }
+  String? selectedImage;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +29,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
     return Scaffold(
       appBar: CustomAppBar(title: 'Subir Receta'),
       resizeToAvoidBottomInset: false,
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
           WavesWidget(),
@@ -40,13 +39,23 @@ class _UploadRecipeState extends State<UploadRecipe> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InputText(labelText: "Nombre"),
+                  _ProductImageStack(
+                    selectedImage: selectedImage,
+                    onImageSelected: (String? image) {
+                      setState(() {
+                        selectedImage = image;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  const InputText(labelText: "Nombre"),
                   const SizedBox(height: 16),
                   Text(
                     'Ingredientes',
                     style: textStyleVilaTourTitle(
                         color: Colors.black, fontSize: 20),
                   ),
+
                   const SizedBox(height: 10),
 
                   SearchAnchor(
@@ -61,7 +70,6 @@ class _UploadRecipeState extends State<UploadRecipe> {
                         leading: const Icon(Icons.search),
                       );
                     },
-                    //TODO esto no funciona
                     suggestionsBuilder:
                         (BuildContext context, SearchController controller) {
                       return ingredientsProvider.filteredIngredients
@@ -85,7 +93,6 @@ class _UploadRecipeState extends State<UploadRecipe> {
 
                   const SizedBox(height: 16),
 
-                  // Ingredientes seleccionados
                   ValueListenableBuilder<List<Ingredient>>(
                     valueListenable: _selectedIngredients,
                     builder: (context, selectedIngredients, child) {
@@ -105,8 +112,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                                 ),
                                 const SizedBox(width: 8),
                                 GestureDetector(
-                                  onTap: () =>
-                                      _addOrRemoveIngredient(ingredient),
+                                  onTap: () => {},
                                   child: const Icon(Icons.close,
                                       size: 16, color: Colors.red),
                                 ),
@@ -119,83 +125,99 @@ class _UploadRecipeState extends State<UploadRecipe> {
                   ),
 
                   const SizedBox(height: 16),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                      child: ElevatedButton(
-                        onPressed: () => _selectImage(),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 30),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          backgroundColor: Colors.blue
-                        ),
-                        child: const Text('Añadir imagen'),
-                      ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  ValueListenableBuilder<String?>(
-                    valueListenable: _imagePath,
-                    builder: (context, imagePath, child) {
-                      if (imagePath == null) return const SizedBox.shrink();
-                      return Center(
-                        child: Image.asset(
-                          imagePath,
-                          height: 150,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 16),
 
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/nextStep');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 30),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          backgroundColor: Colors.blueAccent,
-                        ),
-                        child: const Text('Siguiente'),
-                      ),
+                      child: CustomButton(
+                        text: "Siguiente", 
+                        onPressed: () {}
+                      )
                     ),
-                  ),
+                    ),
+                  
                 ],
               ),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: const CustomNavigationBar(),
     );
   }
+}
 
-  Widget _emptyContainer() {
-    return Center(
-      child: Text(
-        'No se encontraron ingredientes',
-        style: TextStyle(color: Colors.grey),
+class _ProductImageStack extends StatelessWidget {
+  const _ProductImageStack({
+    super.key,
+    required this.selectedImage,
+    required this.onImageSelected,
+  });
+
+  final String? selectedImage;
+  final Function(String?) onImageSelected;
+
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile =
+        await picker.pickImage(source: source, imageQuality: 100);
+    if (pickedFile != null) {
+      onImageSelected(pickedFile.path);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        RecipeImage(url: selectedImage),
+        _IconPositionedButton(
+          icon: Icons.photo_library_outlined,
+          onPressed: () => _pickImage(ImageSource.gallery),
+          position: const Offset(65, 12),
+        ),
+        _IconPositionedButton(
+          icon: Icons.camera_alt_outlined,
+          onPressed: () => _pickImage(ImageSource.camera),
+          position: const Offset(15, 12),
+        ),
+      ],
+    );
+  }
+}
+
+class _IconPositionedButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+  final Offset position;
+
+  const _IconPositionedButton({
+    required this.icon,
+    required this.onPressed,
+    required this.position,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: position.dy,
+      right: position.dx,
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 10,
+              offset: const Offset(2, 2),
+            ),
+          ],
+        ),
+        child: IconButton(
+          icon: Icon(icon, size: 45),
+          color: Colors.white,
+          onPressed: onPressed,
+        ),
       ),
     );
-  }
-
-  void _addOrRemoveIngredient(Ingredient ingredient) {
-    _selectedIngredients.value = List.from(_selectedIngredients.value)
-      ..remove(ingredient);
-    _selectedIngredients.value = List.from(
-        _selectedIngredients.value); // Reasigna para disparar la notificación
   }
 }
