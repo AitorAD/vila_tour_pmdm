@@ -4,6 +4,7 @@ import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/bar_decoration.dart';
 import 'package:vila_tour_pmdm/src/widgets/button.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
+import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class UserScreen extends StatelessWidget {
   static final routeName = 'user_screen';

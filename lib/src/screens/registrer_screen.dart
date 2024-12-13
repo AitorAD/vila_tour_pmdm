@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/register_form_provider.dart';
-import 'package:vila_tour_pmdm/src/screens/home.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';
-import 'package:vila_tour_pmdm/src/utils/result.dart';
-import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+
+import '../utils/result.dart';
+
 
 class RegistrerScreen extends StatelessWidget {
   static const routeName = 'register_screen';
