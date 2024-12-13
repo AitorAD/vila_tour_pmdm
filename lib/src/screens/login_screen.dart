@@ -48,7 +48,7 @@ class LoginScreen extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 30.0),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start, 
                                 children: [
                                   _LoginForm(
                                     key:
