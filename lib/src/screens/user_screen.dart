@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/providers/user_form_provider.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/bar_decoration.dart';
-import 'package:vila_tour_pmdm/src/widgets/button.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -12,9 +13,13 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final userFormProvider = Provider.of<UserFormProvider>(context);
+
+    userFormProvider.loadUser(currentUser);
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       drawer: drawer(),
       bottomNavigationBar: CustomNavigationBar(),
@@ -29,11 +34,18 @@ class UserScreen extends StatelessWidget {
               iconRight: iconRightBarMenu(_scaffoldKey),
             ),
             _Header(),
-            _ProfileForm(),
-            CustomButton(text: 'Guardar', onPressed: () {}),
+            _ProfileForm(userFormProvider: userFormProvider),
           ],
         ),
       ),
+      floatingActionButton: userFormProvider.haveChanges
+          ? FloatingActionButton(
+              onPressed: () {
+                // modify()
+              },
+              child: Icon(Icons.save),
+            )
+          : null,
     );
   }
 
@@ -54,12 +66,8 @@ class UserScreen extends StatelessWidget {
         children: [
           BarScreenArrow(labelText: 'Configuración', arrowBack: true),
           Row(
-            children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.sunny))
-
-            ],
+            children: [IconButton(onPressed: () {}, icon: Icon(Icons.sunny))],
           )
-          
         ],
       ),
     );
@@ -68,42 +76,51 @@ class UserScreen extends StatelessWidget {
 }
 
 class _ProfileForm extends StatelessWidget {
-  const _ProfileForm({
+  UserFormProvider userFormProvider;
+
+  _ProfileForm({
     super.key,
+    required this.userFormProvider,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Form(
+        key: userFormProvider.formLogKey,
         child: Column(
           children: [
             buildTextField(
-              initialValue: currentUser.username,
-              label: 'Usuario:',
-              hintText: 'Nombre de usuario',
-              onChanged: (value) {},
-              // onChanged: (value) => registerForm.username = value,
+              label: 'Nombre de usuario:',
+              initialValue: userFormProvider.user.username,
+              onChanged: (value) => userFormProvider.user.username = value,
               validator: validateRequiredField,
+              hintText: '',
             ),
             const SizedBox(height: 20),
             buildTextField(
-              initialValue: currentUser.email,
               label: 'E-mail:',
-              hintText: 'ejemplo@ejemplo.com',
-              onChanged: (value) {},
-              //onChanged: (value) => registerForm.email = value,
+              initialValue: userFormProvider.user.email,
+              onChanged: (value) => userFormProvider.user.email = value,
               validator: validateEmail,
+              hintText: '',
             ),
             const SizedBox(height: 20),
             buildTextField(
-              initialValue: currentUser.password,
-              label: 'Contraseña:',
-              hintText: '**********',
-              obscureText: true,
-              onChanged: (value) {},
-              //onChanged: (value) => registerForm.password = value,
-              validator: validatePassword,
+              label: 'Nombre:',
+              initialValue: userFormProvider.user.name,
+              onChanged: (value) => userFormProvider.user.name = value,
+              validator: validateRequiredField,
+              hintText: '',
+            ),
+            const SizedBox(height: 20),
+            buildTextField(
+              label: 'Apellidos:',
+              initialValue: userFormProvider.user.surname,
+              onChanged: (value) => userFormProvider.user.surname = value,
+              validator: validateRequiredField,
+              hintText: '',
             ),
           ],
         ),

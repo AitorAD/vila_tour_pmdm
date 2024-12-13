@@ -25,4 +25,8 @@ class UserService extends ChangeNotifier {
     User currentUser = User.fromJson(response.body);
     return currentUser;
   }
+
+  Future<bool> modifyUser(User user) async {
+    return true;
+  }
 }
