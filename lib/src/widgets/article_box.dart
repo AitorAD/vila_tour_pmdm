@@ -1,10 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class ArticleBox extends StatefulWidget {
@@ -34,14 +29,11 @@ class _ArticleBoxState extends State<ArticleBox> {
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Stack(
           children: [
-            // Imagen de fondo
             _BackgroundImage(widget: widget),
 
-            // Información sobre el artículo
             if (widget.article is Festival) _FestivalInfo(widget: widget),
             if (widget.article is Recipe) _RecipeInfo(widget: widget),
 
-            // Icono de favorito
             _Favorite(article: widget.article)
           ],
         ),
@@ -227,8 +219,7 @@ class _BackgroundImage extends StatelessWidget {
                       height: 150,
                       child: FadeInImage(
                         placeholder: AssetImage('assets/logo.ico'),
-                        image: MemoryImage(
-                            decodeImageBase64(widget.article.imagensPaths)),
+                        image: AssetImage('assets/logo.ico'),//MemoryImage(decodeImageBase64(widget.article.imagensPaths)),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -237,8 +228,7 @@ class _BackgroundImage extends StatelessWidget {
               )
             : FadeInImage(
                 placeholder: AssetImage('assets/logo.ico'),
-                image: MemoryImage(
-                    decodeImageBase64(widget.article.imagensPaths)),
+                image: AssetImage('assets/logo.ico'),//MemoryImage(decodeImageBase64(widget.article.imagensPaths)),
                 width: double.infinity,
                 height: 150,
                 fit: BoxFit.cover,
