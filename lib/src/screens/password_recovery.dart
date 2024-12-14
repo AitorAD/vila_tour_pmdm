@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/src/screens/home.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
-
-import 'package:flutter/material.dart';
 
 class PasswordRecovery extends StatefulWidget {
   const PasswordRecovery({Key? key}) : super(key: key);
@@ -123,18 +120,21 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
       final email = _emailController.text;
       final userService = UserService();
 
-      print("Aqui llego");
-
       try {
         // Comprueba si el correo existe en el backend
         final emailExists = await userService.checkIfEmailExists(email);
         if (emailExists) {
-          setState(() {
-            _emailSent = true;
-          });
+          print("Que si que existe");
+          final emailSent = await userService.sendRecoveryEmail(email);
+          if(emailSent){
+            print("Se ha enviado");
+              setState(() {
+              _emailSent = true;
+          }
+          );
         } else {
           _showErrorDialog(context);
-        }
+        }}
       } catch (e) {
         print("Error al enviar el correo: $e");
         ScaffoldMessenger.of(context).showSnackBar(
@@ -149,6 +149,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: Text('Correo no encontrado'),
           content: Text(
             'El correo ingresado no está registrado. Por favor, verifica e intenta de nuevo.',
