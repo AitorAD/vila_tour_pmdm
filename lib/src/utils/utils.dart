@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -41,3 +42,8 @@ Uint8List decodeImageBase64(String image) {
   }
 }
 
+Future<String> fileToBase64(File file) async {
+  List<int> fileBytes = await file.readAsBytes();
+  String base64String = base64Encode(fileBytes);
+  return base64String;
+}

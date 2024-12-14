@@ -1,3 +1,5 @@
+import 'models.dart';
+
 abstract class Article {
   int id;
   String name;
@@ -6,7 +8,7 @@ abstract class Article {
   DateTime creationDate;
   DateTime lastModificationDate;
   String type;
-  List<dynamic> reviews;
+  List<Review> reviews;
 
   Article({
     required this.id,

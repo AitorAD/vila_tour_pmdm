@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/src/models/categoryIngredient.dart';
+import 'package:vila_tour_pmdm/src/models/category_ingredient.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
 import 'package:provider/provider.dart';

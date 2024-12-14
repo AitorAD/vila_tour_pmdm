@@ -1,14 +1,13 @@
 import 'dart:convert';
 
-import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'models.dart';
 
-class Recipe extends Article {
-  bool approved;
-  bool recent;
-  List<Ingredient> ingredients;
+class Place extends Article {
+  CategoryPlace categoryPlace;
   User creator;
+  Coordinate coordinate;
 
-  Recipe({
+  Place({
     required type,
     required id,
     required name,
@@ -17,10 +16,9 @@ class Recipe extends Article {
     required creationDate,
     required lastModificationDate,
     required reviews,
-    required this.approved,
-    required this.recent,
-    required this.ingredients,
+    required this.categoryPlace,
     required this.creator,
+    required this.coordinate,
   }) : super(
             id: id,
             name: name,
@@ -29,13 +27,13 @@ class Recipe extends Article {
             creationDate: creationDate,
             lastModificationDate: lastModificationDate,
             reviews: reviews,
-            type: 'recipe');
+            type: 'place');
 
-  factory Recipe.fromJson(String str) => Recipe.fromMap(json.decode(str));
+  factory Place.fromJson(String str) => Place.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Recipe.fromMap(Map<String, dynamic> json) => Recipe(
+  factory Place.fromMap(Map<String, dynamic> json) => Place(
         type: json["type"],
         id: json["id"],
         name: json["name"],
@@ -44,10 +42,9 @@ class Recipe extends Article {
         creationDate: DateTime.parse(json["creationDate"]),
         lastModificationDate: DateTime.parse(json["lastModificationDate"]),
         reviews: List<dynamic>.from(json["reviews"].map((x) => x)),
-        approved: json["approved"],
-        recent: json["recent"],
-        ingredients: List<Ingredient>.from(json["ingredients"].map((x) => x)),
+        categoryPlace: CategoryPlace.fromMap(json["categoryPlace"]),
         creator: User.fromMap(json["creator"]),
+        coordinate: Coordinate.fromMap(json["coordinate"]),
       );
 
   Map<String, dynamic> toMap() => {
@@ -58,14 +55,13 @@ class Recipe extends Article {
         "averageScore": averageScore,
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
-        "reviews": List<Review>.from(reviews.map((x) => x)),
-        "approved": approved,
-        "recent": recent,
-        "ingredients": List<Ingredient>.from(ingredients.map((x) => x)),
+        "reviews": List<dynamic>.from(reviews.map((x) => x)),
+        "categoryPlace": categoryPlace.toMap(),
         "creator": creator.toMap(),
+        "coordinate": coordinate.toMap(),
       };
 
-  static List<Recipe> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((item) => Recipe.fromMap(item)).toList();
+  static List<Festival> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((item) => Festival.fromMap(item)).toList();
   }
 }

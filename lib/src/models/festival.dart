@@ -1,74 +1,77 @@
 import 'dart:convert';
-import 'package:vila_tour_pmdm/src/models/article.dart';
+
+import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class Festival extends Article {
   DateTime startDate;
   DateTime endDate;
-  dynamic coordinade;
+  User creator;
+  Coordinate coordinate;
 
   Festival({
-    required int id,
-    required String name,
-    required String description,
-    required String imagensPaths,
-    required double averageScore,
-    required DateTime creationDate,
-    required DateTime lastModificationDate,
-    required List<dynamic> reviews,
+    required type,
+    required id,
+    required name,
+    required description,
+    required averageScore,
+    required creationDate,
+    required lastModificationDate,
+    required reviews,
     required this.startDate,
     required this.endDate,
-    required this.coordinade,
+    required this.creator,
+    required this.coordinate,
   }) : super(
             id: id,
             name: name,
             description: description,
-            averageScore: 0.0,
+            averageScore: averageScore,
             creationDate: creationDate,
             lastModificationDate: lastModificationDate,
             reviews: reviews,
-            type: "festival");
+            type: 'festival');
 
   factory Festival.fromJson(String str) => Festival.fromMap(json.decode(str));
 
+  String toJson() => json.encode(toMap());
+
   factory Festival.fromMap(Map<String, dynamic> json) => Festival(
+        type: json["type"],
         id: json["id"],
         name: json["name"],
         description: json["description"],
-        imagensPaths: json["imagensPaths"],
-        averageScore: json["averageScore"]?.toDouble(),
+        averageScore: json["averageScore"],
         creationDate: DateTime.parse(json["creationDate"]),
         lastModificationDate: DateTime.parse(json["lastModificationDate"]),
-        reviews: List<dynamic>.from(json["reviews"].map((x) => x)),
-        // startDate: DateTime.parse(json["startDate"]),
-        // endDate: DateTime.parse(json["endDate"]),
-        startDate: json["startDate"] is String
-            ? DateTime.tryParse(json["startDate"]) ?? DateTime.now()
-            : DateTime.now(),
-        endDate: json["endDate"] is String
-            ? DateTime.tryParse(json["endDate"]) ?? DateTime.now()
-            : DateTime.now(),
-        coordinade: json["coordinade"],
+        reviews: json["reviews"] != null
+            ? List<Review>.from(json["reviews"].map((x) => x))
+            : [],
+        startDate: DateTime.parse(json["startDate"]),
+        endDate: DateTime.parse(json["endDate"]),
+        creator: User.fromMap(json["creator"]),
+        coordinate: Coordinate.fromMap(json["coordinate"]),
       );
 
-  // Método de fábrica para una lista de Festival
-  static List<Festival> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((item) => Festival.fromMap(item)).toList();
-  }
-
   Map<String, dynamic> toMap() => {
+        "type": type,
         "id": id,
         "name": name,
         "description": description,
         "averageScore": averageScore,
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
-        "reviews": List<dynamic>.from(reviews.map((x) => x)),
+        "reviews": List<Review>.from(reviews.map((x) => x)),
         "startDate":
             "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
         "endDate":
             "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}",
-        "coordinade": coordinade,
+        "creator": creator.toMap(),
+        "coordinate": coordinate.toMap(),
       };
+
+  static List<Festival> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((item) => Festival.fromMap(item)).toList();
+  }
 
   @override
   String toString() {

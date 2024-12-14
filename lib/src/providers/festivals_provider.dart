@@ -22,6 +22,7 @@ class FestivalsProvider with ChangeNotifier {
     return response.body;
   }
 
+/*
   Future<void> loadFestivals() async {
     try {
       final jsonData = await _getJsonData('festivals');
@@ -33,7 +34,7 @@ class FestivalsProvider with ChangeNotifier {
       print('Error loading festivals in provider: $e');
     }
   }
-
+*/
   void filterFestivals(String query) {
     _currentFilter = query;
     if (query.isEmpty) {
