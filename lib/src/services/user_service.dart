@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -24,5 +25,34 @@ class UserService extends ChangeNotifier {
 
     User currentUser = User.fromJson(response.body);
     return currentUser;
+  }
+
+  Future<bool> checkIfEmailExists(String email) async {
+    try {
+      final url = Uri.parse('$baseURL/users/email/exist?email=$email');
+      final response = await http.get(url);
+      if (response.body.contains("true")) {
+        print("Email existe");
+        return true;
+      } else {
+        print('Error: Código HTTP ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('Error al verificar el correo: $e');
+      return false;
+    }
+  }
+
+  // Envía el correo de recuperación
+  Future<bool> sendRecoveryEmail(String email) async {
+    final url = Uri.parse('$baseURL/auth/recoverymail/email?email=$email');
+    final response = await http.post(url);
+    if (response.statusCode == 200) {
+      return true; // Éxito al enviar el correo
+    } else {
+      print("Error al enviar el correo. Código HTTP ${response.statusCode}");
+      return false; // Fallo al enviar el correo
+    }
   }
 }
