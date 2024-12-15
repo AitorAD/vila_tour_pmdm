@@ -84,6 +84,7 @@ class User {
             json["reviews"]?.map((x) => Review.fromMap(x)) ?? []),
       );
 
+  // Método existente para mapear todos los campos
   Map<String, dynamic> toMap() => {
         "id": id,
         "username": username,
@@ -97,6 +98,11 @@ class User {
         "createdFestivals": List<Festival>.from(createdFestivals.map((x) => x)),
         "createdPlaces": List<Place>.from(createdPlaces.map((x) => x)),
         "reviews": List<Review>.from(reviews.map((x) => x)),
+      };
+
+  // Nuevo método para mapear solo el ID
+  Map<String, dynamic> toMapMinimal() => {
+        "id": id,
       };
 
   @override

@@ -1,10 +1,10 @@
 import 'dart:convert';
-
+import 'package:intl/intl.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class Recipe extends Article {
-  bool approved;
-  bool recent;
+  bool? approved;
+  bool? recent;
   List<Ingredient> ingredients;
   User creator;
 
@@ -31,9 +31,20 @@ class Recipe extends Article {
             reviews: reviews,
             type: 'recipe');
 
-  factory Recipe.fromJson(String str) => Recipe.fromMap(json.decode(str));
+
+  // Modificado para aceptar tanto un String como un Map<String, dynamic>
+  factory Recipe.fromJson(dynamic source) {
+    if (source is String) {
+      return Recipe.fromMap(json.decode(source));
+    } else if (source is Map<String, dynamic>) {
+      return Recipe.fromMap(source);
+    } else {
+      throw ArgumentError('Invalid input type for Recipe.fromJson');
+    }
+  }
 
   String toJson() => json.encode(toMap());
+
 
   factory Recipe.fromMap(Map<String, dynamic> json) => Recipe(
         type: json["type"],
