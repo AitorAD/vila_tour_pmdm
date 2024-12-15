@@ -108,7 +108,8 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                       const Icon(Icons.location_on, color: Colors.redAccent),
                       const SizedBox(width: 4),
                       Text(
-                        festival.coordinade = 'Lugar Coordenada',
+                        '',
+                        // festival.coordinade = 'Lugar Coordenada',
                         style: const TextStyle(
                           fontSize: 18,
                           fontFamily: 'PontanoSans',

@@ -6,10 +6,12 @@ import 'package:vila_tour_pmdm/src/providers/login_form_provider.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/providers/register_form_provider.dart';
+import 'package:vila_tour_pmdm/src/providers/user_form_provider.dart';
 import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
+import 'package:vila_tour_pmdm/src/services/festival_service.dart';
 import 'package:vila_tour_pmdm/src/services/ingredient_service.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
@@ -36,6 +38,7 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => UiProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => IngredientsProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => UserService(), lazy: false),
+      ChangeNotifierProvider(create: (_) => UserFormProvider(), lazy: false),
     ], child: MyApp());
   }
 }

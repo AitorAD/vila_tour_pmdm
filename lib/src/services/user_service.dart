@@ -25,4 +25,33 @@ class UserService extends ChangeNotifier {
     User currentUser = User.fromJson(response.body);
     return currentUser;
   }
+
+  Future<bool> modifyUser(User user, User newUser) async {
+    final url = Uri.parse('$baseURL/users/${user.id}');
+
+    String? token = await UserPreferences.instance.readData('token');
+    print('Token: $token');
+
+    String jsonData = newUser.toJson();
+    print('Request body: $jsonData');
+
+    final response = await http.put(
+      url,
+      body: jsonData,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      currentUser = User.fromJson(response.body);
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

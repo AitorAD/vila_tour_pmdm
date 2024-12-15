@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:vila_tour_pmdm/src/models/categoryIngredient.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class CategoryIngredientProvider with ChangeNotifier {
   String _baseUrl = 'http://10.0.2.2:8080'; // En Android Emulator

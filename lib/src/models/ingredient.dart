@@ -1,4 +1,4 @@
-import 'package:vila_tour_pmdm/src/models/categoryIngredient.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class Ingredient {
   final int id;

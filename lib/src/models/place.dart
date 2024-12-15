@@ -1,14 +1,13 @@
 import 'dart:convert';
 
-import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'models.dart';
 
-class Festival extends Article {
-  DateTime startDate;
-  DateTime endDate;
+class Place extends Article {
+  CategoryPlace categoryPlace;
   User creator;
   Coordinate coordinate;
 
-  Festival({
+  Place({
     required type,
     required id,
     required name,
@@ -17,8 +16,7 @@ class Festival extends Article {
     required creationDate,
     required lastModificationDate,
     required reviews,
-    required this.startDate,
-    required this.endDate,
+    required this.categoryPlace,
     required this.creator,
     required this.coordinate,
   }) : super(
@@ -29,29 +27,27 @@ class Festival extends Article {
             creationDate: creationDate,
             lastModificationDate: lastModificationDate,
             reviews: reviews,
-            type: 'festival');
+            type: 'place');
 
-  factory Festival.fromJson(String str) => Festival.fromMap(json.decode(str));
+  factory Place.fromJson(String str) => Place.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Festival.fromMap(Map<String, dynamic> json) => Festival(
+  factory Place.fromMap(Map<String, dynamic> json) => Place(
         type: json["type"],
         id: json["id"],
         name: json["name"],
         description: json["description"],
-        averageScore: json["averageScore"],
+        averageScore: json["averageScore"]?.toDouble(),
         creationDate: DateTime.parse(json["creationDate"]),
         lastModificationDate: DateTime.parse(json["lastModificationDate"]),
         reviews: json["reviews"] != null
-            ? List<Review>.from(json["reviews"].map((x) => x))
+            ? List<Review>.from(json["reviews"].map((x) => Review.fromMap(x)))
             : [],
-        startDate: DateTime.parse(json["startDate"]),
-        endDate: DateTime.parse(json["endDate"]),
+        categoryPlace: CategoryPlace.fromMap(json["categoryPlace"]),
         creator: User.fromMap(json["creator"]),
         coordinate: Coordinate.fromMap(json["coordinate"]),
       );
-
 
   Map<String, dynamic> toMap() => {
         "type": type,
@@ -62,20 +58,12 @@ class Festival extends Article {
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
         "reviews": reviews.map((x) => x.toMap()).toList(),
-        "startDate":
-            "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
-        "endDate":
-            "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}",
+        "categoryPlace": categoryPlace.toMap(),
         "creator": creator.toMap(),
         "coordinate": coordinate.toMap(),
       };
 
   static List<Festival> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((item) => Festival.fromMap(item)).toList();
-  }
-
-  @override
-  String toString() {
-    return 'Festival(id: $id, name: $name, description: $description, averageScore: $averageScore, startDate: $startDate, endDate: $endDate)';
   }
 }
