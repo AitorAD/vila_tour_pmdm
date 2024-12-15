@@ -53,7 +53,9 @@ class UserService extends ChangeNotifier {
       return true;
     } else {
       return false;
-      
+    }
+  }
+
   Future<bool> checkIfEmailExists(String email) async {
     try {
       final url = Uri.parse('$baseURL/users/email/exist?email=$email');
