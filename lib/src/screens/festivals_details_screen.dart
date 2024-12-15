@@ -30,7 +30,8 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                   tag: festival.id, // Asegúrate de usar el mismo `tag`
                   child: FadeInImage(
                     placeholder: AssetImage('assets/logo.ico'),
-                    image: AssetImage('assets/logo.ico'),//MemoryImage(decodeImageBase64(festival.imagensPaths)),
+                    image: MemoryImage(
+                        decodeImageBase64(festival.images!.first.path)),
                     width: double.infinity,
                     height: 400,
                     fit: BoxFit.cover,
@@ -72,10 +73,11 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      PaintStars(rating: festival.averageScore, color: Colors.yellow),
+                      PaintStars(
+                          rating: festival.averageScore, color: Colors.yellow),
                       const SizedBox(width: 4),
-                      const Text(
-                        '(281)',
+                      Text(
+                        '(${festival.reviews.length})',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       )
                     ],
@@ -108,7 +110,7 @@ class _DetailsFestivalState extends State<DetailsFestival> {
                       const Icon(Icons.location_on, color: Colors.redAccent),
                       const SizedBox(width: 4),
                       Text(
-                        festival.coordinade = 'Lugar Coordenada',
+                        '${festival.coordinate.name} [${festival.coordinate.latitude}, ${festival.coordinate.longitude}]',
                         style: const TextStyle(
                           fontSize: 18,
                           fontFamily: 'PontanoSans',

@@ -47,7 +47,7 @@ class IngredientsProvider with ChangeNotifier {
   void addIngredientToAvailable(Ingredient ingredient) {
     if (!_ingredients.contains(ingredient)) {
       _ingredients.add(ingredient);
-      filterIngredients(currentFilter); // Para volver a mostrarlo si corresponde al filtro
+      filterIngredients(currentFilter);
     }
     notifyListeners();
   }

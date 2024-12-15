@@ -61,7 +61,7 @@ class RecipesProvider with ChangeNotifier {
   void addRecipeToAvailable(Recipe recipe) {
     if (!_recipes.contains(recipe)) {
       _recipes.add(recipe);
-      filterRecipes(_currentFilter); // Para volver a mostrarlo si corresponde al filtro
+      filterRecipes(_currentFilter);
     }
     notifyListeners();
   }

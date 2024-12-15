@@ -19,7 +19,7 @@ class LoginService extends ChangeNotifier {
         body: json.encode({"username": username, "password": password}),
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       );
-
+      
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         await UserPreferences.instance
@@ -27,7 +27,6 @@ class LoginService extends ChangeNotifier {
 
         int id = responseData['id'];
         currentUser = await UserService().getCurrentUser(id);
-        print(currentUser);
         return Result.success;
       } else if (response.statusCode == 401) {
         return Result.invalidCredentials;

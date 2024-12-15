@@ -2,23 +2,26 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
+import 'package:vila_tour_pmdm/src/services/config.dart';
 
 class FestivalService {
-  final String _baseUrl = 'http://10.0.2.2:8080'; // En Android Emulator
+  Future<List<Festival>> getFestivals() async {
+    final url = Uri.parse('$baseURL/festivals');
 
-  Future<List<Festival>> fetchFestivals() async {
-    try {
-      var url = Uri.parse('$_baseUrl/festivals');
-      final response = await http.get(url);
+    String? token = await UserPreferences.instance.readData('token');
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return Festival.fromJsonList(data);
-      } else {
-        throw HttpException('Failed to load festivals: ${response.statusCode}');
-      }
-    } catch (e) {
-      rethrow;
-    }
+    final response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+    );
+    
+    List<Festival> festivals =
+        Festival.fromJsonList(json.decode(response.body));
+
+    return festivals;
   }
 }

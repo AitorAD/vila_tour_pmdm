@@ -57,34 +57,37 @@ class BarScreenArrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        height: 50,
-        decoration: defaultDecoration(0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              if (arrowBack == true)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 25),
+        child: Container(
+          height: 50,
+          decoration: defaultDecoration(0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                if (arrowBack == true)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Icon(Icons.arrow_back, color: Colors.white),
+                    ),
                   ),
-                ),
-              Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    labelText,
-                    style: textStyleVilaTourTitle(color: Colors.white),
-                  )),
-              if (iconRight != null)
                 Align(
-                  alignment: Alignment.centerRight,
-                  child: iconRight,
-                )
-            ],
+                    alignment: Alignment.center,
+                    child: Text(
+                      labelText,
+                      style: textStyleVilaTourTitle(color: Colors.white),
+                    )),
+                if (iconRight != null)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: iconRight,
+                  )
+              ],
+            ),
           ),
         ),
       ),
