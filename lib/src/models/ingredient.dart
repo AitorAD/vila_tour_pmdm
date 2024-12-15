@@ -11,23 +11,30 @@ class Ingredient {
     required this.category,
   });
 
+  // Crear un ingrediente a partir de un mapa
   factory Ingredient.fromMap(Map<String, dynamic> map) {
     return Ingredient(
       id: map['idIngredient'] ?? 0,
       name: map['name'] ?? 'Unknown',
-      category: CategoryIngredient.fromMap(map['categoryIngredient'] ?? {}),
+      category: CategoryIngredient.fromMap(map['category'] ?? {}),
     );
   }
 
+  // Método estático para crear una lista de ingredientes a partir de una lista de Map
   static List<Ingredient> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((item) => Ingredient.fromMap(item)).toList();
+    return jsonList
+        .map((item) => Ingredient.fromMap(item as Map<String, dynamic>))
+        .toList();
   }
 
-  Map<String, dynamic> toMap() => {
-        "id": id,
-        "name": name,
-        "category": category,
-      };
+  // Convertir un ingrediente a un mapa, asegurándose de que 'category' sea un mapa, no una cadena
+  Map<String, dynamic> toMap() {
+    return {
+      "idIngredient": id,
+      "name": name,
+      "category": category.toMap(),  // Mantener 'category' como un objeto, no como una cadena
+    };
+  }
 
   @override
   String toString() {

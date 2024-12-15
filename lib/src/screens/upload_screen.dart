@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
@@ -228,32 +229,94 @@ class _UploadRecipeState extends State<UploadRecipe> {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: CustomButton(
-                          text: "Siguiente",
-                          onPressed: () {
+                          text: "Enviar",
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              final recipe = Recipe(
-                                type: "recipe",
-                                id: 0,
-                                creationDate: DateTime.now(),
-                                lastModificationDate: DateTime.now(),
-                                name: _nameController.text,
-                                description: _descriptionController.text,
-                                ingredients: _selectedIngredients.value,
-                                averageScore: 0,
-                                reviews: [],
-                                approved: false,
-                                recent: true,
-                                creator: currentUser,
+                              bool? confirm = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                        '¿Estás seguro de enviar la receta?'),
+                                    content: const Text(
+                                        'Una vez enviada, la receta irá a revisión.'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text(
+                                          'Cancelar',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .black),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(false);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text(
+                                          'Enviar',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .black),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pop(true);
+                                        }
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
-                              final recipeService =
-                                  RecipeService(); 
-                              recipeService.createRecipe(
-                                  recipe); 
+
+                              if (confirm == true) {
+                                final recipe = Recipe(
+                                  type: "recipe",
+                                  id: 0,
+                                  creationDate: DateTime.now(),
+                                  lastModificationDate: DateTime.now(),
+                                  name: _nameController.text,
+                                  description: _descriptionController.text,
+                                  ingredients: _selectedIngredients.value,
+                                  averageScore: 1.2,
+                                  reviews: [],
+                                  approved: false,
+                                  recent: true,
+                                  creator: currentUser,
+                                );
+
+                                try {
+                                  final recipeService = RecipeService();
+                                  await recipeService.createRecipe(recipe);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Receta enviada a revisión'),
+                                      duration: Duration(
+                                          seconds: 2),
+                                    ),
+                                  );
+
+                                  Navigator.pushReplacementNamed(
+                                      context, HomePage.routeName);
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Error al enviar la receta'),
+                                      backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                              }
                             }
                           },
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),

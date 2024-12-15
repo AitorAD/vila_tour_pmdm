@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:vila_tour_pmdm/src/providers/recipes_provider.dart';
+import 'package:vila_tour_pmdm/src/models/recipe.dart';
+import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RecipesScreen extends StatelessWidget {
@@ -9,31 +9,45 @@ class RecipesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provisional hasta conectar con la API
-    final recipesProvider = Provider.of<RecipesProvider>(context);
+    final recipeService = RecipeService();
 
     return Scaffold(
-        bottomNavigationBar: CustomNavigationBar(),
-        appBar: CustomAppBar(title: "Recetas"),
-        body: Stack(
-          children: [
-            WavesWidget(),
-            Column(
-              children: [
-                SearchBox(),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: recipesProvider.recipes.length,
-                    itemBuilder: (context, index) {
-                      return ArticleBox(
-                        article: recipesProvider.recipes[index],
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ));
+      bottomNavigationBar: CustomNavigationBar(),
+      appBar: CustomAppBar(title: "Recetas"),
+      body: Stack(
+        children: [
+          WavesWidget(),
+          FutureBuilder<List<Recipe>>(
+            future: recipeService.fetchRecipes(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                print(snapshot.error);
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                final recipes = snapshot.data ?? [];
+                if (recipes.isEmpty) {
+                  return const Center(child: Text('No se encontraron recetas.'));
+                }
+                return Column(
+                  children: [
+                    SearchBox(), // O puedes eliminarlo si no está implementado
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: recipes.length,
+                        itemBuilder: (context, index) {
+                          return ArticleBox(article: recipes[index]);
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
