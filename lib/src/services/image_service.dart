@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/article.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
@@ -23,6 +22,12 @@ class ImageService {
     );
 
     List<customImage.Image> images = customImage.Image.fromJsonList(jsonDecode(response.body));
+
+    for (var image in images) {
+      image.article = article;
+      print(image);
+    }
+
     return images;
   }
 

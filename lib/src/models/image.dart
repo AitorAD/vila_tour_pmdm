@@ -28,8 +28,12 @@ class Image {
         "article": article.toMap(),
       };
 
-  
   static List<Image> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((item) => Image.fromMap(item)).toList();
+  }
+
+  @override
+  String toString() {
+    return 'Festival(id: $id, path: $path, article: $article)';
   }
 }

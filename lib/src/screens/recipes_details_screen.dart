@@ -103,7 +103,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         tag: recipe.id, // Mismo tag que en ArticleBox
                         child: FadeInImage(
                           placeholder: AssetImage('assets/logo.ico'),
-                          image: AssetImage('assets/logo.ico'),//MemoryImage(decodeImageBase64(recipe.imagensPaths)),
+                          image: MemoryImage(decodeImageBase64(recipe.images!.first.path)),
                           width: double.infinity,
                           height: 200,
                           fit: BoxFit.cover,

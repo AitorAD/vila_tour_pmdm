@@ -9,14 +9,14 @@ class Festival extends Article {
   Coordinate coordinate;
 
   Festival({
-    required type,
-    required id,
-    required name,
-    required description,
-    required averageScore,
-    required creationDate,
-    required lastModificationDate,
-    required reviews,
+    required String type,
+    required int id,
+    required String name,
+    required String description,
+    required double averageScore,
+    required DateTime creationDate,
+    required DateTime lastModificationDate,
+    required List<Review> reviews,
     required this.startDate,
     required this.endDate,
     required this.creator,
@@ -43,15 +43,16 @@ class Festival extends Article {
         averageScore: json["averageScore"],
         creationDate: DateTime.parse(json["creationDate"]),
         lastModificationDate: DateTime.parse(json["lastModificationDate"]),
-        reviews: json["reviews"] != null
-            ? List<Review>.from(json["reviews"].map((x) => x))
+        reviews: json["reviews"] is List
+            ? (json["reviews"] as List)
+                .map((x) => Review.fromMap(x as Map<String, dynamic>))
+                .toList()
             : [],
         startDate: DateTime.parse(json["startDate"]),
         endDate: DateTime.parse(json["endDate"]),
         creator: User.fromMap(json["creator"]),
         coordinate: Coordinate.fromMap(json["coordinate"]),
       );
-
 
   Map<String, dynamic> toMap() => {
         "type": type,

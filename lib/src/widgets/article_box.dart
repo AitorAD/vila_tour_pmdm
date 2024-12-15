@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/festivals_details_screen.dart';
-import 'package:vila_tour_pmdm/src/screens/festivals_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/recipes_details_screen.dart';
-import 'package:vila_tour_pmdm/src/screens/recipes_screen.dart';
+import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class ArticleBox extends StatefulWidget {
@@ -34,10 +33,8 @@ class _ArticleBoxState extends State<ArticleBox> {
         child: Stack(
           children: [
             _BackgroundImage(widget: widget),
-
             if (widget.article is Festival) _FestivalInfo(widget: widget),
             if (widget.article is Recipe) _RecipeInfo(widget: widget),
-
             _Favorite(article: widget.article)
           ],
         ),
@@ -112,19 +109,19 @@ class _FestivalInfo extends StatelessWidget {
               ),
             ),
             Text(
-              'location (provisional)',
-              // (widget.article as Festival).location,
+              'Lugar: ${(widget.article as Festival).coordinate.name}',
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             Text(
-              'fecha (provisional)',
-              // (widget.article as Festival).date,
+              '${formatDate((widget.article as Festival).startDate)} - ${formatDate((widget.article as Festival).endDate)}',
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             SizedBox(height: 10),
             Row(
               children: [
-                PaintStars(rating: (widget.article as Festival).averageScore, color: Colors.yellow),
+                PaintStars(
+                    rating: (widget.article as Festival).averageScore,
+                    color: Colors.yellow),
                 SizedBox(width: 10),
                 Text(
                   (widget.article as Festival).averageScore.toString(),
@@ -180,7 +177,9 @@ class _RecipeInfo extends StatelessWidget {
             SizedBox(height: 5),
             Row(
               children: [
-                PaintStars(rating: (widget.article as Recipe).averageScore, color: Colors.yellow),
+                PaintStars(
+                    rating: (widget.article as Recipe).averageScore,
+                    color: Colors.yellow),
                 SizedBox(width: 10),
                 Text(
                   (widget.article as Recipe).averageScore.toString(),
@@ -223,7 +222,8 @@ class _BackgroundImage extends StatelessWidget {
                       height: 150,
                       child: FadeInImage(
                         placeholder: AssetImage('assets/logo.ico'),
-                        image: AssetImage('assets/logo.ico'),//MemoryImage(decodeImageBase64(widget.article.imagensPaths)),
+                        image: MemoryImage(decodeImageBase64(
+                            widget.article.images!.first.path)),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -232,7 +232,8 @@ class _BackgroundImage extends StatelessWidget {
               )
             : FadeInImage(
                 placeholder: AssetImage('assets/logo.ico'),
-                image: AssetImage('assets/logo.ico'),//MemoryImage(decodeImageBase64(widget.article.imagensPaths)),
+                image: MemoryImage(
+                    decodeImageBase64(widget.article.images![0].path)),
                 width: double.infinity,
                 height: 150,
                 fit: BoxFit.cover,
@@ -241,4 +242,3 @@ class _BackgroundImage extends StatelessWidget {
     );
   }
 }
-

@@ -21,8 +21,9 @@ class Coordinate {
   factory Coordinate.fromMap(Map<String, dynamic> json) => Coordinate(
         id: json["id"],
         name: json["name"],
-        latitude: json["latitude"]?.toDouble(),
-        longitude: json["longitude"]?.toDouble(),
+        latitude: json["latitude"] != null ? json["latitude"].toDouble() : 0.0,
+        longitude:
+            json["longitude"] != null ? json["longitude"].toDouble() : 0.0,
       );
 
   Map<String, dynamic> toMap() => {

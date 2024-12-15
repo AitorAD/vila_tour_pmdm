@@ -9,6 +9,7 @@ abstract class Article {
   DateTime lastModificationDate;
   String type;
   List<Review> reviews;
+  List<Image>? images;
 
   Article({
     required this.id,
@@ -36,11 +37,11 @@ abstract class Article {
 
   static Article fromMap(Map<String, dynamic> map) {
     switch (map['type']) {
-      case 'Recipe':
+      case 'recipe':
         return Recipe.fromMap(map);
-      case 'Place':
+      case 'place':
         return Place.fromMap(map);
-      case 'Festival':
+      case 'festival':
         return Festival.fromMap(map);
       default:
         throw Exception('Unknown article type: ${map['type']}');

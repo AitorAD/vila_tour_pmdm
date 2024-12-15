@@ -8,7 +8,7 @@ class RecipeService {
   final String _baseUrl = 'http://10.0.2.2:8080';
 
   /// Obtiene la lista de recetas desde el servidor
-  Future<List<Recipe>> fetchRecipes() async {
+  Future<List<Recipe>> getRecipes() async {
     final String? token = await UserPreferences.instance.readData('token');
     if (token == null) {
       throw Exception('Token is null');

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class Recipe extends Article {
@@ -12,10 +13,10 @@ class Recipe extends Article {
     required id,
     required name,
     required description,
-    required double averageScore,
+    required averageScore,
     required creationDate,
     required lastModificationDate,
-    required List<Review> reviews,
+    required reviews,
     required this.approved,
     required this.recent,
     required this.ingredients,
@@ -31,6 +32,7 @@ class Recipe extends Article {
             type: 'recipe');
 
 
+  // Modificado para aceptar tanto un String como un Map<String, dynamic>
   factory Recipe.fromJson(dynamic source) {
     if (source is String) {
       return Recipe.fromMap(json.decode(source));
@@ -45,27 +47,24 @@ class Recipe extends Article {
 
 
   factory Recipe.fromMap(Map<String, dynamic> json) => Recipe(
-      type: json["type"],
-      id: json["id"],
-      name: json["name"],
-      description: json["description"],
-      averageScore: json["averageScore"]?.toDouble(),
-      creationDate: DateTime.parse(json["creationDate"]),
-      lastModificationDate: DateTime.parse(json["lastModificationDate"]),
-      reviews: json["reviews"] is List
-          ? (json["reviews"] as List)
-              .map((x) => Review.fromMap(x as Map<String, dynamic>))
-              .toList()
-          : [],
-      approved: json["approved"],
-      recent: json["recent"],
-      ingredients: json["ingredients"] != null
-          ? List<Ingredient>.from(
-              json["ingredients"].map((x) => Ingredient.fromMap(x)))
-          : [],
-      creator: User.fromMap(json["creator"]),
-    );
-
+        type: json["type"],
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        averageScore: json["averageScore"]?.toDouble(),
+        creationDate: DateTime.parse(json["creationDate"]),
+        lastModificationDate: DateTime.parse(json["lastModificationDate"]),
+        reviews: json["reviews"] != null
+            ? List<Review>.from(json["reviews"].map((x) => Review.fromMap(x)))
+            : [],
+        approved: json["approved"],
+        recent: json["recent"],
+        ingredients: json["ingredients"] != null
+            ? List<Ingredient>.from(
+                json["ingredients"].map((x) => Ingredient.fromMap(x)))
+            : [],
+        creator: User.fromMap(json["creator"]),
+      );
 
   Map<String, dynamic> toMap() => {
         "type": type,
