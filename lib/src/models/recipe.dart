@@ -43,10 +43,15 @@ class Recipe extends Article {
         averageScore: json["averageScore"]?.toDouble(),
         creationDate: DateTime.parse(json["creationDate"]),
         lastModificationDate: DateTime.parse(json["lastModificationDate"]),
-        reviews: List<dynamic>.from(json["reviews"].map((x) => x)),
+        reviews: json["reviews"] != null
+            ? List<Review>.from(json["reviews"].map((x) => Review.fromMap(x)))
+            : [],
         approved: json["approved"],
         recent: json["recent"],
-        ingredients: List<Ingredient>.from(json["ingredients"].map((x) => x)),
+        ingredients: json["ingredients"] != null
+            ? List<Ingredient>.from(
+                json["ingredients"].map((x) => Ingredient.fromMap(x)))
+            : [],
         creator: User.fromMap(json["creator"]),
       );
 
@@ -58,10 +63,10 @@ class Recipe extends Article {
         "averageScore": averageScore,
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
-        "reviews": List<Review>.from(reviews.map((x) => x)),
+        "reviews": reviews.map((x) => x.toMap()).toList(),
         "approved": approved,
         "recent": recent,
-        "ingredients": List<Ingredient>.from(ingredients.map((x) => x)),
+        "ingredients": ingredients.map((x) => x.toMap()).toList(),
         "creator": creator.toMap(),
       };
 

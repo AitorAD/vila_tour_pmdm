@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/screens/festivals_details_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/festivals_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/recipes_details_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/recipes_screen.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class ArticleBox extends StatefulWidget {
@@ -14,14 +18,14 @@ class ArticleBox extends StatefulWidget {
 class _ArticleBoxState extends State<ArticleBox> {
   @override
   Widget build(BuildContext context) {
-    String routeName = "/";
+    String _routeName = "/";
     return GestureDetector(
       onTap: () => {
-        if (widget.article is Festival) routeName = 'general_festivals',
-        if (widget.article is Recipe) routeName = 'general_recipes',
+        if (widget.article is Festival) _routeName = DetailsFestival.routeName,
+        if (widget.article is Recipe) _routeName = RecipeDetails.routeName,
         Navigator.pushNamed(
           context,
-          routeName,
+          _routeName,
           arguments: widget.article,
         ),
       },

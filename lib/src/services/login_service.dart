@@ -19,7 +19,7 @@ class LoginService extends ChangeNotifier {
         body: json.encode({"username": username, "password": password}),
         headers: {HttpHeaders.contentTypeHeader: 'application/json'},
       );
-
+      print(response.body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         await UserPreferences.instance

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/festival.dart';
 import 'package:vila_tour_pmdm/src/services/festival_service.dart';
+import '../widgets/widgets.dart';
 
 class FestivalsScreen extends StatelessWidget {
   static final routeName = 'festivals_screen';
@@ -33,16 +34,14 @@ class FestivalsScreen extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             List<Festival> festivals = snapshot.data!;
-            return ListView.builder(
-              itemCount: festivals.length,
-              itemBuilder: (context, index) {
-                final item = festivals[index];
-                return ListTile(
-                  title: Text(item.name),
-                  subtitle: Text(item.description),
-                );
-              },
-            );
+            return Expanded(
+                child: ListView.builder(
+                  itemCount: festivals.length,
+                  itemBuilder: (context, index) {
+                    return ArticleBox(article: festivals[index]);
+                  },
+                ),
+              );
           }
         },
       ),

@@ -74,12 +74,14 @@ class User {
         name: json["name"],
         surname: json["surname"],
         profilePicture: json["profilePicture"],
-        createdRecipes:
-            List<Recipe>.from(json["createdRecipes"].map((x) => x)),
-        createdFestivals:
-            List<Festival>.from(json["createdFestivals"].map((x) => x)),
-        createdPlaces: List<Place>.from(json["createdPlaces"].map((x) => x)),
-        reviews: List<Review>.from(json["reviews"].map((x) => x)),
+        createdRecipes: List<Recipe>.from(
+            json["createdRecipes"]?.map((x) => Recipe.fromMap(x)) ?? []),
+        createdFestivals: List<Festival>.from(
+            json["createdFestivals"]?.map((x) => Festival.fromMap(x)) ?? []),
+        createdPlaces: List<Place>.from(
+            json["createdPlaces"]?.map((x) => Place.fromMap(x)) ?? []),
+        reviews: List<Review>.from(
+            json["reviews"]?.map((x) => Review.fromMap(x)) ?? []),
       );
 
   Map<String, dynamic> toMap() => {

@@ -41,7 +41,9 @@ class Place extends Article {
         averageScore: json["averageScore"]?.toDouble(),
         creationDate: DateTime.parse(json["creationDate"]),
         lastModificationDate: DateTime.parse(json["lastModificationDate"]),
-        reviews: List<dynamic>.from(json["reviews"].map((x) => x)),
+        reviews: json["reviews"] != null
+            ? List<Review>.from(json["reviews"].map((x) => Review.fromMap(x)))
+            : [],
         categoryPlace: CategoryPlace.fromMap(json["categoryPlace"]),
         creator: User.fromMap(json["creator"]),
         coordinate: Coordinate.fromMap(json["coordinate"]),
@@ -55,7 +57,7 @@ class Place extends Article {
         "averageScore": averageScore,
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
-        "reviews": List<dynamic>.from(reviews.map((x) => x)),
+        "reviews": reviews.map((x) => x.toMap()).toList(),
         "categoryPlace": categoryPlace.toMap(),
         "creator": creator.toMap(),
         "coordinate": coordinate.toMap(),

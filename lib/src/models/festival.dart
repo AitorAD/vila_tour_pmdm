@@ -52,6 +52,7 @@ class Festival extends Article {
         coordinate: Coordinate.fromMap(json["coordinate"]),
       );
 
+
   Map<String, dynamic> toMap() => {
         "type": type,
         "id": id,
@@ -60,7 +61,7 @@ class Festival extends Article {
         "averageScore": averageScore,
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
-        "reviews": List<Review>.from(reviews.map((x) => x)),
+        "reviews": reviews.map((x) => x.toMap()).toList(),
         "startDate":
             "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
         "endDate":
