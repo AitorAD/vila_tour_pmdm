@@ -9,7 +9,7 @@ abstract class Article {
   DateTime lastModificationDate;
   String type;
   List<Review> reviews;
-  List<Image>? images;
+  List<Image> images;
 
   Article({
     required this.id,
@@ -19,6 +19,7 @@ abstract class Article {
     required this.creationDate,
     required this.lastModificationDate,
     required this.reviews,
+    required this.images,
     required this.type,
   });
 
@@ -32,6 +33,7 @@ abstract class Article {
       "lastModificationDate": lastModificationDate.toIso8601String(),
       "type": type,
       "reviews": reviews.map((r) => r.toMap()).toList(),
+      "images": images.map((i) => i.toMap()).toList(),
     };
   }
 

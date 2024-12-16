@@ -22,12 +22,6 @@ class ImageService {
     );
 
     List<customImage.Image> images = customImage.Image.fromJsonList(jsonDecode(response.body));
-
-    for (var image in images) {
-      image.article = article;
-      print(image);
-    }
-
     return images;
   }
 

@@ -16,6 +16,7 @@ class Place extends Article {
     required creationDate,
     required lastModificationDate,
     required reviews,
+    required images,
     required this.categoryPlace,
     required this.creator,
     required this.coordinate,
@@ -27,6 +28,7 @@ class Place extends Article {
             creationDate: creationDate,
             lastModificationDate: lastModificationDate,
             reviews: reviews,
+            images: images,
             type: 'place');
 
   factory Place.fromJson(String str) => Place.fromMap(json.decode(str));
@@ -44,6 +46,11 @@ class Place extends Article {
         reviews: json["reviews"] != null
             ? List<Review>.from(json["reviews"].map((x) => Review.fromMap(x)))
             : [],
+        images: json["images"] is List
+            ? (json["images"] as List)
+                .map((x) => Image.fromMap(x as Map<String, dynamic>))
+                .toList()
+            : [],
         categoryPlace: CategoryPlace.fromMap(json["categoryPlace"]),
         creator: User.fromMap(json["creator"]),
         coordinate: Coordinate.fromMap(json["coordinate"]),
@@ -58,6 +65,7 @@ class Place extends Article {
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
         "reviews": reviews.map((x) => x.toMap()).toList(),
+        "images": images.map((x) => x.toMap()).toList(),
         "categoryPlace": categoryPlace.toMap(),
         "creator": creator.toMap(),
         "coordinate": coordinate.toMap(),

@@ -17,6 +17,7 @@ class Festival extends Article {
     required DateTime creationDate,
     required DateTime lastModificationDate,
     required List<Review> reviews,
+    required List<Image> images,
     required this.startDate,
     required this.endDate,
     required this.creator,
@@ -29,6 +30,7 @@ class Festival extends Article {
             creationDate: creationDate,
             lastModificationDate: lastModificationDate,
             reviews: reviews,
+            images: images,
             type: 'festival');
 
   factory Festival.fromJson(String str) => Festival.fromMap(json.decode(str));
@@ -48,6 +50,11 @@ class Festival extends Article {
                 .map((x) => Review.fromMap(x as Map<String, dynamic>))
                 .toList()
             : [],
+        images: json["images"] is List
+            ? (json["images"] as List)
+                .map((x) => Image.fromMap(x as Map<String, dynamic>))
+                .toList()
+            : [],
         startDate: DateTime.parse(json["startDate"]),
         endDate: DateTime.parse(json["endDate"]),
         creator: User.fromMap(json["creator"]),
@@ -63,6 +70,7 @@ class Festival extends Article {
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
         "reviews": reviews.map((x) => x.toMap()).toList(),
+        "images": reviews.map((x) => x.toMap()).toList(),
         "startDate":
             "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
         "endDate":
