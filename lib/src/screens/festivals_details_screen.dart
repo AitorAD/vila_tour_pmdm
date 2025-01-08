@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 
 class DetailsFestival extends StatefulWidget {
   static final routeName = 'general_festival';
@@ -28,13 +30,30 @@ class _DetailsFestivalState extends State<DetailsFestival> {
               children: [
                 Hero(
                   tag: festival.id, // Asegúrate de usar el mismo `tag`
-                  child: FadeInImage(
-                    placeholder: AssetImage('assets/logo.ico'),
-                    image: MemoryImage(
-                        decodeImageBase64(festival.images!.first.path)),
-                    width: double.infinity,
-                    height: 400,
-                    fit: BoxFit.cover,
+                  child: PageStorage(
+                    bucket:
+                        PageStorageBucket(), // Crear un bucket para almacenar el estado
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        height: 400,
+                        enableInfiniteScroll: true,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 5),
+                        enlargeCenterPage: true,
+                        viewportFraction: 1.0,
+                      ),
+                      items: festival.images.map((image) {
+                        return FadeInImage(
+                          placeholder: AssetImage('assets/logo.ico'),
+                          image: image.path.startsWith('assets/')
+                              ? AssetImage(image.path) as ImageProvider
+                              : MemoryImage(decodeImageBase64(image.path)),
+                          width: double.infinity,
+                          height: 400,
+                          fit: BoxFit.cover,
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
 

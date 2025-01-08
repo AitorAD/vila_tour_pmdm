@@ -12,7 +12,6 @@ class RecipesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recipeService = RecipeService();
-    final imageService = ImageService();
 
     return Scaffold(
       bottomNavigationBar: CustomNavigationBar(),
@@ -29,7 +28,7 @@ class RecipesScreen extends StatelessWidget {
                 print(snapshot.error);
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No se encontraron festivales.'));
+                return Center(child: Text('No se encontraron recetas.'));
               } else {
                 List<Recipe> recipes = snapshot.data!;
 

@@ -12,6 +12,41 @@ class FestivalsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final festivalService = FestivalService();
+
+    return Scaffold(
+      bottomNavigationBar: CustomNavigationBar(),
+      appBar: CustomAppBar(title: 'Festivales y Tradiciones'),
+      body: Stack(
+        children: [
+          WavesWidget(),
+          FutureBuilder<List<Festival>>(
+            future: festivalService.getFestivals(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                print(snapshot.error);
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('No se encontraron festivales.'));
+              } else {
+                List<Festival> festivals = snapshot.data!;
+
+                return ListView.builder(
+                  itemCount: festivals.length,
+                  itemBuilder: (context, index) {
+                    final festival = festivals[index];
+                    return ArticleBox(article: festival);
+                  },
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+    /*
+    final festivalService = FestivalService();
     final imageService = ImageService();
 
     return Scaffold(
@@ -66,5 +101,7 @@ class FestivalsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+  */
   }
 }

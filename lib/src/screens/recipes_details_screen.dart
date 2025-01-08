@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
@@ -103,7 +102,11 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         tag: recipe.id, // Mismo tag que en ArticleBox
                         child: FadeInImage(
                           placeholder: AssetImage('assets/logo.ico'),
-                          image: MemoryImage(decodeImageBase64(recipe.images!.first.path)),
+                          image: recipe.images.isNotEmpty
+                              ? MemoryImage(
+                                  decodeImageBase64(recipe.images.first.path))
+                              : AssetImage('assets/logo_foreground.png')
+                                  as ImageProvider,
                           width: double.infinity,
                           height: 200,
                           fit: BoxFit.cover,
@@ -130,7 +133,8 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: ratings.map((rating) {
                             return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
                               child: Row(
                                 children: [
                                   Expanded(
