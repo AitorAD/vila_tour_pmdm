@@ -66,13 +66,13 @@ class User {
   String toJson() => json.encode(toMap());
 
   factory User.fromMap(Map<String, dynamic> json) => User(
-        id: json["id"],
+        id: json["id"] ?? 0,
         username: json["username"],
-        email: json["email"],
-        password: json["password"],
-        role: json["role"],
-        name: json["name"],
-        surname: json["surname"],
+        email: json["email"] ?? "null",
+        password: json["password"] ?? "null",
+        role: json["role"] ?? "null",
+        name: json["name"] ?? "null",
+        surname: json["surname"] ?? "null",
         profilePicture: json["profilePicture"],
         createdRecipes: List<Recipe>.from(
             json["createdRecipes"]?.map((x) => Recipe.fromMap(x)) ?? []),

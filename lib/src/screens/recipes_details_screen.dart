@@ -32,8 +32,6 @@ class _RecipeDetailsState extends State<RecipeDetails>
   Widget build(BuildContext context) {
     final Recipe recipe = ModalRoute.of(context)!.settings.arguments as Recipe;
 
-
-
     return Scaffold(
       bottomNavigationBar: CustomNavigationBar(),
       appBar: CustomAppBar(title: recipe.name),
@@ -114,9 +112,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                 ),
 
                 // Tab 3: Reseñas
-                const Center(child: Text('Contenido de las reseñas aquí')),
-
-                //ReviewsInfo(ratings: ratings)
+                ReviewsInfo(reviews: recipe.reviews)
               ],
             ),
           ),
