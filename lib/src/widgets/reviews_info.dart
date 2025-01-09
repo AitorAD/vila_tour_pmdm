@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/button.dart';
 import 'package:vila_tour_pmdm/src/widgets/paint_stars.dart';
 
 class ReviewsInfo extends StatelessWidget {
@@ -146,7 +148,7 @@ class _StarRatingDistribution extends StatelessWidget {
 
   Map<int, double> _calculateRatingsPercentage() {
     // Inicializamos un mapa para contar las estrellas
-    Map<int, int> starCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+    Map<int, int> starCounts = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0};
     int totalReviews = reviews.length;
 
     // Contamos las calificaciones

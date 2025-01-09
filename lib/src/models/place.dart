@@ -71,7 +71,7 @@ class Place extends Article {
         "coordinate": coordinate.toMap(),
       };
 
-  static List<Festival> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((item) => Festival.fromMap(item)).toList();
+  static List<Place> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((item) => Place.fromMap(item)).toList();
   }
 }

@@ -1,21 +1,25 @@
 {
-    "nombreApp" : "VILATOUR",
-     "rutas" : [
+    "nombreApp": "VILATOUR",
+    "rutas": [
         {
-            "ruta" : "festivals_screen",
+            "ruta": "festivals_screen",
             "texto": "Festivales"
         },
         {
-            "ruta" : "login_screen",
+            "ruta": "login_screen",
             "texto": "Log In"
         },
         {
-            "ruta" : "recipes_screen",
+            "ruta": "recipes_screen",
             "texto": "Recetas"
         },
         {
-            "ruta" : "upload_recipe",
-            "texto" : "Subir receta"
+            "ruta": "upload_recipe",
+            "texto": "Subir receta"
+        },
+        {
+            "ruta": "places_screen",
+            "texto": "Lugares"
         }
-     ]
+    ]
 }

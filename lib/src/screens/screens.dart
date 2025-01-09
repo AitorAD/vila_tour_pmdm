@@ -7,3 +7,8 @@ export 'package:vila_tour_pmdm/src/screens/recipes_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/map_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/upload_screen.dart';
+export 'package:vila_tour_pmdm/src/screens/places_screen.dart';
+export 'package:vila_tour_pmdm/src/screens/places_details_screen.dart';
+export 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
+export 'package:vila_tour_pmdm/src/screens/user_screen.dart';
+export 'package:vila_tour_pmdm/src/screens/password_recovery.dart';

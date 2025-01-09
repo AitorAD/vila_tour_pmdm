@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vila_tour_pmdm/src/screens/password_recovery.dart';
-
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/screens/upload_screen.dart';
-import 'package:vila_tour_pmdm/src/screens/user_screen.dart';
 
 Map<String, WidgetBuilder> getApplicationRoutes() {
   return <String, WidgetBuilder>{
@@ -18,5 +14,8 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     UploadRecipe.routeName: (BuildContext context) => UploadRecipe(),
     UserScreen.routeName: (BuildContext context) => UserScreen(),
     PasswordRecovery.routeName: (BuildContext context) => PasswordRecovery(),
+    PlacesScreen.routeName: (BuildContext context) => PlacesScreen(),
+    PlacesDetails.routeName: (BuildContext context) => PlacesDetails(),
+    AddReviewScreen.routeName: (BuildContext context) => AddReviewScreen(),
   };
 }
