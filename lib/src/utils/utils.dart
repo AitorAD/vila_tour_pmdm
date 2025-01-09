@@ -51,3 +51,19 @@ Future<String> fileToBase64(File file) async {
 String formatDate(DateTime date) {
   return DateFormat('dd/MM/yyyy').format(date);
 }
+
+ImageProvider getImage(String? picture) {
+    if (picture != null && picture.isNotEmpty) {
+      try {
+        // Intentamos decodificar la cadena base64 para convertirla en una imagen.
+        return MemoryImage(decodeImageBase64(picture));
+      } catch (e) {
+        print('Error al decodificar la imagen base64: $e');
+        // En caso de error en la decodificación, se muestra la imagen predeterminada.
+        return AssetImage('assets/logo.ico');
+      }
+    } else {
+      // Si no hay imagen, mostramos la predeterminada.
+      return AssetImage('assets/logo.ico');
+    }
+  }

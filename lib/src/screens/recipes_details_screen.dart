@@ -148,9 +148,9 @@ class _RecipeDetailsState extends State<RecipeDetails>
                   // Tab 3: Reseñas
                   const Center(child: Text('Contenido de las reseñas aquí')),
 
-                  //ReviewsInfo(ratings: ratings)
-                ],
-              ),
+                // Tab 3: Reseñas
+                ReviewsInfo(reviews: recipe.reviews)
+              ],
             ),
           ],
         ),
