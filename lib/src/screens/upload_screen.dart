@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
@@ -21,11 +25,8 @@ class UploadRecipe extends StatefulWidget {
 class _UploadRecipeState extends State<UploadRecipe> {
   final ValueNotifier<List<Ingredient>> _selectedIngredients =
       ValueNotifier([]);
-  String? selectedImage;
+  customImage.Image? selectedImage;
   bool _isSearchFocused = false;
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -38,7 +39,25 @@ class _UploadRecipeState extends State<UploadRecipe> {
 
   @override
   Widget build(BuildContext context) {
+    final recipeService = RecipeService();
+    final recipeFormProvider = Provider.of<RecipeFormProvider>(context);
     final ingredientsProvider = Provider.of<IngredientsProvider>(context);
+
+    recipeFormProvider.recipe = Recipe(
+      type: "recipe",
+      id: 0,
+      creationDate: DateTime.now(),
+      lastModificationDate: DateTime.now(),
+      name: '',
+      description: '',
+      ingredients: _selectedIngredients.value,
+      averageScore: 1.2,
+      reviews: [],
+      approved: false,
+      recent: true,
+      creator: currentUser,
+      images: [],
+    );
 
     return Scaffold(
       appBar: CustomAppBar(title: 'Subir Receta'),
@@ -51,13 +70,14 @@ class _UploadRecipeState extends State<UploadRecipe> {
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
               child: Form(
-                key: _formKey,
+                key: recipeFormProvider.formLogKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _ProductImageStack(
-                      selectedImage: selectedImage,
-                      onImageSelected: (String? image) {
+                      selectedImage: selectedImage?.path,
+                      recipeFormProvider: recipeFormProvider,
+                      onImageSelected: (customImage.Image? image) {
                         setState(() {
                           selectedImage = image;
                         });
@@ -65,13 +85,14 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     ),
                     const SizedBox(height: 15),
                     TextFormField(
-                      controller: _nameController,
                       decoration: InputDecoration(
                         labelText: "Nombre",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
+                      onChanged: (value) =>
+                          recipeFormProvider.recipe!.name = value,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor ingrese el nombre de la receta';
@@ -208,7 +229,6 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
-                      controller: _descriptionController,
                       maxLines: 6,
                       decoration: InputDecoration(
                         hintText: 'Escribe la descripción de la receta...',
@@ -216,6 +236,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
+                      onChanged: (value) =>
+                          recipeFormProvider.recipe!.description = value,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor ingrese la descripción de la receta';
@@ -231,11 +253,13 @@ class _UploadRecipeState extends State<UploadRecipe> {
                         child: CustomButton(
                           text: "Enviar",
                           onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
+                            if (recipeFormProvider.formLogKey.currentState!
+                                .validate()) {
                               bool? confirm = await showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
+                                    backgroundColor: Colors.white,
                                     title: const Text(
                                         '¿Estás seguro de enviar la receta?'),
                                     content: const Text(
@@ -244,58 +268,46 @@ class _UploadRecipeState extends State<UploadRecipe> {
                                       TextButton(
                                         child: const Text(
                                           'Cancelar',
-                                          style: TextStyle(
-                                              color: Colors
-                                                  .black),
+                                          style: TextStyle(color: Colors.black),
                                         ),
                                         onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(false);
+                                          Navigator.of(context).pop(false);
                                         },
                                       ),
                                       TextButton(
-                                        child: const Text(
-                                          'Enviar',
-                                          style: TextStyle(
-                                              color: Colors
-                                                  .black),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(true);
-                                        }
-                                      ),
+                                          child: const Text(
+                                            'Enviar',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          }),
                                     ],
                                   );
                                 },
                               );
 
                               if (confirm == true) {
-                                final recipe = Recipe(
-                                  type: "recipe",
-                                  id: 0,
-                                  creationDate: DateTime.now(),
-                                  lastModificationDate: DateTime.now(),
-                                  name: _nameController.text,
-                                  description: _descriptionController.text,
-                                  ingredients: _selectedIngredients.value,
-                                  averageScore: 1.2,
-                                  reviews: [],
-                                  approved: false,
-                                  recent: true,
-                                  creator: currentUser,
-                                );
-
                                 try {
-                                  final recipeService = RecipeService();
-                                  await recipeService.createRecipe(recipe);
+                                  recipeFormProvider.recipe!.ingredients =
+                                      _selectedIngredients.value;
+                                  print('RECETA ENVIADA ' +
+                                      recipeFormProvider.recipe!.toJson());
+
+                                  if (selectedImage != null) {
+                                    recipeFormProvider.recipe!.images
+                                        .add(selectedImage!);
+                                  }
+
+                                  await recipeService
+                                      .createRecipe(recipeFormProvider.recipe!);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content:
                                           Text('Receta enviada a revisión'),
-                                      duration: Duration(
-                                          seconds: 2),
+                                      duration: Duration(seconds: 2),
                                     ),
                                   );
 
@@ -326,31 +338,44 @@ class _UploadRecipeState extends State<UploadRecipe> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    _descriptionController.dispose();
-    _nameController.dispose();
-    super.dispose();
-  }
 }
 
 class _ProductImageStack extends StatelessWidget {
-  const _ProductImageStack({
+  RecipeFormProvider recipeFormProvider;
+
+  _ProductImageStack({
     super.key,
     required this.selectedImage,
     required this.onImageSelected,
+    required this.recipeFormProvider,
   });
 
   final String? selectedImage;
-  final Function(String?) onImageSelected;
+  final Function(customImage.Image?) onImageSelected;
 
   Future<void> _pickImage(ImageSource source) async {
-    final picker = ImagePicker();
-    final pickedFile =
-        await picker.pickImage(source: source, imageQuality: 100);
-    if (pickedFile != null) {
-      onImageSelected(pickedFile.path);
+    try {
+      final picker = ImagePicker();
+      final pickedFile =
+          await picker.pickImage(source: source, imageQuality: 50);
+
+      if (pickedFile != null) {
+        // Convertir el archivo de imagen a una cadena Base64
+        final base64Image = await fileToBase64(File(pickedFile.path));
+
+        // Crear un objeto de imagen personalizada
+        final image = customImage.Image(path: base64Image);
+
+        // Agregar la imagen en formato Base64 al modelo de receta
+        recipeFormProvider.recipe!.images.add(image);
+
+        // Actualizar la imagen seleccionada en la interfaz
+        onImageSelected(image); // Pasar la cadena Base64
+      } else {
+        print('No se seleccionó ninguna imagen.');
+      }
+    } catch (e) {
+      print('Error al seleccionar la imagen: $e');
     }
   }
 

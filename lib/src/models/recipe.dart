@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class Recipe extends Article {
@@ -9,14 +8,15 @@ class Recipe extends Article {
   User creator;
 
   Recipe({
-    required type,
-    required id,
-    required name,
-    required description,
-    required averageScore,
-    required creationDate,
-    required lastModificationDate,
-    required reviews,
+    required String type,
+    required int id,
+    required String name,
+    required String description,
+    required double averageScore,
+    required DateTime creationDate,
+    required DateTime lastModificationDate,
+    required List<Review> reviews,
+    required List<Image> images,
     required this.approved,
     required this.recent,
     required this.ingredients,
@@ -29,8 +29,8 @@ class Recipe extends Article {
             creationDate: creationDate,
             lastModificationDate: lastModificationDate,
             reviews: reviews,
+            images: images,
             type: 'recipe');
-
 
   // Modificado para aceptar tanto un String como un Map<String, dynamic>
   factory Recipe.fromJson(dynamic source) {
@@ -45,7 +45,6 @@ class Recipe extends Article {
 
   String toJson() => json.encode(toMap());
 
-
   factory Recipe.fromMap(Map<String, dynamic> json) => Recipe(
         type: json["type"],
         id: json["id"],
@@ -56,6 +55,11 @@ class Recipe extends Article {
         lastModificationDate: DateTime.parse(json["lastModificationDate"]),
         reviews: json["reviews"] != null
             ? List<Review>.from(json["reviews"].map((x) => Review.fromMap(x)))
+            : [],
+        images: json["images"] is List
+            ? (json["images"] as List)
+                .map((x) => Image.fromMap(x as Map<String, dynamic>))
+                .toList()
             : [],
         approved: json["approved"],
         recent: json["recent"],
@@ -75,6 +79,7 @@ class Recipe extends Article {
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
         "reviews": reviews.map((x) => x.toMap()).toList(),
+        'images': images.map((image) => image.toJson()).toList(),
         "approved": approved,
         "recent": recent,
         "ingredients": ingredients.map((x) => x.toMap()).toList(),

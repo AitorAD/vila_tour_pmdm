@@ -124,7 +124,7 @@ class _FestivalInfo extends StatelessWidget {
                     color: Colors.yellow),
                 SizedBox(width: 10),
                 Text(
-                  (widget.article as Festival).averageScore.toString(),
+                  (widget.article as Festival).averageScore.toStringAsFixed(1),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -182,7 +182,7 @@ class _RecipeInfo extends StatelessWidget {
                     color: Colors.yellow),
                 SizedBox(width: 10),
                 Text(
-                  (widget.article as Recipe).averageScore.toString(),
+                  (widget.article as Recipe).averageScore.toStringAsFixed(1),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -212,33 +212,64 @@ class _BackgroundImage extends StatelessWidget {
       child: Hero(
         tag: widget.article.id,
         child: widget.article is Recipe
-            ? Container(
-                color: Colors.black.withOpacity(0.4),
-                height: 150,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 135,
-                      height: 150,
-                      child: FadeInImage(
-                        placeholder: AssetImage('assets/logo.ico'),
-                        image: MemoryImage(decodeImageBase64(
-                            widget.article.images!.first.path)),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : FadeInImage(
-                placeholder: AssetImage('assets/logo.ico'),
-                image: MemoryImage(
-                    decodeImageBase64(widget.article.images![0].path)),
-                width: double.infinity,
-                height: 150,
-                fit: BoxFit.cover,
-              ),
+            ? _ImageRecipe(widget: widget)
+            : _ImageFestival(widget: widget),
       ),
+    );
+  }
+}
+
+class _ImageRecipe extends StatelessWidget {
+  const _ImageRecipe({
+    super.key,
+    required this.widget,
+  });
+
+  final ArticleBox widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black.withOpacity(0.4),
+      height: 150,
+      child: Row(
+        children: [
+          Container(
+            width: 135,
+            height: 150,
+            child: FadeInImage(
+              placeholder: AssetImage('assets/logo.ico'),
+              image: widget.article.images.isNotEmpty
+                  ? MemoryImage(
+                      decodeImageBase64(widget.article.images.first.path))
+                  : AssetImage('assets/logo_foreground.png') as ImageProvider,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ImageFestival extends StatelessWidget {
+  const _ImageFestival({
+    super.key,
+    required this.widget,
+  });
+
+  final ArticleBox widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInImage(
+      placeholder: AssetImage('assets/logo.ico'),
+      image: widget.article.images.isNotEmpty
+          ? MemoryImage(decodeImageBase64(widget.article.images.first.path))
+          : AssetImage('assets/logo_foreground.png') as ImageProvider,
+      width: double.infinity,
+      height: 150,
+      fit: BoxFit.cover,
     );
   }
 }
