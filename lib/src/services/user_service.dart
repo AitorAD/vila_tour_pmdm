@@ -29,10 +29,8 @@ class UserService extends ChangeNotifier {
 
   Future<User> getBasicInfoUserById(int id) async {
     final url = Uri.parse('$baseURL/users/basic/$id');
-    print('Haciendo solicitud a: $url');
 
     String? token = await UserPreferences.instance.readData('token');
-    print('Token obtenido: $token');
 
     final response = await http.get(
       url,
@@ -42,22 +40,15 @@ class UserService extends ChangeNotifier {
       },
     );
 
-    print('Respuesta recibida: ${response.statusCode}');
-    print('Cuerpo de la respuesta: ${response.body}');
-
     if (response.statusCode == 200) {
       try {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
-        print('JSON decodificado: $jsonResponse');
         User user = User.fromMap(jsonResponse);
-        print('Usuario creado: $user');
         return user;
       } catch (e) {
-        print('Error al deserializar el JSON: $e');
         throw Exception('Error al deserializar los datos del usuario');
       }
     } else {
-      print('Error en la respuesta del servidor: ${response.statusCode}');
       throw Exception('Error al cargar los datos del usuario');
     }
   }

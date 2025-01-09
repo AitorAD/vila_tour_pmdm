@@ -124,7 +124,7 @@ class _FestivalInfo extends StatelessWidget {
                     color: Colors.yellow),
                 SizedBox(width: 10),
                 Text(
-                  (widget.article as Festival).averageScore.toString(),
+                  (widget.article as Festival).averageScore.toStringAsFixed(1),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -182,7 +182,7 @@ class _RecipeInfo extends StatelessWidget {
                     color: Colors.yellow),
                 SizedBox(width: 10),
                 Text(
-                  (widget.article as Recipe).averageScore.toString(),
+                  (widget.article as Recipe).averageScore.toStringAsFixed(1),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,

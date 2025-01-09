@@ -124,16 +124,30 @@ class _StarRatingDistribution extends StatelessWidget {
     required this.reviews,
   });
 
-  final List<Map<String, dynamic>> ratings = [
-    {'stars': 5, 'percentage': 0.76},
-    {'stars': 4, 'percentage': 0.13},
-    {'stars': 3, 'percentage': 0.04},
-    {'stars': 2, 'percentage': 0.04},
-    {'stars': 1, 'percentage': 0.04},
-  ];
+  Map<int, double> _calculateRatingsPercentage() {
+    // Inicializamos un mapa para contar las estrellas
+    Map<int, int> starCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+    int totalReviews = reviews.length;
+
+    // Contamos las calificaciones
+    for (var review in reviews) {
+      starCounts[review.rating] = (starCounts[review.rating] ?? 0) + 1;
+    }
+
+    // Calculamos los porcentajes
+    return starCounts
+        .map((stars, count) => MapEntry(stars, count / totalReviews));
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Calculamos los porcentajes dinámicamente
+    final ratingsPercentage = _calculateRatingsPercentage();
+    final double averageRating = reviews.isNotEmpty
+        ? reviews.map((review) => review.rating).reduce((a, b) => a + b) /
+            reviews.length
+        : 0;
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -144,26 +158,29 @@ class _StarRatingDistribution extends StatelessWidget {
             flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: ratings.map((rating) {
+              children: ratingsPercentage.entries.map((entry) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Row(
                     children: [
                       Expanded(
                         child: LinearProgressIndicator(
-                          value: rating['percentage'],
+                          value: entry.value,
                           backgroundColor: Colors.grey[300],
                           color: Colors.amber,
                           minHeight: 10,
                         ),
                       ),
+                      const SizedBox(width: 8),
+                      Text('${entry.key}'),
+                      Icon(Icons.star, color: Colors.amber, size: 20),
                     ],
                   ),
                 );
               }).toList(),
             ),
           ),
-          // Columna derecha: puntuación, estrellas y comentarios
+          // Columna derecha: puntuación promedio, estrellas y comentarios
           Expanded(
             flex: 1,
             child: Column(
@@ -172,12 +189,12 @@ class _StarRatingDistribution extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '4.8',
+                  averageRating.toStringAsFixed(1),
                   style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                 ),
-                PaintStars(rating: 4.8, color: Colors.amber),
+                PaintStars(rating: averageRating, color: Colors.amber),
                 Text(
-                  '100000.037 comentarios',
+                  '${reviews.length} comentarios',
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -191,13 +208,3 @@ class _StarRatingDistribution extends StatelessWidget {
     );
   }
 }
-
-/*
-    final List<Map<String, dynamic>> ratings = [
-      {'stars': 5, 'percentage': 0.76},
-      {'stars': 4, 'percentage': 0.13},
-      {'stars': 3, 'percentage': 0.04},
-      {'stars': 2, 'percentage': 0.04},
-      {'stars': 1, 'percentage': 0.04},
-    ];
-*/
