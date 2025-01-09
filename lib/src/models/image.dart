@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class Image {
   int? id;
@@ -12,7 +11,7 @@ class Image {
 
   factory Image.fromJson(String str) => Image.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
+  Map<String, dynamic> toJson() => toMap();
 
   factory Image.fromMap(Map<String, dynamic> json) => Image(
         id: json["id"],
@@ -30,6 +29,6 @@ class Image {
 
   @override
   String toString() {
-    return 'Festival(id: $id, path: $path)';
+    return 'Image(id: $id, path: $path)';
   }
 }
