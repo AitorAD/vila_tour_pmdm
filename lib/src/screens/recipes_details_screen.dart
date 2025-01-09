@@ -34,12 +34,11 @@ class _RecipeDetailsState extends State<RecipeDetails>
 
     return Scaffold(
       bottomNavigationBar: CustomNavigationBar(),
-      appBar: CustomAppBar(title: recipe.name),
-      body: Stack(
-        children: [
+      body: Stack(children: [
         WavesWidget(),
         Column(
           children: [
+            BarScreenArrow(labelText: recipe.name, arrowBack: true),
             TabBar(
               controller: _tabController,
               indicatorColor: const Color.fromARGB(255, 54, 71, 71),
@@ -146,11 +145,9 @@ class _RecipeDetailsState extends State<RecipeDetails>
                   ),
 
                   // Tab 3: Reseñas
-                  const Center(child: Text('Contenido de las reseñas aquí')),
-
-                // Tab 3: Reseñas
-                ReviewsInfo(reviews: recipe.reviews)
-              ],
+                  ReviewsInfo(reviews: recipe.reviews)
+                ],
+              ),
             ),
           ],
         ),

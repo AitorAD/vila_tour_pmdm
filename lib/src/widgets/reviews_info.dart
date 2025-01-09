@@ -59,53 +59,73 @@ class ReviewBox extends StatelessWidget {
         } else {
           // Si todo está bien, usa el resultado
           final user = snapshot.data!;
-          return Container(
+          return Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 28,
-                        backgroundColor: Colors.grey[300],
-                        backgroundImage: getImage(user.profilePicture),
-                      ),
-                      SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user.username,
-                            style: textStyleVilaTourTitle(
-                                color: Colors.black, fontSize: 15),
-                          ),
-                          Row(
-                            children: [
-                              PaintStars(
-                                rating: review.rating.toDouble(),
-                                color: Colors.amber,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                DateFormat('dd-MM-yyyy')
-                                    .format(review.postDate),
-                                style: textStyleVilaTourTitle(
-                                    color: Colors.grey, fontSize: 12),
-                              ),
-                            ],
-                          )
-                        ],
+                SizedBox(height: 15),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: Offset(3, 3),
                       ),
                     ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(review.comment),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 28,
+                              backgroundColor: Colors.grey[300],
+                              backgroundImage: getImage(user.profilePicture),
+                            ),
+                            SizedBox(width: 12),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user.username,
+                                  style: textStyleVilaTourTitle(
+                                      color: Colors.black, fontSize: 15),
+                                ),
+                                Row(
+                                  children: [
+                                    PaintStars(
+                                      rating: review.rating.toDouble(),
+                                      color: Colors.amber,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      DateFormat('dd-MM-yyyy')
+                                          .format(review.postDate),
+                                      style: textStyleVilaTourTitle(
+                                          color: Colors.grey, fontSize: 12),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(review.comment, textAlign: TextAlign.start),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
