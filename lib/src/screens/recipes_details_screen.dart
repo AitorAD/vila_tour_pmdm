@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
@@ -15,17 +16,27 @@ class RecipeDetails extends StatefulWidget {
 class _RecipeDetailsState extends State<RecipeDetails>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool showFab = false; // Controla la visibilidad del botón
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, initialIndex: 1, vsync: this);
+    _tabController.addListener(_handleTabChange);
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabChange); // Limpia el listener
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _handleTabChange() {
+    setState(() {
+      showFab =
+          _tabController.index == 2; // Muestra el botón solo en el índice 2
+    });
   }
 
   @override
@@ -34,6 +45,16 @@ class _RecipeDetailsState extends State<RecipeDetails>
 
     return Scaffold(
       bottomNavigationBar: CustomNavigationBar(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: showFab
+          ? ElevatedCustomButton(
+              text: 'Añadir reseña',
+              radius: 20,
+              onPressed: () {
+                Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: recipe);
+              },
+            )
+          : null,
       body: Stack(children: [
         WavesWidget(),
         Column(
@@ -152,23 +173,6 @@ class _RecipeDetailsState extends State<RecipeDetails>
           ],
         ),
       ]),
-      /*
-      floatingActionButton: Consumer<RecipesProvider>(
-        builder: (context, recipesProvider, child) {
-          final isFavourite = recipesProvider.recipes.any((r) => r.name == recipe.name && r.favourite);
-
-          return FloatingActionButton(
-            onPressed: () {
-              recipesProvider.toggleFavorite(recipe);
-            },
-            backgroundColor: isFavourite ? Colors.white : Colors.redAccent,
-            child: isFavourite
-                ? Icon(Icons.favorite, color: Colors.redAccent)
-                : Icon(Icons.favorite_border),
-          );
-        },
-      ),
-      */
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/screens/festivals_details_screen.dart';
-import 'package:vila_tour_pmdm/src/screens/recipes_details_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -22,6 +21,7 @@ class _ArticleBoxState extends State<ArticleBox> {
       onTap: () => {
         if (widget.article is Festival) _routeName = DetailsFestival.routeName,
         if (widget.article is Recipe) _routeName = RecipeDetails.routeName,
+        if (widget.article is Place) _routeName = PlacesDetails.routeName,
         Navigator.pushNamed(
           context,
           _routeName,
@@ -35,6 +35,7 @@ class _ArticleBoxState extends State<ArticleBox> {
             _BackgroundImage(widget: widget),
             if (widget.article is Festival) _FestivalInfo(widget: widget),
             if (widget.article is Recipe) _RecipeInfo(widget: widget),
+            if (widget.article is Place) _PlaceInfo(widget: widget),
             _Favorite(article: widget.article)
           ],
         ),
@@ -125,6 +126,66 @@ class _FestivalInfo extends StatelessWidget {
                 SizedBox(width: 10),
                 Text(
                   (widget.article as Festival).averageScore.toStringAsFixed(1),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PlaceInfo extends StatelessWidget {
+  const _PlaceInfo({
+    super.key,
+    required this.widget,
+  });
+
+  final ArticleBox widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.black.withOpacity(0.4),
+        ),
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              widget.article.name,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'Lugar: ${(widget.article as Place).coordinate.name}',
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                PaintStars(
+                    rating: (widget.article as Place).averageScore,
+                    color: Colors.yellow),
+                SizedBox(width: 10),
+                Text(
+                  (widget.article as Place).averageScore.toStringAsFixed(1),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
