@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
@@ -184,17 +185,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                   ),
         
                   // Pestaña 2: Reseñas
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Reseñas:',
-                          style: textStyleVilaTourTitle(color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ReviewsInfo(reviews: festival.reviews)
                 ],
               ),
             ),

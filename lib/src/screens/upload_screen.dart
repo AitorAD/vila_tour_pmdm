@@ -292,12 +292,12 @@ class _UploadRecipeState extends State<UploadRecipe> {
                                 try {
                                   recipeFormProvider.recipe!.ingredients =
                                       _selectedIngredients.value;
-                                  print('RECETA ENVIADA ' +
-                                      recipeFormProvider.recipe!.toJson());
 
                                   if (selectedImage != null) {
-                                    recipeFormProvider.recipe!.images
-                                        .add(selectedImage!);
+                                    String base64Image = await fileToBase64(
+                                        File(selectedImage!.path));
+                                    recipeFormProvider.recipe!.images.add(
+                                        customImage.Image(path: base64Image));
                                   }
 
                                   await recipeService
@@ -314,6 +314,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                                   Navigator.pushReplacementNamed(
                                       context, HomePage.routeName);
                                 } catch (e) {
+                                  print("RECETAERROR:" + e.toString());
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content:
@@ -360,17 +361,10 @@ class _ProductImageStack extends StatelessWidget {
           await picker.pickImage(source: source, imageQuality: 50);
 
       if (pickedFile != null) {
-        // Convertir el archivo de imagen a una cadena Base64
-        final base64Image = await fileToBase64(File(pickedFile.path));
+        // Cargar la imagen sin convertir a base64 inicialmente
+        final image = customImage.Image(path: pickedFile.path);
 
-        // Crear un objeto de imagen personalizada
-        final image = customImage.Image(path: base64Image);
-
-        // Agregar la imagen en formato Base64 al modelo de receta
-        recipeFormProvider.recipe!.images.add(image);
-
-        // Actualizar la imagen seleccionada en la interfaz
-        onImageSelected(image); // Pasar la cadena Base64
+        onImageSelected(image); // Pasar la imagen no codificada
       } else {
         print('No se seleccionó ninguna imagen.');
       }
