@@ -141,7 +141,7 @@ class StarRating extends StatefulWidget {
 }
 
 class _StarRatingState extends State<StarRating> {
-  int _selectedStars = 0;
+  int _selectedStars = 5;
 
   void _onStarTap(int index) {
     setState(() {

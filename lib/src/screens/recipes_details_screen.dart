@@ -138,7 +138,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                recipe.averageScore.toString(),
+                                recipe.averageScore.toStringAsFixed(1),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,

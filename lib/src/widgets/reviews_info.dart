@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/button.dart';
 import 'package:vila_tour_pmdm/src/widgets/paint_stars.dart';
 
 class ReviewsInfo extends StatelessWidget {
@@ -16,124 +14,154 @@ class ReviewsInfo extends StatelessWidget {
     required this.reviews,
   });
 
+  Future<List<Map<String, dynamic>>> _loadReviewsWithUsers(
+      BuildContext context) async {
+    final userService = Provider.of<UserService>(context, listen: false);
+
+    // Cargamos la información de los usuarios para cada review
+    final reviewsWithUsers = await Future.wait(
+      reviews.map((review) async {
+        final user = await userService.getBasicInfoUserById(review.id.userId);
+        return {
+          'review': review,
+          'user': user,
+        };
+      }).toList(),
+    );
+
+    return reviewsWithUsers;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _StarRatingDistribution(reviews: reviews),
-        Expanded(
-          child: ListView.builder(
-            itemCount: reviews.length,
-            itemBuilder: (context, index) {
-              return ReviewBox(review: reviews[index]);
-            },
-          ),
-        ),
-      ],
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: _loadReviewsWithUsers(context),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Mostrar un único indicador de carga
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          // Manejar errores en la carga
+          return Center(child: Text('Error al cargar las reseñas'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          // Manejar el caso de datos vacíos
+          return Center(child: Text('No hay reseñas disponibles'));
+        } else {
+          // Mostrar las reseñas con los usuarios
+          final reviewsWithUsers = snapshot.data!;
+          return Column(
+            children: [
+              _StarRatingDistribution(reviews: reviews),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: reviewsWithUsers.length +
+                      1, // Añadir un elemento extra para el SizedBox
+                  itemBuilder: (context, index) {
+                    if (index == reviewsWithUsers.length) {
+                      return SizedBox(height: 65); // Espacio adicional al final
+                    }
+                    final reviewWithUser = reviewsWithUsers[index];
+                    final review = reviewWithUser['review'] as Review;
+                    final user = reviewWithUser['user'] as User;
+
+                    return ReviewBox(review: review, user: user);
+                  },
+                ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 }
 
 class ReviewBox extends StatelessWidget {
   final Review review;
+  final User user;
 
   const ReviewBox({
     super.key,
     required this.review,
+    required this.user,
   });
 
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
 
-    return FutureBuilder<User>(
-      future: userService.getBasicInfoUserById(review.id.userId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Muestra un indicador de carga mientras esperas el Future
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          // Muestra un mensaje de error si el Future falla
-          return Center(child: Text('Error al cargar el usuario'));
-        } else if (!snapshot.hasData) {
-          // Maneja el caso donde no hay datos
-          return Center(child: Text('Usuario no encontrado'));
-        } else {
-          // Si todo está bien, usa el resultado
-          final user = snapshot.data!;
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: const Color.fromARGB(255, 255, 255, 255),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(3, 3),
+                ),
+              ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 15),
-                Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(3, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 28,
-                              backgroundColor: Colors.grey[300],
-                              backgroundImage: getImage(user.profilePicture),
-                            ),
-                            SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  user.username,
-                                  style: textStyleVilaTourTitle(
-                                      color: Colors.black, fontSize: 15),
-                                ),
-                                Row(
-                                  children: [
-                                    PaintStars(
-                                      rating: review.rating.toDouble(),
-                                      color: Colors.amber,
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      DateFormat('dd-MM-yyyy')
-                                          .format(review.postDate),
-                                      style: textStyleVilaTourTitle(
-                                          color: Colors.grey, fontSize: 12),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
+                      CircleAvatar(
+                        radius: 28,
+                        backgroundColor: Colors.grey[300],
+                        backgroundImage: getImage(user.profilePicture),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(review.comment, textAlign: TextAlign.start),
+                      SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.username,
+                            style: textStyleVilaTourTitle(
+                                color: Colors.black, fontSize: 15),
+                          ),
+                          Row(
+                            children: [
+                              PaintStars(
+                                rating: review.rating.toDouble(),
+                                color: Colors.amber,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                DateFormat('dd-MM-yyyy')
+                                    .format(review.postDate),
+                                style: textStyleVilaTourTitle(
+                                    color: Colors.grey, fontSize: 12),
+                              ),
+                            ],
+                          )
+                        ],
                       ),
                     ],
                   ),
                 ),
+                review.comment.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(review.comment, textAlign: TextAlign.start),
+                      )
+                    : Container(),
               ],
             ),
-          );
-        }
-      },
+          ),
+          SizedBox(height: 15),
+        ],
+      ),
     );
   }
 }
@@ -214,9 +242,25 @@ class _StarRatingDistribution extends StatelessWidget {
                   averageRating.toStringAsFixed(1),
                   style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                 ),
-                PaintStars(rating: averageRating, color: Colors.amber),
+                Row(
+                  children: [
+                    PaintStars(rating: averageRating, color: Colors.amber),
+                    // TODO: Mostrar el numero de reseñas. 
+                    //Este numero marca la cantidad de gente que ha valorado el artículo
+                    
+                    /*
+                    Text(
+                      '(${reviews.length})',
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
+                    */
+                  ],
+                ),
                 Text(
-                  '${reviews.length} comentarios',
+                  '${reviews.where((review) => review.comment.isNotEmpty).length} comentarios',
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
