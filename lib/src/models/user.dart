@@ -68,11 +68,11 @@ class User {
   factory User.fromMap(Map<String, dynamic> json) => User(
         id: json["id"] ?? 0,
         username: json["username"],
-        email: json["email"] ?? "null",
-        password: json["password"] ?? "null",
-        role: json["role"] ?? "null",
-        name: json["name"] ?? "null",
-        surname: json["surname"] ?? "null",
+        email: json["email"] ?? "",
+        password: json["password"] ?? "",
+        role: json["role"] ?? "",
+        name: json["name"] ?? "",
+        surname: json["surname"] ?? "",
         profilePicture: json["profilePicture"],
         createdRecipes: List<Recipe>.from(
             json["createdRecipes"]?.map((x) => Recipe.fromMap(x)) ?? []),

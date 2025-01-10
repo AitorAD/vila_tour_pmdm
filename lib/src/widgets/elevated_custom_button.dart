@@ -16,7 +16,7 @@ class ElevatedCustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: defaultDecoration(radius), // Aplica la decoración
+      decoration: defaultDecoration(radius, opacity: 1), // Aplica la decoración
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent, // Lo hacemos transparente

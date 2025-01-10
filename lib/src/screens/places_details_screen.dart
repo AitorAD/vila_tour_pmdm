@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
@@ -16,18 +17,28 @@ class PlacesDetails extends StatefulWidget {
 class _PlacesDetailsState extends State<PlacesDetails>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool showFab = false; // Controla la visibilidad del botón
 
   @override
   void initState() {
     super.initState();
     _tabController =
         TabController(length: 2, vsync: this); // 2 pestañas: General y Reviews
+    _tabController.addListener(_handleTabChange);
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabChange); // Limpia el listener
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _handleTabChange() {
+    setState(() {
+      showFab =
+          _tabController.index == 1; // Muestra el botón solo en el índice 2
+    });
   }
 
   @override
@@ -36,6 +47,16 @@ class _PlacesDetailsState extends State<PlacesDetails>
 
     return Scaffold(
       appBar: CustomAppBar(title: place.name),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: showFab
+          ? ElevatedCustomButton(
+              text: 'Añadir reseña',
+              radius: 20,
+              onPressed: () {
+                Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: place);
+              },
+            )
+          : null,
       body: Stack(children: [
         WavesWidget(),
         Column(

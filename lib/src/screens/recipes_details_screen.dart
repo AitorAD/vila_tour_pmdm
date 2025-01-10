@@ -51,7 +51,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
               text: 'Añadir reseña',
               radius: 20,
               onPressed: () {
-                Navigator.pushNamed(context, AddReviewScreen.routeName);
+                Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: recipe);
               },
             )
           : null,
@@ -173,23 +173,6 @@ class _RecipeDetailsState extends State<RecipeDetails>
           ],
         ),
       ]),
-      /*
-      floatingActionButton: Consumer<RecipesProvider>(
-        builder: (context, recipesProvider, child) {
-          final isFavourite = recipesProvider.recipes.any((r) => r.name == recipe.name && r.favourite);
-
-          return FloatingActionButton(
-            onPressed: () {
-              recipesProvider.toggleFavorite(recipe);
-            },
-            backgroundColor: isFavourite ? Colors.white : Colors.redAccent,
-            child: isFavourite
-                ? Icon(Icons.favorite, color: Colors.redAccent)
-                : Icon(Icons.favorite_border),
-          );
-        },
-      ),
-      */
     );
   }
 }
