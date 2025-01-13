@@ -6,44 +6,7 @@ const tealGradientMiddle2 = Color(0xFF25C1CE);
 const tealGradientMiddle3 = Color(0xFF17BFC1);
 const tealGradientEnd = Color(0xFF01C2A9);
 
-ThemeData lightMode = ThemeData(
-  brightness: Brightness.light,
-  colorScheme: const ColorScheme.light(
-    primary: tealGradientStart,
-    primaryContainer: tealGradientMiddle1,
-    secondary: tealGradientMiddle2,
-    background: Colors.white,
-    surface: tealGradientMiddle3,
-    onPrimary: Colors.white,
-    onSecondary: Colors.black87,
-    onBackground: Colors.black,
-    onSurface: Colors.black87,
-  ),
-  scaffoldBackgroundColor: Colors.white,
-  appBarTheme: const AppBarTheme(
-    centerTitle: true,
-    color: Colors.white,
-    titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
-    iconTheme: IconThemeData(color: Colors.black),
-  ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    selectedItemColor: Colors.white,
-    unselectedItemColor: Colors.white,
-  ),
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: tealGradientEnd,
-    foregroundColor: Colors.white,
-  ),
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(tealGradientStart),
-      foregroundColor: MaterialStateProperty.all(Colors.white),
-    ),
-  ),
-  drawerTheme: DrawerThemeData(
-    backgroundColor: Colors.white, // Color de fondo del Drawer
-  ),
-);
+ThemeData lightMode = ThemeData(brightness: Brightness.light);
 
 ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,

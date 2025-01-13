@@ -1,29 +1,46 @@
 import 'package:flutter/material.dart';
 
 class SearchBox extends StatelessWidget {
+  final String hintText;
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onFilterPressed;
+
   const SearchBox({
     super.key,
+    required this.hintText,
+    required this.controller,
+    required this.onChanged,
+    required this.onFilterPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: const BoxDecoration(
-          color: Color(0xFFD9D9D9),
-          borderRadius: BorderRadius.all(Radius.circular(100))),
-      child: const Row(
+        color: Color(0xFFD9D9D9),
+        borderRadius: BorderRadius.all(Radius.circular(100)),
+      ),
+      child: Row(
         children: [
-          Icon(Icons.search),
+          const Icon(Icons.search),
           Expanded(
-              child: TextField(
-                  decoration: InputDecoration(
-            hintText: 'Buscar',
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-          ))),
-          Icon(Icons.tune_rounded),
+            child: TextField(
+              controller: controller,
+              onChanged: onChanged,
+              decoration: InputDecoration(
+                hintText: hintText,
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.tune_rounded),
+            onPressed: onFilterPressed,
+          ),
         ],
       ),
     );
