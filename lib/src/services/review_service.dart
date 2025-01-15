@@ -6,7 +6,7 @@ import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
 
 class ReviewService {
-  Future<bool> addReview(Review review) async {
+  Future<bool> addUpdateReview(Review review) async {
     final url = Uri.parse(
         '$baseURL/reviews?article_id=${review.id.articleId}&user_id=${review.id.userId}');
 

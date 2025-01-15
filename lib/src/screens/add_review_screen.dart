@@ -96,6 +96,15 @@ class _ReviewForm extends StatelessWidget {
             text: 'Enviar',
             radius: 30,
             onPressed: () async {
+              if (reviewFormProvider.rating == 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Añade una puntuación'),
+                  ),
+                );
+                return;
+              }
+
               ReviewId reviewId = ReviewId(
                 articleId: article.id,
                 userId: currentUser.id,
@@ -105,8 +114,9 @@ class _ReviewForm extends StatelessWidget {
                 rating: reviewFormProvider.rating,
                 comment: reviewFormProvider.comment,
                 postDate: DateTime.now(),
+                favorite: getFavourite(),
               );
-              bool isAddedReview = await reviewService.addReview(review);
+              bool isAddedReview = await reviewService.addUpdateReview(review);
               String message = isAddedReview
                   ? 'Reseña añadida correctamente'
                   : 'Error al añadir la reseña';
@@ -115,10 +125,19 @@ class _ReviewForm extends StatelessWidget {
                   content: Text(message),
                 ),
               );
+              if (isAddedReview) {
+                Navigator.pop(context);
+              }
             },
           ),
         ],
       ),
+    );
+  }
+
+  bool getFavourite() {
+    return article.reviews.any(
+      (review) => review.id.userId == currentUser.id && review.favorite,
     );
   }
 
@@ -141,7 +160,7 @@ class StarRating extends StatefulWidget {
 }
 
 class _StarRatingState extends State<StarRating> {
-  int _selectedStars = 5;
+  int _selectedStars = 0;
 
   void _onStarTap(int index) {
     setState(() {

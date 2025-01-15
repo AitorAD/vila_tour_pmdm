@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/screens/screens.dart';
+import 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
 import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class PlacesDetails extends StatefulWidget {
@@ -36,17 +38,24 @@ class _PlacesDetailsState extends State<PlacesDetails>
 
   void _handleTabChange() {
     setState(() {
-      showFab =
-          _tabController.index == 1; // Muestra el botón solo en el índice 2
+      showFab = _tabController.index == 1; // Muestra el botón solo en la pestaña de reseñas
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final Place place = ModalRoute.of(context)!.settings.arguments as Place;
+    final filteredReviews =
+        place.reviews.where((review) => review.rating > 0).toList();
+    final double averageScore = filteredReviews.isNotEmpty
+        ? filteredReviews
+                .map((review) => review.rating)
+                .reduce((a, b) => a + b) /
+            filteredReviews.length
+        : 0;
 
     return Scaffold(
-      appBar: CustomAppBar(title: place.name),
+      bottomNavigationBar: CustomNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
@@ -56,11 +65,12 @@ class _PlacesDetailsState extends State<PlacesDetails>
                 Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: place);
               },
             )
-          : null,
+          : FavoriteFloatingActionButton(article: place),
       body: Stack(children: [
         WavesWidget(),
         Column(
           children: [
+            BarScreenArrow(labelText: place.name, arrowBack: true),
             TabBar(
               controller: _tabController,
               indicatorColor: const Color.fromARGB(255, 54, 71, 71),
@@ -131,33 +141,9 @@ class _PlacesDetailsState extends State<PlacesDetails>
                         const SizedBox(height: 8),
 
                         // Row for rating stars
-                        Container(
-                          width: 300,
-                          height: 50,
-                          decoration: defaultDecoration(10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                place.averageScore.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: 'PontanoSans',
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              PaintStars(
-                                  rating: place.averageScore,
-                                  color: Colors.yellow),
-                              const SizedBox(width: 4),
-                              Text(
-                                '(${place.reviews.length})',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              )
-                            ],
-                          ),
+                        RatingRow(
+                          averageScore: averageScore,
+                          reviewCount: filteredReviews.length,
                         ),
 
                         const Divider(),
@@ -214,30 +200,3 @@ class _PlacesDetailsState extends State<PlacesDetails>
     );
   }
 }
-
-
-/*
-
-      // Floating action button for "favorite"
-
-      // El widget consumer reconstruye automaticamente el floatingActionButton
-      // cuando es estado de FestivalsProvider cambia
-      floatingActionButton: Consumer<FestivalsProvider>(
-        builder: (context, festivalsProvider, child) {
-          // Verifica si el festival actual es favorito
-          final isFavourite = festivalsProvider.festivals
-              .any((f) => f.name == festival.name && f.favourite);
-
-          return FloatingActionButton(
-            onPressed: () {
-              festivalsProvider.toggleFavorite(festival);
-            },
-            backgroundColor: isFavourite ? Colors.white : Colors.redAccent,
-            child: isFavourite
-                ? Icon(Icons.favorite, color: Colors.redAccent)
-                : Icon(Icons.favorite_border),
-          );
-        },
-      ),
-
-      */

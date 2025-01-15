@@ -5,14 +5,14 @@ class Review {
   int rating;
   String comment;
   DateTime postDate;
-  bool? favorite;
+  bool favorite;
 
   Review({
     required this.id,
     required this.rating,
     required this.comment,
     required this.postDate,
-    this.favorite,
+    required this.favorite,
   });
 
   factory Review.fromJson(String str) => Review.fromMap(json.decode(str));

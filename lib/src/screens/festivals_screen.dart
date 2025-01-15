@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 import 'package:vila_tour_pmdm/src/services/festival_service.dart';
-import 'package:vila_tour_pmdm/src/services/image_service.dart';
 import '../widgets/widgets.dart';
 
-class FestivalsScreen extends StatelessWidget {
+class FestivalsScreen extends StatefulWidget {
   static final routeName = 'festivals_screen';
   const FestivalsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final festivalService = FestivalService();
+  _FestivalsScreenState createState() => _FestivalsScreenState();
+}
 
+class _FestivalsScreenState extends State<FestivalsScreen> {
+  late Future<List<Festival>> _festivalsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFestivals();
+  }
+
+  void _loadFestivals() {
+    final festivalService = FestivalService();
+    setState(() {
+      _festivalsFuture = festivalService.getFestivals();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CustomNavigationBar(),
       appBar: CustomAppBar(title: 'Festivales y Tradiciones'),
@@ -20,7 +36,7 @@ class FestivalsScreen extends StatelessWidget {
         children: [
           WavesWidget(),
           FutureBuilder<List<Festival>>(
-            future: festivalService.getFestivals(),
+            future: _festivalsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
