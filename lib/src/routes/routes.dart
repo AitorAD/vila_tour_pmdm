@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/screens/map_screen2.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 
 Map<String, WidgetBuilder> getApplicationRoutes() {
@@ -10,7 +11,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     LoginScreen.routeName: (BuildContext context) => LoginScreen(),
     RegistrerScreen.routeName: (BuildContext context) => RegistrerScreen(),
     RecipesScreen.routeName: (BuildContext context) => RecipesScreen(),
-    MapScreen.routeName: (BuildContext context) => MapScreen(),
+    MapScreen.routeName: (BuildContext context) => MapScreen2(),
     UploadRecipe.routeName: (BuildContext context) => UploadRecipe(),
     UserScreen.routeName: (BuildContext context) => UserScreen(),
     PasswordRecovery.routeName: (BuildContext context) => PasswordRecovery(),

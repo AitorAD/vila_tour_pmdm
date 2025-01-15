@@ -9,8 +9,23 @@ import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 
+
 class MapScreen extends StatelessWidget {
-  static final routeName = 'map_screen';
+
+  static final routeName = 'map_screen2';
+  final List<String> _selectedOptions = [];
+
+  final Map<String, IconData> categoryIcons = {
+    'PLAYA': Icons.beach_access_rounded,
+    'PARQUE': Icons.park_rounded,
+    'RESTAURANTE': Icons.restaurant_rounded,
+    'HOTEL': Icons.hotel_rounded,
+    'MONUMENTO': Icons.account_balance_rounded,
+    'MUSEO': Icons.museum_rounded,
+    'IGLESIA': Icons.church_rounded,
+    'CASTILLO': Icons.castle_rounded,
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +37,60 @@ class MapScreen extends StatelessWidget {
             minimum: EdgeInsets.only(top: 15),
             child: Column(
               children: [
-                SearchBox(),
+                SearchBox(
+                  hintText: 'Buscar lugar',
+                  controller: TextEditingController(),
+                  onChanged: (value) {},
+                  onFilterPressed: () {
+                    showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(25.0, 25.0, 0.0, 0.0),
+                      items: <PopupMenuEntry<String>>[
+                        PopupMenuItem<String>(
+                          enabled: false,
+                          child: Text(
+                            'Opciones de Filtrado',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        ...categoryIcons.entries.map((entry) {
+                          return PopupMenuItem<String>(
+                            child: StatefulBuilder(
+                              builder: (BuildContext context, StateSetter setState) {
+                                return Row(
+                                  children: [
+                                    Checkbox(
+                                      value: _selectedOptions.contains(entry.key),
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          if (value == true) {
+                                            _selectedOptions.add(entry.key);
+                                          } else {
+                                            _selectedOptions.remove(entry.key);
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(width: 50),
+                                    Icon(entry.value),
+                                    Text(entry.key),
+                                  ],
+                                );
+                              },
+                            ),
+                            value: entry.key,
+                          );
+                        }).toList(),
+                      ],
+                      elevation: 8.0,
+                    ).then((value) {
+                      if (value != null) {
+                        // Manejar la opción seleccionada
+                        print('Opción seleccionada: $value');
+                      }
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -32,8 +100,6 @@ class MapScreen extends StatelessWidget {
               alignment: Alignment.bottomRight,
               child: FloatingActionButton(
                 onPressed: () {
-                     final mapBodyState = context.findAncestorStateOfType<_MapBodyState>();
-                      mapBodyState?.getCurrentLocation();
                 },
                 child: Icon(Icons.gps_fixed),
               ),
@@ -102,29 +168,6 @@ class _MapBodyState extends State<_MapBody> {
     }
   }
 
-
-  Future<void> getCurrentLocation() async {
-  try {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return;
-      }
-    }
-
-    Position position = await Geolocator.getCurrentPosition();
-    mapController.move(LatLng(position.latitude, position.longitude), 15.0);
-  } catch (e) {
-    print('Error al obtener la ubicación actual: $e');
-  }
-}
-
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
@@ -170,4 +213,4 @@ class _MapBodyState extends State<_MapBody> {
       ],
     );
   }
-}  
+}
