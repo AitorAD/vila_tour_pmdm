@@ -74,4 +74,32 @@ class Place extends Article {
   static List<Place> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((item) => Place.fromMap(item)).toList();
   }
+
+  static nullPlace() => Place(
+      id: -1,
+      name: 'Lugar no encontrado',
+      description: '',
+      coordinate: Coordinate(id: -1, name: "", longitude: 0, latitude: 0),
+      categoryPlace: CategoryPlace(id: -1, name: "Sin categoria"),
+      creator: new User(
+        id: -1,
+        username: 'unknown',
+        email: 'unknown@example.com',
+        password: 'password',
+        role: 'user',
+        name: 'Unknown',
+        surname: 'User',
+        profilePicture: 'default.png',
+        createdRecipes: [],
+        createdFestivals: [],
+        createdPlaces: [],
+        reviews: [],
+      ),
+      type: 'unknown',
+      averageScore: 0.0,
+      creationDate: DateTime.now(),
+      lastModificationDate: DateTime.now(),
+      reviews: [],
+      images: []);
 }
+
