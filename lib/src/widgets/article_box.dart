@@ -6,9 +6,8 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class ArticleBox extends StatefulWidget {
   final Article article;
-
   ArticleBox({required this.article});
-
+  
   @override
   State<ArticleBox> createState() => _ArticleBoxState();
 }
