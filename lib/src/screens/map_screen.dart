@@ -125,7 +125,6 @@ class _MapBodyState extends State<_MapBody> {
   List<Marker> _markers = [];
   PopupController _popupController = PopupController();
 
-  static bool _isSatelliteView = false;
   MapController mapController = MapController();
 
   final Map<String, IconData> categoryIcons = {

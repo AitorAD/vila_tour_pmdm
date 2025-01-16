@@ -4,12 +4,14 @@ import 'package:flutter_map_marker_popup/extension_api.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/providers/places_provider.dart';
 import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 
-class MapScreen2 extends StatelessWidget {
+class MapScreen2 extends StatefulWidget {
   // Ruta de la pantalla
   static final routeName = 'map_screen';
 
@@ -28,20 +30,35 @@ class MapScreen2 extends StatelessWidget {
   // Lista de categorías seleccionadas (inicialmente todas seleccionadas)
   static List<String> selectedCategories = List.from(categoryIcons.keys);
 
+  // Lista estatica de lugares
+  static List<Place> places = [];
+
+  @override
+  State<MapScreen2> createState() => _MapScreen2State();
+}
+
+class _MapScreen2State extends State<MapScreen2> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Stack(
-        children: [
-          _MapBody(),
-          SafeArea(
-            top: false,
-            minimum: EdgeInsets.only(top: 15),
-            child: SearchBoxFiltered(),
-          ),
-          CenterMap(),
-        ],
-      ),
+    PlaceService placeService = PlaceService();
+    return Scaffold(
+      body: FutureBuilder<List<Place>>(
+          future: placeService.getPlaces(),
+          builder: (context, snapshot) {
+            Provider.of<PlacesProvider>(context, listen: false)
+                .setPlaces(snapshot.data ?? []);
+            return Stack(
+              children: [
+                _MapBody(),
+                SafeArea(
+                  top: false,
+                  minimum: EdgeInsets.only(top: 15),
+                  child: SearchBoxFiltered(),
+                ),
+                CenterMap(),
+              ],
+            );
+          }),
       bottomNavigationBar: CustomNavigationBar(),
     );
   }
@@ -90,7 +107,7 @@ class SearchBoxFiltered extends StatelessWidget {
   Future<String?> _showFilterMenu(BuildContext context) {
     return showMenu(
       context: context,
-      position: RelativeRect.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      position: RelativeRect.fromLTRB(100.0, 100.0, 0.0, 0.0),
       items: <PopupMenuEntry<String>>[
         const PopupMenuItem<String>(
           enabled: false,
@@ -145,41 +162,28 @@ class _MapBody extends StatefulWidget {
 
 // Clase del estado del cuerpo del mapa
 class _MapBodyState extends State<_MapBody> {
-  // Servicio de lugares
-  final PlaceService _placeService = PlaceService();
-  // Lista de lugares
-  List<Place> _places = [];
-  // Lista de marcadores en el mapa
   List<Marker> _markers = [];
-  // Controlador del mapa
   MapController _mapController = MapController();
-  // Controlador de los popups
   PopupController _popupController = PopupController();
 
-  // Método para cargar los marcadores
   @override
   void initState() {
     super.initState();
+    // Acceder a los lugares desde el provider
     _loadMarkers();
   }
 
-  // Método para cargar los marcadores
   void _loadMarkers() async {
     try {
-      // Obtener la lista de todos los lugares
-      List<Place> places = await _placeService.getPlaces();
+      final places = Provider.of<PlacesProvider>(context, listen: false).places;
+      print(places.length);
       setState(() {
-        // Actualizar la lista de lugares
-        _places = places;
-        // Actualizar la lista de marcadores
-        _markers = _places.map((place) {
+        _markers = places.map((place) {
           // Obtener el icono de la categoría del lugar
-          IconData iconData =
-              MapScreen2.categoryIcons[place.categoryPlace.name]!;
+          IconData iconData = MapScreen2.categoryIcons[place.categoryPlace.name]!;
           // Crear un marcador con el icono y la posición del lugar
           return Marker(
-            point:
-                LatLng(place.coordinate.latitude, place.coordinate.longitude),
+            point: LatLng(place.coordinate.latitude, place.coordinate.longitude),
             child: Icon(
               iconData,
               color: Color.fromARGB(255, 22, 183, 189),
@@ -201,7 +205,6 @@ class _MapBodyState extends State<_MapBody> {
         initialCenter: LatLng(38.509430, -0.230211),
         initialZoom: 13.0,
         maxZoom: 18.0,
-        // Al pulsar en el mapa se ocultan todos los popups
         onTap: (tapPosition, point) => _popupController.hideAllPopups(),
       ),
       children: [
@@ -215,14 +218,12 @@ class _MapBodyState extends State<_MapBody> {
             popupController: _popupController,
             popupDisplayOptions: PopupDisplayOptions(
               builder: (BuildContext context, Marker marker) {
-                // Obtener el lugar correspondiente al marcador
-                final place = _places.firstWhere(
+                final place = MapScreen2.places.firstWhere(
                   (place) =>
                       place.coordinate.latitude == marker.point.latitude &&
                       place.coordinate.longitude == marker.point.longitude,
                   orElse: () => Place.nullPlace(),
                 );
-                // Crear un popup con la información del lugar
                 return Container(
                   width: 300,
                   height: 170,
