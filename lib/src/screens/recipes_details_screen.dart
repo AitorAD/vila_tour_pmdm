@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
+import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
 import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -42,19 +44,30 @@ class _RecipeDetailsState extends State<RecipeDetails>
   @override
   Widget build(BuildContext context) {
     final Recipe recipe = ModalRoute.of(context)!.settings.arguments as Recipe;
+    final filteredReviews =
+        recipe.reviews.where((review) => review.rating > 0).toList();
+    final double averageScore = filteredReviews.isNotEmpty
+        ? filteredReviews
+                .map((review) => review.rating)
+                .reduce((a, b) => a + b) /
+            filteredReviews.length
+        : 0;
 
     return Scaffold(
       bottomNavigationBar: CustomNavigationBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: showFab ?
+      FloatingActionButtonLocation.centerFloat :
+      FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
               text: 'Añadir reseña',
               radius: 20,
               onPressed: () {
-                Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: recipe);
+                Navigator.pushNamed(context, AddReviewScreen.routeName,
+                    arguments: recipe);
               },
             )
-          : null,
+          : FavoriteFloatingActionButton(article: recipe),
       body: Stack(children: [
         WavesWidget(),
         Column(
@@ -116,47 +129,27 @@ class _RecipeDetailsState extends State<RecipeDetails>
                         SizedBox(height: 20),
                         Hero(
                           tag: recipe.id, // Mismo tag que en ArticleBox
-                          child: FadeInImage(
-                            placeholder: AssetImage('assets/logo.ico'),
-                            image: recipe.images.isNotEmpty
-                                ? MemoryImage(
-                                    decodeImageBase64(recipe.images.first.path))
-                                : AssetImage('assets/logo_foreground.png')
-                                    as ImageProvider,
-                            width: double.infinity,
-                            height: 200,
-                            fit: BoxFit.cover,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: FadeInImage(
+                              placeholder: AssetImage('assets/logo.ico'),
+                              image: recipe.images.isNotEmpty
+                                  ? MemoryImage(decodeImageBase64(
+                                      recipe.images.first.path))
+                                  : AssetImage('assets/logo_foreground.png')
+                                      as ImageProvider,
+                              width: double.infinity,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
+
                         SizedBox(height: 20),
                         // Row for rating stars
-                        Container(
-                          width: 300,
-                          height: 50,
-                          decoration: defaultDecoration(10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                recipe.averageScore.toStringAsFixed(1),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: 'PontanoSans',
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              PaintStars(
-                                  rating: recipe.averageScore,
-                                  color: Colors.yellow),
-                              const SizedBox(width: 4),
-                              Text(
-                                '(${recipe.reviews.length})',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              )
-                            ],
-                          ),
+                        RatingRow(
+                          averageScore: averageScore,
+                          reviewCount: filteredReviews.length,
                         ),
                         const Divider(height: 20),
 

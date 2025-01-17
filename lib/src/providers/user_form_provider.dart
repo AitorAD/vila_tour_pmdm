@@ -8,9 +8,11 @@ class UserFormProvider extends ChangeNotifier {
   User? user = null;
   bool _isLoading = false;
   bool _haveChanges = false;
+  bool _isEditing = false;
 
   bool get isLoading => _isLoading;
   bool get haveChanges => _haveChanges;
+  bool get isEditing => _isEditing;
 
   set isLoading(bool value) {
     _isLoading = value;
@@ -24,14 +26,16 @@ class UserFormProvider extends ChangeNotifier {
     }
   }
 
+  set isEditing(bool value) {
+    _isEditing = value;
+    notifyListeners();
+  }
+
   bool isValidForm() {
-    print(formLogKey.currentState?.validate());
     return formLogKey.currentState?.validate() ?? false;
   }
 
   void checkForChanges() {
-    print('userForm' + user.toString());
-    print('currentUser' + currentUser.toString());
     haveChanges = user != currentUser;
   }
 }

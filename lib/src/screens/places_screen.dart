@@ -136,6 +136,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
                           : _filteredPlaces;
 
                       return ListView.builder(
+                        padding: EdgeInsets.zero,
                         itemCount: places.length,
                         itemBuilder: (context, index) {
                           final place = places[index];

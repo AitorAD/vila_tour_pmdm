@@ -7,7 +7,6 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 import '../utils/result.dart';
 
-
 class RegistrerScreen extends StatelessWidget {
   static const routeName = 'register_screen';
 
@@ -89,35 +88,35 @@ class _RegisterScreenBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           buildTextField(
-            label: 'Usuario:',
-            hintText: 'Nombre de usuario',
-            onChanged: (value) => registerForm.username = value,
-            validator: validateRequiredField,
-          ),
+              label: 'Usuario:',
+              hintText: 'Nombre de usuario',
+              onChanged: (value) => registerForm.username = value,
+              validator: validateRequiredField,
+              enabled: true),
           const SizedBox(height: 20),
           buildTextField(
-            label: 'E-mail:',
-            hintText: 'ejemplo@ejemplo.com',
-            onChanged: (value) => registerForm.email = value,
-            validator: validateEmail,
-          ),
+              label: 'E-mail:',
+              hintText: 'ejemplo@ejemplo.com',
+              onChanged: (value) => registerForm.email = value,
+              validator: validateEmail,
+              enabled: true),
           const SizedBox(height: 20),
           buildTextField(
-            label: 'Contraseña:',
-            hintText: '**********',
-            obscureText: true,
-            onChanged: (value) => registerForm.changePassword(value),
-            validator: validatePassword,
-          ),
+              label: 'Contraseña:',
+              hintText: '**********',
+              obscureText: true,
+              onChanged: (value) => registerForm.changePassword(value),
+              validator: validatePassword,
+              enabled: true),
           const SizedBox(height: 20),
           buildTextField(
-            label: 'Repita la contraseña:',
-            hintText: '**********',
-            obscureText: true,
-            onChanged: (value) => repeatedPassword = value,
-            validator: (value) =>
-                validateRepeatedPassword(value, registerForm.password),
-          ),
+              label: 'Repita la contraseña:',
+              hintText: '**********',
+              obscureText: true,
+              onChanged: (value) => repeatedPassword = value,
+              validator: (value) =>
+                  validateRepeatedPassword(value, registerForm.password),
+              enabled: true),
           const SizedBox(height: 40),
           // _buildSubmitButton(registerForm, loginService),
           _RegisterButton(
