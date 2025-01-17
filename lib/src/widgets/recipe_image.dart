@@ -42,7 +42,7 @@ class RecipeImage extends StatelessWidget {
   Widget getImage(String? picture) {
     if (picture == null) {
       return const Image(
-        image: AssetImage('assets/logo_foreground.png'),
+        image: AssetImage('assets/placeholder_camera.png'),
         fit: BoxFit.cover,
       );
     }

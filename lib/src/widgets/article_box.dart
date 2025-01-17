@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
+import 'package:vila_tour_pmdm/src/services/config.dart';
+import 'package:vila_tour_pmdm/src/services/review_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -53,27 +57,72 @@ class _Favorite extends StatefulWidget {
 }
 
 class __FavoriteState extends State<_Favorite> {
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
       top: 10,
       right: 10,
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
+          if (isLoading) return;
+
           setState(() {
-            // widget.article.favourite = !widget.article.favourite;
+            isLoading = true;
           });
+
+          final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
+          final currentReview = widget.article.reviews.firstWhere(
+            (review) => review.id.userId == currentUser.id,
+            orElse: () => Review(
+              id: ReviewId(articleId: widget.article.id, userId: currentUser.id),
+              favorite: false,
+              comment: "",
+              postDate: DateTime.now(),
+              rating: 0,
+            ),
+          );
+
+          try {
+            await reviewProvider.toggleFavorite(currentReview);
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error al actualizar el estado de favorito'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          } finally {
+            setState(() {
+              isLoading = false;
+            });
+          }
         },
-        child: Icon(
-          Icons.favorite,
-          // widget.article.favourite ? Icons.favorite : Icons.favorite_border,
-          color: Colors.white,
-          size: 30,
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 300),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return ScaleTransition(child: child, scale: animation);
+          },
+          child: Icon(
+            getFavourite() ? Icons.favorite : Icons.favorite_border,
+            key: ValueKey<bool>(getFavourite()),
+            color: Colors.white,
+            size: 30,
+          ),
         ),
       ),
     );
   }
+
+  bool getFavourite() {
+    return widget.article.reviews.any(
+      (review) => review.id.userId == currentUser.id && review.favorite,
+    );
+  }
 }
+
+
 
 class _FestivalInfo extends StatelessWidget {
   const _FestivalInfo({

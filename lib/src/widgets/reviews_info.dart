@@ -52,6 +52,7 @@ class ReviewsInfo extends StatelessWidget {
           return Column(
             children: [
               _StarRatingDistribution(reviews: reviews),
+              SizedBox(height: 1), // Ajusta la altura del espacio
               Expanded(
                 child: ListView.builder(
                   itemCount: reviewsWithUsers.length +
@@ -88,8 +89,6 @@ class ReviewBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userService = Provider.of<UserService>(context);
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -245,9 +244,9 @@ class _StarRatingDistribution extends StatelessWidget {
                 Row(
                   children: [
                     PaintStars(rating: averageRating, color: Colors.amber),
-                    // TODO: Mostrar el numero de reseñas. 
+                    // TODO: Mostrar el numero de reseñas.
                     //Este numero marca la cantidad de gente que ha valorado el artículo
-                    
+
                     /*
                     Text(
                       '(${reviews.length})',

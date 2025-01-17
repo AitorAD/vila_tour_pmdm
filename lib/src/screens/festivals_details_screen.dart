@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
+import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
 import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -17,35 +20,60 @@ class DetailsFestival extends StatefulWidget {
 class _DetailsFestivalState extends State<DetailsFestival>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool showFab = false; // Controla la visibilidad del botón
 
   @override
   void initState() {
     super.initState();
-    _tabController =
-        TabController(length: 2, vsync: this); // 2 pestañas: General y Reviews
+    _tabController = TabController(length: 2, vsync: this); // 2 pestañas: General y Reviews
+    _tabController.addListener(_handleTabChange);
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabChange); // Limpia el listener
     _tabController.dispose();
     super.dispose();
   }
 
+  void _handleTabChange() {
+    setState(() {
+      showFab = _tabController.index == 1; // Muestra el botón solo en la pestaña de reseñas
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Festival festival =
-        ModalRoute.of(context)!.settings.arguments as Festival;
+    final Festival festival = ModalRoute.of(context)!.settings.arguments as Festival;
+
+    final filteredReviews = festival.reviews.where((review) => review.rating > 0).toList();
+    final double averageScore = filteredReviews.isNotEmpty
+        ? filteredReviews.map((review) => review.rating).reduce((a, b) => a + b) / filteredReviews.length
+        : 0;
 
     return Scaffold(
-      appBar: CustomAppBar(title: festival.name),
-      body: Stack(
-        children: [
-          WavesWidget(),
-          Column(
+      bottomNavigationBar: CustomNavigationBar(),
+      floatingActionButtonLocation: showFab ?
+      FloatingActionButtonLocation.centerFloat :
+      FloatingActionButtonLocation.endFloat,
+      floatingActionButton: showFab
+          ? ElevatedCustomButton(
+              text: 'Añadir reseña',
+              radius: 20,
+              onPressed: () {
+                Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: festival);
+              },
+            )
+          : FavoriteFloatingActionButton(article: festival),
+      body: Stack(children: [
+        WavesWidget(),
+        Column(
           children: [
+            BarScreenArrow(labelText: festival.name, arrowBack: true),
             TabBar(
               controller: _tabController,
-              indicatorColor: const Color.fromARGB(255, 54, 71, 71),
+              labelColor: const Color.fromARGB(255, 2, 110, 96),
+              indicatorColor: const Color(0xFF01C2A9),
               tabs: const [
                 Tab(text: 'General'),
                 Tab(text: 'Reseñas'),
@@ -76,12 +104,12 @@ class _DetailsFestivalState extends State<DetailsFestival>
                               ),
                               items: festival.images.map((image) {
                                 return ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                      20),
+                                  borderRadius: BorderRadius.circular(20),
                                   child: FadeInImage(
                                     placeholder: AssetImage('assets/logo.ico'),
                                     image: image.path.startsWith('assets/')
-                                        ? AssetImage(image.path) as ImageProvider
+                                        ? AssetImage(image.path)
+                                            as ImageProvider
                                         : MemoryImage(
                                             decodeImageBase64(image.path)),
                                     width: double.infinity,
@@ -93,9 +121,9 @@ class _DetailsFestivalState extends State<DetailsFestival>
                             ),
                           ),
                         ),
-        
+
                         const SizedBox(height: 16),
-        
+
                         // Festival title
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -109,41 +137,17 @@ class _DetailsFestivalState extends State<DetailsFestival>
                             textAlign: TextAlign.center,
                           ),
                         ),
-        
+
                         const SizedBox(height: 8),
-        
+
                         // Row for rating stars
-                        Container(
-                          width: 300,
-                          height: 50,
-                          decoration: defaultDecoration(10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                festival.averageScore.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: 'PontanoSans',
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              PaintStars(
-                                  rating: festival.averageScore,
-                                  color: Colors.yellow),
-                              const SizedBox(width: 4),
-                              Text(
-                                '(${festival.reviews.length})',
-                                style:
-                                    TextStyle(color: Colors.white, fontSize: 16),
-                              )
-                            ],
-                          ),
+                        RatingRow(
+                          averageScore: averageScore,
+                          reviewCount: filteredReviews.length,
                         ),
-        
+
                         const Divider(),
-        
+
                         // Festival description
                         Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -156,12 +160,13 @@ class _DetailsFestivalState extends State<DetailsFestival>
                             ),
                           ),
                         ),
-        
+
                         const Divider(),
-        
+
                         // Location row
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -183,7 +188,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                       ],
                     ),
                   ),
-        
+
                   // Pestaña 2: Reseñas
                   ReviewsInfo(reviews: festival.reviews)
                 ],
@@ -191,8 +196,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
             ),
           ],
         ),
-      ]
-      ),
+      ]),
     );
   }
 }

@@ -12,3 +12,4 @@ export 'review_form_provider.dart';
 export 'theme_provider.dart';
 export 'ui_provider.dart';
 export 'user_form_provider.dart';
+export 'review_provider.dart';
