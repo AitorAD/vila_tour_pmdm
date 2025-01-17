@@ -1,6 +1,15 @@
+export 'category_ingredient_provider.dart';
 export 'festivals_provider.dart';
+export 'ingredients_provider.dart';
+export 'login_form_provider.dart';
+export 'login_provider.dart';
+export 'menu.dart';
+export 'places_provider.dart';
+export 'profile_form_provider.dart';
 export 'recipe_form_provider.dart';
+export 'register_form_provider.dart';
+export 'review_form_provider.dart';
 export 'theme_provider.dart';
 export 'ui_provider.dart';
+export 'user_form_provider.dart';
 export 'review_provider.dart';
-

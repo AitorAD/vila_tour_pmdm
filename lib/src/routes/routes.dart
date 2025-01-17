@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/screens/map_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 
 Map<String, WidgetBuilder> getApplicationRoutes() {
