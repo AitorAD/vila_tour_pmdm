@@ -7,6 +7,8 @@ import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/services/review_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ArticleBox extends StatefulWidget {
   final Article article;
@@ -39,7 +41,9 @@ class _ArticleBoxState extends State<ArticleBox> {
             if (widget.article is Festival) _FestivalInfo(widget: widget),
             if (widget.article is Recipe) _RecipeInfo(widget: widget),
             if (widget.article is Place) _PlaceInfo(widget: widget),
-            _Favorite(article: widget.article)
+            _Favorite(article: widget.article),
+            if (widget.article is Festival || widget.article is Place)
+              _HowToGetThere(article: widget.article),
           ],
         ),
       ),
@@ -122,7 +126,40 @@ class __FavoriteState extends State<_Favorite> {
   }
 }
 
+class _HowToGetThere extends StatelessWidget {
+  const _HowToGetThere({super.key, required this.article});
 
+  final Article article;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 15,
+      right: 10,
+      child: GestureDetector(
+        onTap: () async {
+          Position position = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+          String destination;
+          if (article is Place) {
+            destination = '${(article as Place).coordinate.latitude},${(article as Place).coordinate.longitude}';
+          } else if (article is Festival) {
+            destination = '${(article as Festival).coordinate.latitude},${(article as Festival).coordinate.longitude}';
+          } else {
+            return;
+          }
+          String url = 'https://www.google.com/maps/dir/?api=1&origin=${position.latitude},${position.longitude}&destination=$destination&travelmode=driving';
+          if (await canLaunchUrl(Uri.parse(url))) {
+            await launchUrl(Uri.parse(url));
+          } else {
+            throw 'Could not launch url';
+          }
+        },
+        child: Icon(Icons.directions, color: Colors.white, size: 30),
+      ),
+    );
+  }
+}
 
 class _FestivalInfo extends StatelessWidget {
   const _FestivalInfo({

@@ -7,12 +7,10 @@ import 'package:vila_tour_pmdm/src/providers/user_form_provider.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/bar_decoration.dart';
-import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class UserScreen extends StatelessWidget {
-  static final routeName = 'user_screen';
+  static const routeName = 'user_screen';
   const UserScreen({super.key});
 
   @override
@@ -21,7 +19,6 @@ class UserScreen extends StatelessWidget {
     final userFormProvider = Provider.of<UserFormProvider>(context);
     final userService = Provider.of<UserService>(context);
 
-    // Inicializar los valores iniciales del formulario
     userFormProvider.user = currentUser.copyWith();
 
     return Scaffold(
@@ -52,16 +49,17 @@ class UserScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FloatingActionButton(
+                  heroTag: 'cancelButton',
                   onPressed: () {
                     userFormProvider.isEditing = false;
-                    userFormProvider.user = currentUser.copyWith();
-                    userFormProvider.checkForChanges();
+                    userFormProvider.resetForm();
                   },
-                  child: Icon(Icons.cancel),
                   backgroundColor: Colors.red,
+                  child: const Icon(Icons.cancel),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 FloatingActionButton(
+                  heroTag: 'saveButton',
                   onPressed: () async {
                     String message;
                     if (userFormProvider.isValidForm()) {
@@ -85,6 +83,7 @@ class UserScreen extends StatelessWidget {
               ],
             )
           : FloatingActionButton(
+              heroTag: 'editButton',
               onPressed: () {
                 userFormProvider.isEditing = true;
               },
@@ -95,7 +94,7 @@ class UserScreen extends StatelessWidget {
 
   IconButton iconRightBarMenu(GlobalKey<ScaffoldState> _scaffoldKey) {
     return IconButton(
-      icon: Icon(Icons.more_vert, color: Colors.white, size: 28),
+      icon: const Icon(Icons.more_vert, color: Colors.white, size: 28),
       onPressed: () {
         _scaffoldKey.currentState
             ?.openDrawer(); // Abrir el Drawer al presionar el icono
@@ -108,7 +107,7 @@ class UserScreen extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [
-          BarScreenArrow(labelText: 'Configuración', arrowBack: true),
+          const BarScreenArrow(labelText: 'Configuración', arrowBack: true),
           Row(
             children: [IconButton(onPressed: () {}, icon: Icon(Icons.sunny))],
           )
@@ -135,12 +134,11 @@ class _ProfileForm extends StatelessWidget {
         child: Column(
           children: [
             buildTextField(
-              initialValue: currentUser.username,
+              initialValue: userFormProvider.user?.username ?? '',
               label: 'Nombre de usuario:',
               hintText: currentUser.username,
               onChanged: (value) {
-                userFormProvider.user?.name = value;
-
+                userFormProvider.user?.username = value;
                 userFormProvider.checkForChanges();
               },
               validator: validateRequiredField,
@@ -148,12 +146,11 @@ class _ProfileForm extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             buildTextField(
-              initialValue: currentUser.email,
+              initialValue: userFormProvider.user?.email ?? '',
               label: 'E-mail:',
               hintText: 'ejemplo@ejemplo.com',
               onChanged: (value) {
                 userFormProvider.user?.email = value;
-
                 userFormProvider.checkForChanges();
               },
               validator: validateEmail,
@@ -161,7 +158,7 @@ class _ProfileForm extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             buildTextField(
-              initialValue: currentUser.name,
+              initialValue: userFormProvider.user?.name ?? '',
               label: 'Nombre:',
               hintText: currentUser.name ?? 'Tu nombre',
               onChanged: (value) {
@@ -177,7 +174,7 @@ class _ProfileForm extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             buildTextField(
-              initialValue: currentUser.surname,
+              initialValue: userFormProvider.user?.surname ?? '',
               label: 'Apellidos:',
               hintText: currentUser.surname ?? 'Tus apellidos',
               onChanged: (value) {
@@ -223,8 +220,6 @@ class _Header extends StatelessWidget {
                 radius: 50,
                 backgroundImage:
                     getImage(userFormProvider.user?.profilePicture),
-
-                // child: Text('AA', style: TextStyle(fontSize: 24)),
               ),
             ),
             Align(
@@ -241,7 +236,7 @@ class _Header extends StatelessWidget {
                   width: 30,
                   height: 30,
                   decoration: defaultDecoration(100, opacity: 1),
-                  child: Icon(
+                  child: const Icon(
                     Icons.edit,
                     color: Colors.white,
                     size: 20,
@@ -284,15 +279,12 @@ class _Header extends StatelessWidget {
   ImageProvider getImage(String? picture) {
     if (picture != null && picture.isNotEmpty) {
       try {
-        // Intentamos decodificar la cadena base64 para convertirla en una imagen.
         return MemoryImage(decodeImageBase64(picture));
       } catch (e) {
         print('Error al decodificar la imagen base64: $e');
-        // En caso de error en la decodificación, se muestra la imagen predeterminada.
         return AssetImage('assets/logo.ico');
       }
     } else {
-      // Si no hay imagen, mostramos la predeterminada.
       return AssetImage('assets/logo.ico');
     }
   }
