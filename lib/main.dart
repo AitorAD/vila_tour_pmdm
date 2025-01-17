@@ -11,6 +11,7 @@ import 'package:vila_tour_pmdm/src/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
+import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/services/festival_service.dart';
 import 'package:vila_tour_pmdm/src/services/ingredient_service.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';

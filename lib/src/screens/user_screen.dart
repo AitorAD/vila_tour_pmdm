@@ -47,28 +47,49 @@ class UserScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: userFormProvider.haveChanges
-          ? FloatingActionButton(
-              onPressed: () async {
-                String message;
-                if (userFormProvider.isValidForm()) {
-                  bool isModified = await userService.modifyUser(
-                      currentUser, userFormProvider.user!);
-                  if (isModified) {
-                    message = 'Usuario modificado con éxito.';
-                  } else {
-                    message = 'Error al modificar los datos del usuario.';
-                  }
-                } else {
-                  message =
-                      'Por favor, completa todos los campos correctamente.';
-                }
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(message)));
-              },
-              child: Icon(Icons.save),
+      floatingActionButton: userFormProvider.isEditing
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  onPressed: () {
+                    userFormProvider.isEditing = false;
+                    userFormProvider.user = currentUser.copyWith();
+                    userFormProvider.checkForChanges();
+                  },
+                  child: Icon(Icons.cancel),
+                  backgroundColor: Colors.red,
+                ),
+                SizedBox(width: 10),
+                FloatingActionButton(
+                  onPressed: () async {
+                    String message;
+                    if (userFormProvider.isValidForm()) {
+                      bool isModified = await userService.modifyUser(
+                          currentUser, userFormProvider.user!);
+                      if (isModified) {
+                        message = 'Usuario modificado con éxito.';
+                        userFormProvider.isEditing = false;
+                      } else {
+                        message = 'Error al modificar los datos del usuario.';
+                      }
+                    } else {
+                      message =
+                          'Por favor, completa todos los campos correctamente.';
+                    }
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(message)));
+                  },
+                  child: Icon(Icons.save),
+                ),
+              ],
             )
-          : null,
+          : FloatingActionButton(
+              onPressed: () {
+                userFormProvider.isEditing = true;
+              },
+              child: Icon(Icons.edit),
+            ),
     );
   }
 
@@ -123,6 +144,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: validateRequiredField,
+              enabled: userFormProvider.isEditing,
             ),
             const SizedBox(height: 20),
             buildTextField(
@@ -135,6 +157,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: validateEmail,
+              enabled: userFormProvider.isEditing,
             ),
             const SizedBox(height: 20),
             buildTextField(
@@ -149,7 +172,8 @@ class _ProfileForm extends StatelessWidget {
                 }
                 userFormProvider.checkForChanges();
               },
-              validator: validateRequiredField,
+              validator: validateName,
+              enabled: userFormProvider.isEditing,
             ),
             const SizedBox(height: 20),
             buildTextField(
@@ -164,7 +188,8 @@ class _ProfileForm extends StatelessWidget {
                 }
                 userFormProvider.checkForChanges();
               },
-              validator: validateRequiredField,
+              validator: validateSurname,
+              enabled: userFormProvider.isEditing,
             ),
           ],
         ),

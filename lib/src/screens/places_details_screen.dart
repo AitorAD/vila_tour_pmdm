@@ -56,7 +56,9 @@ class _PlacesDetailsState extends State<PlacesDetails>
 
     return Scaffold(
       bottomNavigationBar: CustomNavigationBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: showFab ?
+      FloatingActionButtonLocation.centerFloat :
+      FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
               text: 'Añadir reseña',

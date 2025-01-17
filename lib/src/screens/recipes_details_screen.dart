@@ -55,7 +55,9 @@ class _RecipeDetailsState extends State<RecipeDetails>
 
     return Scaffold(
       bottomNavigationBar: CustomNavigationBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: showFab ?
+      FloatingActionButtonLocation.centerFloat :
+      FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
               text: 'Añadir reseña',
