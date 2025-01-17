@@ -12,3 +12,4 @@ export 'package:vila_tour_pmdm/src/screens/places_details_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/user_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/password_recovery.dart';
+export 'package:vila_tour_pmdm/src/screens/languages_screen.dart';

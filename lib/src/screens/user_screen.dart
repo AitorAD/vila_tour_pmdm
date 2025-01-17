@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/providers/user_form_provider.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
@@ -27,7 +29,7 @@ class UserScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
-      drawer: drawer(),
+      drawer: drawer(context),
       bottomNavigationBar: CustomNavigationBar(),
       body: Container(
         width: double.infinity,
@@ -35,7 +37,7 @@ class UserScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             BarScreenArrow(
-              labelText: 'Perfil',
+              labelText: AppLocalizations.of(context).translate('profile'),
               arrowBack: false,
               iconRight: iconRightBarMenu(_scaffoldKey),
             ),
@@ -103,14 +105,28 @@ class UserScreen extends StatelessWidget {
     );
   }
 
-  Drawer drawer() {
+  Drawer drawer(BuildContext context) {
     return Drawer(
       width: double.infinity,
       child: Column(
         children: [
-          BarScreenArrow(labelText: 'Configuración', arrowBack: true),
+          BarScreenArrow(
+            labelText: AppLocalizations.of(context)!.translate('settings'),
+            arrowBack: true,
+          ),
           Row(
-            children: [IconButton(onPressed: () {}, icon: Icon(Icons.sunny))],
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.sunny),
+              ),
+            ],
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, LanguagesScreen.routeName);
+            },
+            icon: Icon(Icons.language),
           )
         ],
       ),

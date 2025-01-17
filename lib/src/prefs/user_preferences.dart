@@ -15,7 +15,8 @@ class UserPreferences {
 
   Future<void> initPrefs() async {
     try {
-      deleteAllData();
+      // deleteAllData();
+      deleteData('token');
       _token = await _prefs.read(key: 'token') ?? '';
       print("Token leido correctamente: $_token");
     } catch (e) {
@@ -37,5 +38,15 @@ class UserPreferences {
 
   Future<void> deleteAllData() async {
     await _prefs.deleteAll();
+  }
+
+  Future<void> saveLanguage(String languageCode) async {
+    await _prefs.write(key: 'language', value: languageCode);
+    print("Idioma guardado correctamente: $languageCode");
+  }
+
+  Future<String?> getLanguage() async {
+    print("Idioma leido correctamente: ${await _prefs.read(key: 'language')}");
+    return await _prefs.read(key: 'language') ?? 'en';
   }
 }
