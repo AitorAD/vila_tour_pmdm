@@ -5,6 +5,7 @@ class SearchBox extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final VoidCallback onFilterPressed;
+  final VoidCallback? onTap; // Hacer que onTap sea opcional
 
   const SearchBox({
     super.key,
@@ -12,6 +13,7 @@ class SearchBox extends StatelessWidget {
     required this.controller,
     required this.onChanged,
     required this.onFilterPressed,
+    this.onTap, // Añadir onTap como opcional
   });
 
   @override
@@ -30,6 +32,7 @@ class SearchBox extends StatelessWidget {
             child: TextField(
               controller: controller,
               onChanged: onChanged,
+              onTap: onTap, // Añadir onTap al TextField
               decoration: InputDecoration(
                 hintText: hintText,
                 border: InputBorder.none,

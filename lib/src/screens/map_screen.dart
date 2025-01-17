@@ -35,6 +35,7 @@ class _MapScreen2State extends State<MapScreen> {
   final MapController _mapController = MapController();
   final PopupController _popupController = PopupController();
   List<Marker> _markers = [];
+  bool _showList = false;  // Variable para controlar la visibilidad de la lista
 
   @override
   void initState() {
@@ -49,10 +50,16 @@ class _MapScreen2State extends State<MapScreen> {
       Provider.of<PlacesProvider>(context, listen: false).setPlaces(places);
 
       setState(() {
-        _markers = places.where((place) => MapScreen.selectedCategories.contains(place.categoryPlace.name)).map((place) {
-          IconData iconData = MapScreen.categoryIcons[place.categoryPlace.name] ?? Icons.location_on;
+        _markers = places
+            .where((place) =>
+                MapScreen.selectedCategories.contains(place.categoryPlace.name))
+            .map((place) {
+          IconData iconData =
+              MapScreen.categoryIcons[place.categoryPlace.name] ??
+                  Icons.location_on;
           return Marker(
-            point: LatLng(place.coordinate.latitude, place.coordinate.longitude),
+            point:
+                LatLng(place.coordinate.latitude, place.coordinate.longitude),
             child: Icon(
               iconData,
               color: Colors.lightBlue,
@@ -115,16 +122,23 @@ class _MapScreen2State extends State<MapScreen> {
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'vila_tour',
               ),
-              PopupMarkerLayerWidget(
+              PopupMarkerLayer(
                 options: PopupMarkerLayerOptions(
                   markers: _markers,
                   popupController: _popupController,
                   popupDisplayOptions: PopupDisplayOptions(
                     builder: (BuildContext context, Marker marker) {
-                      final place = Provider.of<PlacesProvider>(context, listen: false).places.firstWhere(
-                        (p) => p.coordinate.latitude == marker.point.latitude && p.coordinate.longitude == marker.point.longitude,
-                        orElse: () => Place.nullPlace(),
-                      );
+                      final place =
+                          Provider.of<PlacesProvider>(context, listen: false)
+                              .places
+                              .firstWhere(
+                                (p) =>
+                                    p.coordinate.latitude ==
+                                        marker.point.latitude &&
+                                    p.coordinate.longitude ==
+                                        marker.point.longitude,
+                                orElse: () => Place.nullPlace(),
+                              );
                       return Container(
                         width: 300,
                         height: 170,
@@ -147,7 +161,14 @@ class _MapScreen2State extends State<MapScreen> {
           SafeArea(
             top: false,
             minimum: EdgeInsets.only(top: 15),
-            child: SearchBoxFiltered(updateMarkers: _updateMarkers),
+            child: SearchBoxFiltered(
+              updateMarkers: _updateMarkers,
+              onTap: () {
+                setState(() {
+                  _showList = !_showList; // Alternar la visibilidad de la lista
+                });
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0, right: 10),
@@ -168,21 +189,63 @@ class _MapScreen2State extends State<MapScreen> {
 
 class SearchBoxFiltered extends StatelessWidget {
   final VoidCallback updateMarkers;
+  final VoidCallback onTap;
 
-  const SearchBoxFiltered({super.key, required this.updateMarkers});
+  const SearchBoxFiltered({super.key, required this.updateMarkers, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return SearchBox(
-      hintText: "Buscar lugar",
-      controller: TextEditingController(),
-      onChanged: (value) {},
-      onFilterPressed: () {
-        _showFilterMenu(context);
-      },
+    return Column(
+      children: [
+        // Barra de búsqueda
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SearchBox(
+            hintText: "Buscar lugar",
+            controller: TextEditingController(),
+            onChanged: (value) {
+              // Aquí puedes filtrar los lugares a medida que se escribe
+            },
+            onFilterPressed: () {
+              _showFilterMenu(context);  // Llamada al menú de filtros
+            },
+            onTap: onTap,  // Llamada para mostrar/ocultar la lista
+          ),
+        ),
+        
+        // Lista de lugares debajo de la barra de búsqueda
+        Visibility(
+          visible: _showList,  // Controla si la lista se muestra u oculta
+          child: _buildListView(context),
+        ),
+      ],
     );
   }
 
+  // Construir la lista de lugares
+  Widget _buildListView(BuildContext context) {
+    List<String> filteredPlaces = ['Lugar 1', 'Lugar 2', 'Lugar 3'];  // Aquí deberías obtener los lugares filtrados
+
+    return Container(
+      color: Colors.white,  // Color de fondo para la lista
+      child: ListView.builder(
+        padding: EdgeInsets.only(top: 0),
+        itemCount: filteredPlaces.length,
+        itemBuilder: (context, index) {
+          final place = filteredPlaces[index];
+          return ListTile(
+            title: Text(place),
+            onTap: () {
+              // Acción cuando se toca un lugar
+              print("Lugar seleccionado: $place");
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  // Mostrar el menú de filtros
   Future<String?> _showFilterMenu(BuildContext context) {
     return showMenu(
       context: context,
