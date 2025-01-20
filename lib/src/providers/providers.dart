@@ -2,7 +2,6 @@ export 'category_ingredient_provider.dart';
 export 'festivals_provider.dart';
 export 'ingredients_provider.dart';
 export 'login_form_provider.dart';
-export 'login_provider.dart';
 export 'menu.dart';
 export 'places_provider.dart';
 export 'profile_form_provider.dart';
