@@ -1,13 +1,16 @@
 import 'dart:ui';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/menu.dart';
 import 'package:vila_tour_pmdm/src/providers/theme_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/festivals_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/recipes_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
+import 'package:vila_tour_pmdm/src/services/article_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -24,35 +27,105 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ArticleService articleService = ArticleService();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('VILATOUR'),
         centerTitle: true,
       ),
       bottomNavigationBar: CustomNavigationBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-        },
-        child: Icon(Icons.dark_mode),
-      ),
       body: Stack(
         children: [
           WavesWidget(),
           SingleChildScrollView(
             child: Column(
               children: [
-                Image(
-                  image: AssetImage('assets/logo.ico'),
-                  width: 300,
-                  height: 300,
+                FutureBuilder(
+                  future: articleService.getLastArticles(),
+                  builder: (builder, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      List<Article> articles = snapshot.data!;
+                      return SizedBox(
+                        height: 200, // Ajusta la altura según tus necesidades
+                        child: ListView.builder(
+                          itemCount: articles.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            var article = articles[index];
+                            return Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(article.name),
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      return Center(
+                          child: Text('No hay artículos disponibles.'));
+                    }
+                  },
                 ),
+
+                /*
+                Hero(
+                          tag: festival.id,
+                          child: PageStorage(
+                            bucket: PageStorageBucket(),
+                            child: CarouselSlider(
+                              options: CarouselOptions(
+                                height: 350,
+                                enableInfiniteScroll: true,
+                                autoPlay: true,
+                                autoPlayInterval: Duration(seconds: 5),
+                                enlargeCenterPage: true,
+                                viewportFraction: 0.85,
+                              ),
+                              items: festival.images.map((image) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: FadeInImage(
+                                    placeholder: AssetImage('assets/logo.ico'),
+                                    image: image.path.startsWith('assets/')
+                                        ? AssetImage(image.path)
+                                            as ImageProvider
+                                        : MemoryImage(
+                                            decodeImageBase64(image.path)),
+                                    width: double.infinity,
+                                    height: 400,
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                */
+
                 _MainContent()
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class ToggleThemeButton extends StatelessWidget {
+  const ToggleThemeButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+      },
+      child: Icon(Icons.dark_mode),
     );
   }
 }

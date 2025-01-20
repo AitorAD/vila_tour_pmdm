@@ -49,4 +49,8 @@ abstract class Article {
         throw Exception('Unknown article type: ${map['type']}');
     }
   }
+
+  static List<Article> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((item) => Article.fromMap(item)).toList();
+  }
 }
