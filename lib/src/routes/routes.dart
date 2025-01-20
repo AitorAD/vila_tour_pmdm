@@ -18,5 +18,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     PlacesDetails.routeName: (BuildContext context) => PlacesDetails(),
     AddReviewScreen.routeName: (BuildContext context) => AddReviewScreen(),
     LanguagesScreen.routeName: (BuildContext context) => LanguagesScreen(),
+    RoutesScreen.routeName: (BuildContext context) => RoutesScreen(),
   };
 }

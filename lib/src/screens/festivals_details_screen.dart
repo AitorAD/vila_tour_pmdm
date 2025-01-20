@@ -7,7 +7,6 @@ import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
 import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 
 class DetailsFestival extends StatefulWidget {
   static final routeName = 'general_festival';
