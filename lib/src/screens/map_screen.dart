@@ -204,7 +204,8 @@ class SearchBoxFiltered extends StatelessWidget {
             hintText: "Buscar lugar",
             controller: TextEditingController(),
             onChanged: (value) {
-              // Aquí puedes filtrar los lugares a medida que se escribe
+              // Aquí deberías filtrar los lugares
+              
             },
             onFilterPressed: () {
               _showFilterMenu(context);  // Llamada al menú de filtros
@@ -212,36 +213,7 @@ class SearchBoxFiltered extends StatelessWidget {
             onTap: onTap,  // Llamada para mostrar/ocultar la lista
           ),
         ),
-        
-        // Lista de lugares debajo de la barra de búsqueda
-        Visibility(
-          visible: _showList,  // Controla si la lista se muestra u oculta
-          child: _buildListView(context),
-        ),
       ],
-    );
-  }
-
-  // Construir la lista de lugares
-  Widget _buildListView(BuildContext context) {
-    List<String> filteredPlaces = ['Lugar 1', 'Lugar 2', 'Lugar 3'];  // Aquí deberías obtener los lugares filtrados
-
-    return Container(
-      color: Colors.white,  // Color de fondo para la lista
-      child: ListView.builder(
-        padding: EdgeInsets.only(top: 0),
-        itemCount: filteredPlaces.length,
-        itemBuilder: (context, index) {
-          final place = filteredPlaces[index];
-          return ListTile(
-            title: Text(place),
-            onTap: () {
-              // Acción cuando se toca un lugar
-              print("Lugar seleccionado: $place");
-            },
-          );
-        },
-      ),
     );
   }
 
