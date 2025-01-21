@@ -4,36 +4,36 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/providers/menu.dart';
 import 'package:vila_tour_pmdm/src/providers/theme_provider.dart';
-import 'package:vila_tour_pmdm/src/screens/festivals_screen.dart';
-import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
-import 'package:vila_tour_pmdm/src/screens/recipes_screen.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/article_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
 
-import '../providers/providers.dart';
-
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:vila_tour_pmdm/src/providers/theme_provider.dart';
-import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static final routeName = 'home_screen';
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    ArticleService articleService = ArticleService();
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0; // Índice actual del slider
+
+  late Future<List<Article>> _futureArticles; // Define el future aquí
+
+  @override
+  void initState() {
+    super.initState();
+    _futureArticles =
+        ArticleService().getLastArticles(); // Asigna el future solo una vez
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('VILATOUR'),
-        centerTitle: true,
-      ),
       bottomNavigationBar: CustomNavigationBar(),
       body: Stack(
         children: [
@@ -41,74 +41,152 @@ class HomePage extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                FutureBuilder(
-                  future: articleService.getLastArticles(),
-                  builder: (builder, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                      List<Article> articles = snapshot.data!;
-                      return SizedBox(
-                        height: 200, // Ajusta la altura según tus necesidades
-                        child: ListView.builder(
-                          itemCount: articles.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            var article = articles[index];
-                            return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text(article.name),
-                            );
-                          },
-                        ),
-                      );
-                    } else {
-                      return Center(
-                          child: Text('No hay artículos disponibles.'));
-                    }
-                  },
-                ),
+                BarScreenArrow(labelText: 'VILATOUR', arrowBack: false),
+                Container(
+                  height: 320,
+                  child: FutureBuilder(
+                    future: _futureArticles,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasData &&
+                          snapshot.data!.isNotEmpty) {
+                        List<Article> articles = snapshot.data!;
 
-                /*
-                Hero(
-                          tag: festival.id,
-                          child: PageStorage(
-                            bucket: PageStorageBucket(),
-                            child: CarouselSlider(
-                              options: CarouselOptions(
-                                height: 350,
-                                enableInfiniteScroll: true,
-                                autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 5),
-                                enlargeCenterPage: true,
-                                viewportFraction: 0.85,
-                              ),
-                              items: festival.images.map((image) {
-                                return ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: FadeInImage(
-                                    placeholder: AssetImage('assets/logo.ico'),
-                                    image: image.path.startsWith('assets/')
-                                        ? AssetImage(image.path)
-                                            as ImageProvider
-                                        : MemoryImage(
-                                            decodeImageBase64(image.path)),
-                                    width: double.infinity,
-                                    height: 400,
-                                    fit: BoxFit.cover,
-                                  ),
-                                );
-                              }).toList(),
+                        return Column(
+                          children: [
+                            CarouselSlider.builder(
+                              options: carouselOptions(),
+                              itemCount: articles.length,
+                              itemBuilder: (context, index, realIndex) {
+                                var article = articles[index];
+                                return ImageCarousel(article: article);
+                              },
                             ),
-                          ),
-                        ),
-                */
-
+                            const SizedBox(height: 10),
+                            DockIndex(
+                              articles: articles,
+                              currentIndex: _currentIndex,
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Center(
+                          child: Text('No hay artículos disponibles.'),
+                        );
+                      }
+                    },
+                  ),
+                ),
                 _MainContent()
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  CarouselOptions carouselOptions() {
+    return CarouselOptions(
+      height: 300,
+      autoPlay: true, // Reproducción automática
+      autoPlayInterval: const Duration(seconds: 3), // Intervalo
+      enlargeCenterPage: true, // Resalta la diapositiva central
+      viewportFraction: 0.9, // Ocupa el 90% del ancho de la pantalla
+      onPageChanged: (index, reason) {
+        setState(() {
+          _currentIndex = index; // Actualiza el índice actual
+        });
+      },
+    );
+  }
+}
+
+class DockIndex extends StatelessWidget {
+  const DockIndex({
+    super.key,
+    required this.articles,
+    required int currentIndex,
+  }) : _currentIndex = currentIndex;
+
+  final List<Article> articles;
+  final int _currentIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        articles.length,
+        (index) => AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: _currentIndex == index ? 12 : 8, // Tamaño del punto
+          height: 8,
+          decoration: BoxDecoration(
+            color: _currentIndex == index
+                ? Colors.blueAccent // Color activo
+                : Colors.grey, // Color inactivo
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ImageCarousel extends StatelessWidget {
+  const ImageCarousel({
+    super.key,
+    required this.article,
+  });
+
+  final Article article;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        String route = LoginScreen.routeName;
+        if (article is Festival) route = DetailsFestival.routeName;
+        if (article is Place) route = PlacesDetails.routeName;
+        if (article is Recipe) route = RecipeDetails.routeName;
+        Navigator.pushNamed(
+          context,
+          route,
+          arguments: article,
+        );
+      },
+      child: Hero(
+        tag: article.id,
+        child: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 8,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          clipBehavior: Clip.hardEdge,
+          child: FadeInImage(
+            placeholder: const AssetImage('assets/logo.ico'),
+            image: article.images.isEmpty
+                ? const AssetImage('assets/logo.ico')
+                : MemoryImage(
+                    decodeImageBase64(article.images.first.path),
+                  ),
+            width: double.infinity,
+            height: 400,
+            fit: BoxFit.cover,
+            placeholderFit: BoxFit.contain,
+          ),
+        ),
       ),
     );
   }
@@ -177,10 +255,10 @@ class _MainContent extends StatelessWidget {
 }
 
 class _SingleCard extends StatelessWidget {
-  IconData icon;
-  Color color;
-  String text;
-  String route;
+  final IconData icon;
+  final Color color;
+  final String text;
+  final String route;
 
   _SingleCard({
     super.key,
@@ -229,76 +307,3 @@ class _SingleCard extends StatelessWidget {
     );
   }
 }
-
-/*
-class HomePage extends StatelessWidget {
-  static final routeName = 'home_screen';
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        bottomNavigationBar: CustomNavigationBar(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-          },
-          child: Icon(Icons.dark_mode),
-        ),
-        appBar: CustomAppBar(title: 'VILATOUR'),
-        body: home(context));
-  }
-
-  Widget _lista() {
-    return FutureBuilder(
-      future: menuProvider.cargarData(),
-      initialData: const [],
-      builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          return ListView(
-            children: _listaItems(snapshot.data!, context),
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
-  }
-
-  List<Widget> _listaItems(List<dynamic> data, BuildContext context) {
-    final List<Widget> opciones = [];
-    for (var opt in data) {
-      final widgetTemp = ListTile(
-        title: Text(opt['texto']),
-        trailing: const Icon(Icons.keyboard_arrow_right, color: Colors.blue),
-        onTap: () {
-          Navigator.pushNamed(context, opt['ruta']);
-        },
-      );
-
-      opciones
-        ..add(widgetTemp)
-        ..add(const Divider());
-    }
-
-    return opciones;
-  }
-
-  Widget home(context) {
-
-    return FutureBuilder(
-      future: menuProvider.cargarData(),
-      initialData: const [],
-      builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          return ListView(
-            children: _listaItems(snapshot.data!, context),
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
-  }
-}
-*/
