@@ -9,6 +9,7 @@ import 'package:vila_tour_pmdm/src/providers/places_provider.dart';
 import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
+import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 class MapScreen extends StatefulWidget {
   static final routeName = 'map_screen';
@@ -21,21 +22,30 @@ class MapScreen extends StatefulWidget {
     'MONUMENTO': Icons.account_balance_rounded,
     'MUSEO': Icons.museum_rounded,
     'IGLESIA': Icons.church_rounded,
-    'CASTILLO': Icons.castle_rounded,
+  };
+
+  static final Map<String, Color> categoryColors = {
+    'PLAYA': const Color.fromARGB(255, 243, 152, 33),
+    'PARQUE': Colors.green,
+    'RESTAURANTE': const Color.fromARGB(255, 240, 20, 4),
+    'HOTEL': const Color.fromARGB(255, 45, 10, 204),
+    'MONUMENTO': const Color.fromARGB(255, 180, 97, 3),
+    'MUSEO': const Color.fromARGB(255, 125, 7, 223),
+    'IGLESIA': Colors.brown,
   };
 
   static List<String> selectedCategories = List.from(categoryIcons.keys);
   static List<Place> places = [];
 
   @override
-  State<MapScreen> createState() => _MapScreen2State();
+  State<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreen2State extends State<MapScreen> {
+class _MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
   final PopupController _popupController = PopupController();
   List<Marker> _markers = [];
-  bool _showList = false;  // Variable para controlar la visibilidad de la lista
+  bool _showList = false;
 
   @override
   void initState() {
@@ -62,7 +72,7 @@ class _MapScreen2State extends State<MapScreen> {
                 LatLng(place.coordinate.latitude, place.coordinate.longitude),
             child: Icon(
               iconData,
-              color: Colors.lightBlue,
+              color: MapScreen.categoryColors[place.categoryPlace.name] ?? Colors.red,
               size: 30.0,
             ),
           );
@@ -162,10 +172,12 @@ class _MapScreen2State extends State<MapScreen> {
             top: false,
             minimum: EdgeInsets.only(top: 15),
             child: SearchBoxFiltered(
+              mapController: _mapController,
+              popupController: _popupController,
               updateMarkers: _updateMarkers,
               onTap: () {
                 setState(() {
-                  _showList = !_showList; // Alternar la visibilidad de la lista
+                  _showList = !_showList;
                 });
               },
             ),
@@ -175,8 +187,10 @@ class _MapScreen2State extends State<MapScreen> {
             child: Align(
               alignment: Alignment.bottomRight,
               child: FloatingActionButton(
+                backgroundColor: vilaBlueColor(),
+                focusColor: Colors.white,
                 onPressed: _centerMapOnUser,
-                child: const Icon(Icons.my_location),
+                child: Icon(Icons.my_location, color: Colors.white),
               ),
             ),
           ),
@@ -187,41 +201,183 @@ class _MapScreen2State extends State<MapScreen> {
   }
 }
 
-class SearchBoxFiltered extends StatelessWidget {
+class SearchBoxFiltered extends StatefulWidget {
   final VoidCallback updateMarkers;
   final VoidCallback onTap;
+  final MapController mapController;
+  final PopupController popupController;
 
-  const SearchBoxFiltered({super.key, required this.updateMarkers, required this.onTap});
+  const SearchBoxFiltered(
+      {super.key,
+      required this.updateMarkers,
+      required this.onTap,
+      required this.mapController,
+      required this.popupController});
+
+  @override
+  State<SearchBoxFiltered> createState() => _SearchBoxFilteredState();
+}
+
+class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
+  PlaceService placeService = PlaceService();
+  TextEditingController _controller = TextEditingController();
+  List<Place> _places = []; // Datos iniciales
+  List<Place> _filteredPlaces = [];
+  bool _showList = false;
+  String? _selectedMarkerId; // Variable para el marcador seleccionado
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPlaces();
+    _controller.addListener(_filterPlaces);
+    print(_places);
+  }
+
+  void _loadPlaces() async {
+    _places = await placeService.getPlaces();
+    setState(() {
+      _filteredPlaces = _places; // Inicializamos con todos los lugares
+    });
+  }
+
+  void _filterPlaces() {
+    setState(() {
+      // Filtrar los lugares según el texto ingresado y las categorías seleccionadas
+      _filteredPlaces = _places
+          .where((place) =>
+              place.name
+                  .toLowerCase()
+                  .contains(_controller.text.toLowerCase()) &&
+              MapScreen.selectedCategories.contains(place.categoryPlace.name))
+          .toList();
+
+      // Mostrar u ocultar la lista dependiendo del contenido
+      _showList = _controller.text.isNotEmpty && _filteredPlaces.isNotEmpty;
+    });
+  }
+
+  void _onPlaceTap(Place place) {
+    _controller.text = place.name;
+    setState(() {
+      _showList = false;
+      _selectedMarkerId =
+          place.id.toString(); // Asocia el marcador seleccionado
+    });
+    widget.mapController.move(
+      LatLng(place.coordinate.latitude, place.coordinate.longitude),
+      15.0,
+    );
+    // Activa el popup del marcador correspondiente
+    widget.popupController.togglePopup(
+      Marker(
+        point: LatLng(place.coordinate.latitude, place.coordinate.longitude),
+        child:
+            ArticleBox(article: place), // Añadir el parámetro 'child' requerido
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Barra de búsqueda
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(top: 16),
           child: SearchBox(
             hintText: "Buscar lugar",
-            controller: TextEditingController(),
+            controller: _controller,
             onChanged: (value) {
-              // Aquí deberías filtrar los lugares
-              
+              _filterPlaces();
             },
             onFilterPressed: () {
-              _showFilterMenu(context);  // Llamada al menú de filtros
+              _showFilterMenu(context);
             },
-            onTap: onTap,  // Llamada para mostrar/ocultar la lista
+            onTap: widget.onTap,
           ),
         ),
+        if (_showList)
+          Container(
+            margin: EdgeInsets.only(top: 0),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height *
+                  0.4, // Ajusta la altura según sea necesario
+            ),
+            child: ListView.builder(
+              itemCount: _filteredPlaces.length,
+              itemBuilder: (context, index) {
+                final place = _filteredPlaces[index];
+                final iconData =
+                    MapScreen.categoryIcons[place.categoryPlace.name] ??
+                        Icons.location_on;
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+                  elevation: 5,
+                  child: ListTile(
+                      leading: Container(
+                        width: 50.0,
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: vilaBlueColor()),
+                        ),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            iconData,
+                            color: vilaBlueColor(),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        place.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      subtitle: Text(
+                        place.categoryPlace.name,
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      onTap: () => _onPlaceTap(place)),
+                );
+              },
+            ),
+          )
+        else if (_controller.text.isNotEmpty && _filteredPlaces.isEmpty)
+          Container(
+            height: 50,
+            margin: EdgeInsets.symmetric(horizontal: 16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text("No se encontraron lugares."),
+            ),
+          ),
       ],
     );
   }
 
-  // Mostrar el menú de filtros
   Future<String?> _showFilterMenu(BuildContext context) {
     return showMenu(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
       context: context,
-      position: RelativeRect.fromLTRB(100.0, 100.0, 0.0, 0.0),
+      position: RelativeRect.fromLTRB(100.0, 100.0, 20.0, 0.0),
       items: MapScreen.categoryIcons.entries.map(
         (entry) {
           return PopupMenuItem<String>(
@@ -229,6 +385,7 @@ class SearchBoxFiltered extends StatelessWidget {
               children: [
                 StatefulBuilder(
                   builder: (context, setState) => Checkbox(
+                    activeColor: vilaBlueColor(),
                     value: MapScreen.selectedCategories.contains(entry.key),
                     onChanged: (bool? value) {
                       setState(() {
@@ -238,7 +395,7 @@ class SearchBoxFiltered extends StatelessWidget {
                           MapScreen.selectedCategories.remove(entry.key);
                         }
                       });
-                      updateMarkers();
+                      widget.updateMarkers();
                     },
                   ),
                 ),
