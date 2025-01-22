@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
@@ -10,6 +11,7 @@ import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:flutter_compass/flutter_compass.dart';
 
 class MapScreen extends StatefulWidget {
   static final routeName = 'map_screen';
@@ -46,11 +48,21 @@ class _MapScreenState extends State<MapScreen> {
   final PopupController _popupController = PopupController();
   List<Marker> _markers = [];
   bool _showList = false;
+  double? _heading;
+  bool _isMapboxLayerActive = false;
 
   @override
   void initState() {
     super.initState();
     _loadMarkers();
+  }
+
+  void _listenToCompass() {
+    FlutterCompass.events?.listen((event) {
+      setState(() {
+        _heading = event.heading;
+      });
+    });
   }
 
   void _loadMarkers() async {
@@ -72,7 +84,8 @@ class _MapScreenState extends State<MapScreen> {
                 LatLng(place.coordinate.latitude, place.coordinate.longitude),
             child: Icon(
               iconData,
-              color: MapScreen.categoryColors[place.categoryPlace.name] ?? Colors.red,
+              color: MapScreen.categoryColors[place.categoryPlace.name] ??
+                  Colors.red,
               size: 30.0,
             ),
           );
@@ -129,8 +142,9 @@ class _MapScreenState extends State<MapScreen> {
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'vila_tour',
+                urlTemplate: _isMapboxLayerActive
+                ? 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+                : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
               PopupMarkerLayer(
                 options: PopupMarkerLayerOptions(
@@ -180,6 +194,27 @@ class _MapScreenState extends State<MapScreen> {
                   _showList = !_showList;
                 });
               },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 110.0, right: 10),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Column(
+                children: [
+                  FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        _isMapboxLayerActive = !_isMapboxLayerActive;
+                      });
+                    },
+                    backgroundColor: vilaBlueColor(),
+                    focusColor: Colors.white,
+                    child: Icon(Icons.layers_outlined, color: Colors.white),
+                  ),
+                  SizedBox(height: 10), // Espacio entre los botones
+                ],
+              ),
             ),
           ),
           Padding(
@@ -264,9 +299,10 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
       _selectedMarkerId =
           place.id.toString(); // Asocia el marcador seleccionado
     });
-    widget.mapController.move(
+    widget.mapController.moveAndRotate(
       LatLng(place.coordinate.latitude, place.coordinate.longitude),
       15.0,
+      0.0,
     );
     // Activa el popup del marcador correspondiente
     widget.popupController.togglePopup(
