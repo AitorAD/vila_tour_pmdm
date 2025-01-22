@@ -27,6 +27,32 @@ class UserService extends ChangeNotifier {
     return currentUser;
   }
 
+  Future<User> getBasicInfoUserById(int id) async {
+    final url = Uri.parse('$baseURL/users/basic/$id');
+
+    String? token = await UserPreferences.instance.readData('token');
+
+    final response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      try {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        User user = User.fromMap(jsonResponse);
+        return user;
+      } catch (e) {
+        throw Exception('Error al deserializar los datos del usuario');
+      }
+    } else {
+      throw Exception('Error al cargar los datos del usuario');
+    }
+  }
+
   Future<bool> modifyUser(User user, User newUser) async {
     final url = Uri.parse('$baseURL/users/${user.id}');
 

@@ -1,7 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
+import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
+import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RecipeDetails extends StatefulWidget {
@@ -15,188 +18,154 @@ class RecipeDetails extends StatefulWidget {
 class _RecipeDetailsState extends State<RecipeDetails>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool showFab = false; // Controla la visibilidad del botón
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, initialIndex: 1, vsync: this);
+    _tabController.addListener(_handleTabChange);
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabChange); // Limpia el listener
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _handleTabChange() {
+    setState(() {
+      showFab =
+          _tabController.index == 2; // Muestra el botón solo en el índice 2
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final Recipe recipe = ModalRoute.of(context)!.settings.arguments as Recipe;
-
-    final List<Map<String, dynamic>> ratings = [
-      {'stars': 5, 'percentage': 0.76},
-      {'stars': 4, 'percentage': 0.13},
-      {'stars': 3, 'percentage': 0.04},
-      {'stars': 2, 'percentage': 0.04},
-      {'stars': 1, 'percentage': 0.04},
-    ];
+    final filteredReviews =
+        recipe.reviews.where((review) => review.rating > 0).toList();
+    final double averageScore = filteredReviews.isNotEmpty
+        ? filteredReviews
+                .map((review) => review.rating)
+                .reduce((a, b) => a + b) /
+            filteredReviews.length
+        : 0;
 
     return Scaffold(
       bottomNavigationBar: CustomNavigationBar(),
-      appBar: CustomAppBar(title: recipe.name),
-      body: Column(
-        children: [
-          TabBar(
-            controller: _tabController,
-            indicatorColor: const Color.fromARGB(255, 54, 71, 71),
-            tabs: const [
-              Tab(text: 'Receta'),
-              Tab(text: 'Visión General'),
-              Tab(text: 'Reseñas'),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
+      floatingActionButtonLocation: showFab ?
+      FloatingActionButtonLocation.centerFloat :
+      FloatingActionButtonLocation.endFloat,
+      floatingActionButton: showFab
+          ? ElevatedCustomButton(
+              text: 'Añadir reseña',
+              radius: 20,
+              onPressed: () {
+                Navigator.pushNamed(context, AddReviewScreen.routeName,
+                    arguments: recipe);
+              },
+            )
+          : FavoriteFloatingActionButton(article: recipe),
+      body: Stack(children: [
+        WavesWidget(),
+        Column(
+          children: [
+            BarScreenArrow(labelText: recipe.name, arrowBack: true),
+            TabBar(
               controller: _tabController,
-              children: [
-                // Tab 1: Receta
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
+              indicatorColor: const Color.fromARGB(255, 54, 71, 71),
+              tabs: const [
+                Tab(text: 'Receta'),
+                Tab(text: 'Visión General'),
+                Tab(text: 'Reseñas'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // Tab 1: Receta
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          IngredientsWrap(ingredients: recipe.ingredients),
+                          const SizedBox(height: 16),
+                          const Divider(
+                            color: Colors.black,
+                            thickness: 1.0,
+                            indent: 0,
+                            endIndent: 0,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Preparación',
+                            style: textStyleVilaTourTitle(color: Colors.black),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            recipe.description,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Tab 2: Visión General
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IngredientsWrap(ingredients: recipe.ingredients),
-                        const SizedBox(height: 16),
-                        const Divider(
-                          color: Colors.black,
-                          thickness: 1.0,
-                          indent: 0,
-                          endIndent: 0,
-                        ),
-                        const SizedBox(height: 10),
                         Text(
-                          'Preparación',
+                          recipe.name,
                           style: textStyleVilaTourTitle(color: Colors.black),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          recipe.description,
-                          style: const TextStyle(fontSize: 16),
+                        SizedBox(height: 20),
+                        Hero(
+                          tag: recipe.id, // Mismo tag que en ArticleBox
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: FadeInImage(
+                              placeholder: AssetImage('assets/logo.ico'),
+                              image: recipe.images.isNotEmpty
+                                  ? MemoryImage(decodeImageBase64(
+                                      recipe.images.first.path))
+                                  : AssetImage('assets/logo_foreground.png')
+                                      as ImageProvider,
+                              width: double.infinity,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
+
+                        SizedBox(height: 20),
+                        // Row for rating stars
+                        RatingRow(
+                          averageScore: averageScore,
+                          reviewCount: filteredReviews.length,
+                        ),
+                        const Divider(height: 20),
+
+                        IngredientsWrap(ingredients: recipe.ingredients),
                       ],
                     ),
                   ),
-                ),
 
-                // Tab 2: Visión General
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        recipe.name,
-                        style: textStyleVilaTourTitle(color: Colors.black),
-                      ),
-                      SizedBox(height: 20),
-                      Hero(
-                        tag: recipe.id, // Mismo tag que en ArticleBox
-                        child: FadeInImage(
-                          placeholder: AssetImage('assets/logo.ico'),
-                          image: MemoryImage(decodeImageBase64(recipe.images!.first.path)),
-                          width: double.infinity,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      IngredientsWrap(ingredients: recipe.ingredients),
-                    ],
-                  ),
-                ),
-
-                // Tab 3: Reseñas
-                // const Center(child: Text('Contenido de las reseñas aquí')),
-
-                Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Columna izquierda: barras de progreso
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: ratings.map((rating) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: LinearProgressIndicator(
-                                      value: rating['percentage'],
-                                      backgroundColor: Colors.grey[300],
-                                      color: Colors.amber,
-                                      minHeight: 10,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      // Columna derecha: puntuación, estrellas y comentarios
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              '4.8',
-                              style: TextStyle(
-                                  fontSize: 36, fontWeight: FontWeight.bold),
-                            ),
-                            PaintStars(rating: 4.8, color: Colors.amber),
-                            Text(
-                              '100000.037 comentarios',
-                              softWrap: false,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.grey[600]),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                  // Tab 3: Reseñas
+                  ReviewsInfo(reviews: recipe.reviews)
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-      /*
-      floatingActionButton: Consumer<RecipesProvider>(
-        builder: (context, recipesProvider, child) {
-          final isFavourite = recipesProvider.recipes.any((r) => r.name == recipe.name && r.favourite);
-
-          return FloatingActionButton(
-            onPressed: () {
-              recipesProvider.toggleFavorite(recipe);
-            },
-            backgroundColor: isFavourite ? Colors.white : Colors.redAccent,
-            child: isFavourite
-                ? Icon(Icons.favorite, color: Colors.redAccent)
-                : Icon(Icons.favorite_border),
-          );
-        },
-      ),
-      */
+          ],
+        ),
+      ]),
     );
   }
 }

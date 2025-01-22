@@ -1,67 +1,159 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
-import 'package:vila_tour_pmdm/src/services/image_service.dart';
 import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
-class RecipesScreen extends StatelessWidget {
+class RecipesScreen extends StatefulWidget {
   static final routeName = 'recipes_screen';
   const RecipesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final recipeService = RecipeService();
-    final imageService = ImageService();
+  _RecipesScreenState createState() => _RecipesScreenState();
+}
 
-    return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
-      appBar: CustomAppBar(title: 'Festivales y Tradiciones'),
-      body: Stack(
-        children: [
-          WavesWidget(),
-          FutureBuilder<List<Recipe>>(
-            future: recipeService.getRecipes(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                print(snapshot.error);
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No se encontraron festivales.'));
-              } else {
-                List<Recipe> recipes = snapshot.data!;
-                return ListView.builder(
-                  itemCount: recipes.length,
-                  itemBuilder: (context, index) {
-                    final recipe = recipes[index];
-                    return FutureBuilder<List<customImage.Image>>(
-                      future: imageService.getImagesByArticle(recipe),
-                      builder: (context, imageSnapshot) {
-                        if (imageSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (imageSnapshot.hasError) {
-                          print(imageSnapshot.error);
-                          return ListTile(
-                            title: Text(recipe.name),
-                            subtitle: Text('Error al cargar las imágenes'),
-                          );
-                        } else if (!imageSnapshot.hasData ||
-                            imageSnapshot.data!.isEmpty) {
-                          return ArticleBox(article: recipe);
-                        } else {
-                          List<customImage.Image> images = imageSnapshot.data!;
-                          recipe.images = images;
-                          return ArticleBox(article: recipe);
-                        }
-                      },
-                    );
+class _RecipesScreenState extends State<RecipesScreen> {
+  final TextEditingController searchController = TextEditingController();
+  late Future<List<Recipe>> _recipesFuture;
+  List<Recipe> _filteredRecipes = [];
+  String _selectedAttribute = 'name'; // Atributo inicial para filtrar
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecipes();
+  }
+
+  void _loadRecipes() {
+    final recipeService = RecipeService();
+    setState(() {
+      _recipesFuture = recipeService.getRecipes();
+    });
+  }
+
+  void _filterRecipes(String query, List<Recipe> recipes) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredRecipes = recipes;
+      } else {
+        _filteredRecipes = recipes.where(
+          (recipe) {
+            final value = _getAttributeValue(recipe, _selectedAttribute);
+            return value != null &&
+                value.toLowerCase().contains(query.toLowerCase());
+          },
+        ).toList();
+      }
+    });
+  }
+
+  String? _getAttributeValue(Recipe recipe, String attribute) {
+    switch (attribute) {
+      case 'name':
+        return recipe.name;
+      case 'description':
+        return recipe.description;
+      case 'averageScore':
+        return recipe.averageScore.toString();
+      case 'ingredients':
+        return recipe.ingredients.map((ingredient) => ingredient.name).join(', ');
+      default:
+        return null;
+    }
+  }
+
+  void _showFilterOptions() {
+    final Map<String, String> filterOptions = {
+      'Nombre': 'name',
+      'Descripción': 'description',
+      'Puntuación': 'averageScore',
+      'Ingredientes': 'ingredients',
+    };
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: filterOptions.keys.map((label) {
+                final attribute = filterOptions[label]!;
+                return CheckboxListTile(
+                  title: Text(label), // Muestra el nombre en español
+                  value: _selectedAttribute == attribute,
+                  onChanged: (isSelected) {
+                    setState(() {
+                      // Actualiza el estado de las opciones
+                      _selectedAttribute =
+                          isSelected ?? false ? attribute : _selectedAttribute;
+
+                      // Aplicar el filtro
+                      _recipesFuture.then((recipes) {
+                        _filterRecipes(searchController.text, recipes);
+                      });
+                    });
+
+                    Navigator.pop(context);
                   },
                 );
-              }
-            },
+              }).toList(),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: CustomNavigationBar(),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: WavesWidget(),
+          ),
+          Column(
+            children: [
+              BarScreenArrow(labelText: 'Recetas', arrowBack: true),
+              SearchBox(
+                hintText: 'Buscar recetas',
+                controller: searchController,
+                onChanged: (text) {
+                  _recipesFuture.then((recipes) => _filterRecipes(text, recipes));
+                },
+                onFilterPressed: _showFilterOptions,
+              ),
+              Expanded(
+                child: FutureBuilder<List<Recipe>>(
+                  future: _recipesFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      print(snapshot.error);
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                          child: Text('No se encontraron recetas.'));
+                    } else {
+                      final recipes = _filteredRecipes.isEmpty
+                          ? snapshot.data!
+                          : _filteredRecipes;
+
+                      return ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: recipes.length,
+                        itemBuilder: (context, index) {
+                          final recipe = recipes[index];
+                          return ArticleBox(article: recipe);
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),

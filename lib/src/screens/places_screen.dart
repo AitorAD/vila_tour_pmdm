@@ -1,43 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/services/festival_service.dart';
+import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
-class FestivalsScreen extends StatefulWidget {
-  static final routeName = 'festivals_screen';
-  const FestivalsScreen({super.key});
+class PlacesScreen extends StatefulWidget {
+  static final routeName = 'places_screen';
+  const PlacesScreen({super.key});
 
   @override
-  _FestivalsScreenState createState() => _FestivalsScreenState();
+  State<PlacesScreen> createState() => _PlacesScreenState();
 }
 
-class _FestivalsScreenState extends State<FestivalsScreen> {
+class _PlacesScreenState extends State<PlacesScreen> {
   final TextEditingController searchController = TextEditingController();
-  late Future<List<Festival>> _festivalsFuture;
-  List<Festival> _filteredFestivals = [];
+  late Future<List<Place>> _placesFuture;
+  List<Place> _filteredPlaces = [];
   String _selectedAttribute = 'name'; // Atributo inicial para filtrar
 
   @override
   void initState() {
     super.initState();
-    _loadFestivals();
+    final placeService = PlaceService();
+    _placesFuture = placeService.getPlaces();
   }
 
-  void _loadFestivals() {
-    final festivalService = FestivalService();
-    setState(() {
-      _festivalsFuture = festivalService.getFestivals();
-    });
-  }
-
-  void _filterFestivals(String query, List<Festival> festivals) {
+  void _filterPlaces(String query, List<Place> places) {
     setState(() {
       if (query.isEmpty) {
-        _filteredFestivals = festivals;
+        _filteredPlaces = places;
       } else {
-        _filteredFestivals = festivals.where(
-          (festival) {
-            final value = _getAttributeValue(festival, _selectedAttribute);
+        _filteredPlaces = places.where(
+          (place) {
+            final value = _getAttributeValue(place, _selectedAttribute);
             return value != null &&
                 value.toLowerCase().contains(query.toLowerCase());
           },
@@ -46,16 +40,16 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
     });
   }
 
-  String? _getAttributeValue(Festival festival, String attribute) {
+  String? _getAttributeValue(Place place, String attribute) {
     switch (attribute) {
       case 'name':
-        return festival.name;
+        return place.name;
       case 'description':
-        return festival.description;
-      case 'coordinate.name':
-        return festival.coordinate.name;
+        return place.description;
+      case 'categoryPlace.name':
+        return place.categoryPlace.name;
       case 'averageScore':
-        return festival.averageScore.toString();
+        return place.averageScore.toString();
       default:
         return null;
     }
@@ -65,7 +59,7 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
     final Map<String, String> filterOptions = {
       'Nombre': 'name',
       'Descripción': 'description',
-      'Ubicación': 'coordinate.name',
+      'Tipo': 'categoryPlace.name',
       'Puntuación': 'averageScore',
     };
 
@@ -88,8 +82,8 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                           isSelected ?? false ? attribute : _selectedAttribute;
 
                       // Aplicar el filtro
-                      _festivalsFuture.then((festivals) {
-                        _filterFestivals(searchController.text, festivals);
+                      _placesFuture.then((places) {
+                        _filterPlaces(searchController.text, places);
                       });
                     });
 
@@ -115,18 +109,18 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
           ),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Festivales y Tradiciones', arrowBack: true),
+              BarScreenArrow(labelText: 'Lugares', arrowBack: true),
               SearchBox(
-                hintText: 'Buscar festivales',
+                hintText: 'Buscar lugares',
                 controller: searchController,
                 onChanged: (text) {
-                  _festivalsFuture.then((festivals) => _filterFestivals(text, festivals));
+                  _placesFuture.then((places) => _filterPlaces(text, places));
                 },
                 onFilterPressed: _showFilterOptions,
               ),
               Expanded(
-                child: FutureBuilder<List<Festival>>(
-                  future: _festivalsFuture,
+                child: FutureBuilder<List<Place>>(
+                  future: _placesFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -135,18 +129,18 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(
-                          child: Text('No se encontraron festivales.'));
+                          child: Text('No se encontraron lugares.'));
                     } else {
-                      final festivals = _filteredFestivals.isEmpty
+                      final places = _filteredPlaces.isEmpty
                           ? snapshot.data!
-                          : _filteredFestivals;
+                          : _filteredPlaces;
 
                       return ListView.builder(
                         padding: EdgeInsets.zero,
-                        itemCount: festivals.length,
+                        itemCount: places.length,
                         itemBuilder: (context, index) {
-                          final festival = festivals[index];
-                          return ArticleBox(article: festival);
+                          final place = places[index];
+                          return ArticleBox(article: place);
                         },
                       );
                     }

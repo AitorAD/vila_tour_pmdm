@@ -57,6 +57,8 @@ class BarScreenArrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.only(top: 25),
       child: Padding(
         padding: const EdgeInsets.only(top: 25),
         child: Container(

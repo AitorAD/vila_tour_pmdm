@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
+import 'package:vila_tour_pmdm/src/services/image_service.dart';
 
 class RecipeService {
   final String _baseUrl = 'http://10.0.2.2:8080';

@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
 import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
 import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 
-class DetailsFestival extends StatefulWidget {
-  static final routeName = 'general_festival';
-  const DetailsFestival({super.key});
+class PlacesDetails extends StatefulWidget {
+  static final routeName = 'general_place';
+  const PlacesDetails({super.key});
 
   @override
-  State<DetailsFestival> createState() => _DetailsFestivalState();
+  State<PlacesDetails> createState() => _PlacesDetailsState();
 }
 
-class _DetailsFestivalState extends State<DetailsFestival>
+class _PlacesDetailsState extends State<PlacesDetails>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool showFab = false; // Controla la visibilidad del botón
@@ -25,7 +24,8 @@ class _DetailsFestivalState extends State<DetailsFestival>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this); // 2 pestañas: General y Reviews
+    _tabController =
+        TabController(length: 2, vsync: this); // 2 pestañas: General y Reviews
     _tabController.addListener(_handleTabChange);
   }
 
@@ -44,11 +44,14 @@ class _DetailsFestivalState extends State<DetailsFestival>
 
   @override
   Widget build(BuildContext context) {
-    final Festival festival = ModalRoute.of(context)!.settings.arguments as Festival;
-
-    final filteredReviews = festival.reviews.where((review) => review.rating > 0).toList();
+    final Place place = ModalRoute.of(context)!.settings.arguments as Place;
+    final filteredReviews =
+        place.reviews.where((review) => review.rating > 0).toList();
     final double averageScore = filteredReviews.isNotEmpty
-        ? filteredReviews.map((review) => review.rating).reduce((a, b) => a + b) / filteredReviews.length
+        ? filteredReviews
+                .map((review) => review.rating)
+                .reduce((a, b) => a + b) /
+            filteredReviews.length
         : 0;
 
     return Scaffold(
@@ -61,19 +64,18 @@ class _DetailsFestivalState extends State<DetailsFestival>
               text: 'Añadir reseña',
               radius: 20,
               onPressed: () {
-                Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: festival);
+                Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: place);
               },
             )
-          : FavoriteFloatingActionButton(article: festival),
+          : FavoriteFloatingActionButton(article: place),
       body: Stack(children: [
         WavesWidget(),
         Column(
           children: [
-            BarScreenArrow(labelText: festival.name, arrowBack: true),
+            BarScreenArrow(labelText: place.name, arrowBack: true),
             TabBar(
               controller: _tabController,
-              labelColor: const Color.fromARGB(255, 2, 110, 96),
-              indicatorColor: const Color(0xFF01C2A9),
+              indicatorColor: const Color.fromARGB(255, 54, 71, 71),
               tabs: const [
                 Tab(text: 'General'),
                 Tab(text: 'Reseñas'),
@@ -90,7 +92,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                       children: [
                         const SizedBox(height: 20),
                         Hero(
-                          tag: festival.id,
+                          tag: place.id,
                           child: PageStorage(
                             bucket: PageStorageBucket(),
                             child: CarouselSlider(
@@ -102,7 +104,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                                 enlargeCenterPage: true,
                                 viewportFraction: 0.85,
                               ),
-                              items: festival.images.map((image) {
+                              items: place.images.map((image) {
                                 return ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: FadeInImage(
@@ -128,7 +130,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
-                            festival.name,
+                            place.name,
                             style: const TextStyle(
                               fontFamily: 'PontanoSans',
                               fontSize: 28,
@@ -152,7 +154,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            festival.description,
+                            place.description,
                             style: const TextStyle(
                               fontFamily: 'PontanoSans',
                               fontSize: 16,
@@ -174,7 +176,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                                   color: Colors.redAccent),
                               const SizedBox(width: 4),
                               Text(
-                                festival.coordinate.name,
+                                place.coordinate.name,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontFamily: 'PontanoSans',
@@ -190,7 +192,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                   ),
 
                   // Pestaña 2: Reseñas
-                  ReviewsInfo(reviews: festival.reviews)
+                  ReviewsInfo(reviews: place.reviews)
                 ],
               ),
             ),
@@ -200,30 +202,3 @@ class _DetailsFestivalState extends State<DetailsFestival>
     );
   }
 }
-
-
-/*
-
-      // Floating action button for "favorite"
-
-      // El widget consumer reconstruye automaticamente el floatingActionButton
-      // cuando es estado de FestivalsProvider cambia
-      floatingActionButton: Consumer<FestivalsProvider>(
-        builder: (context, festivalsProvider, child) {
-          // Verifica si el festival actual es favorito
-          final isFavourite = festivalsProvider.festivals
-              .any((f) => f.name == festival.name && f.favourite);
-
-          return FloatingActionButton(
-            onPressed: () {
-              festivalsProvider.toggleFavorite(festival);
-            },
-            backgroundColor: isFavourite ? Colors.white : Colors.redAccent,
-            child: isFavourite
-                ? Icon(Icons.favorite, color: Colors.redAccent)
-                : Icon(Icons.favorite_border),
-          );
-        },
-      ),
-
-      */

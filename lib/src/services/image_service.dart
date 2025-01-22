@@ -22,13 +22,38 @@ class ImageService {
     );
 
     List<customImage.Image> images = customImage.Image.fromJsonList(jsonDecode(response.body));
-
-    for (var image in images) {
-      image.article = article;
-      print(image);
-    }
-
     return images;
   }
 
+  Future<customImage.Image> uploadImage(customImage.Image image) async {
+    final url = Uri.parse('$baseURL/images');
+    String? token = await UserPreferences.instance.readData('token');
+
+    if (token == null) {
+      throw Exception('Token is null');
+    }
+
+    try {
+      final String jsonBody = jsonEncode(image.toMap());
+
+      final response = await http.post(
+        url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        },
+        body: jsonBody,
+      );
+
+      if (response.statusCode == 201) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return customImage.Image.fromMap(responseData);
+      } else {
+        throw HttpException(
+            'Failed to upload image: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

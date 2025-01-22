@@ -16,6 +16,7 @@ class Place extends Article {
     required creationDate,
     required lastModificationDate,
     required reviews,
+    required images,
     required this.categoryPlace,
     required this.creator,
     required this.coordinate,
@@ -27,6 +28,7 @@ class Place extends Article {
             creationDate: creationDate,
             lastModificationDate: lastModificationDate,
             reviews: reviews,
+            images: images,
             type: 'place');
 
   factory Place.fromJson(String str) => Place.fromMap(json.decode(str));
@@ -44,6 +46,11 @@ class Place extends Article {
         reviews: json["reviews"] != null
             ? List<Review>.from(json["reviews"].map((x) => Review.fromMap(x)))
             : [],
+        images: json["images"] is List
+            ? (json["images"] as List)
+                .map((x) => Image.fromMap(x as Map<String, dynamic>))
+                .toList()
+            : [],
         categoryPlace: CategoryPlace.fromMap(json["categoryPlace"]),
         creator: User.fromMap(json["creator"]),
         coordinate: Coordinate.fromMap(json["coordinate"]),
@@ -58,12 +65,41 @@ class Place extends Article {
         "creationDate": creationDate.toIso8601String(),
         "lastModificationDate": lastModificationDate.toIso8601String(),
         "reviews": reviews.map((x) => x.toMap()).toList(),
+        "images": images.map((x) => x.toMap()).toList(),
         "categoryPlace": categoryPlace.toMap(),
         "creator": creator.toMap(),
         "coordinate": coordinate.toMap(),
       };
 
-  static List<Festival> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((item) => Festival.fromMap(item)).toList();
+  static List<Place> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((item) => Place.fromMap(item)).toList();
   }
+
+  static nullPlace() => Place(
+      id: -1,
+      name: 'Lugar no encontrado',
+      description: '',
+      coordinate: Coordinate(id: -1, name: "", longitude: 0, latitude: 0),
+      categoryPlace: CategoryPlace(id: -1, name: "Sin categoria"),
+      creator: new User(
+        id: -1,
+        username: 'unknown',
+        email: 'unknown@example.com',
+        password: 'password',
+        role: 'user',
+        name: 'Unknown',
+        surname: 'User',
+        profilePicture: 'default.png',
+        createdRecipes: [],
+        createdFestivals: [],
+        createdPlaces: [],
+        reviews: [],
+      ),
+      type: 'unknown',
+      averageScore: 0.0,
+      creationDate: DateTime.now(),
+      lastModificationDate: DateTime.now(),
+      reviews: [],
+      images: []);
 }
+

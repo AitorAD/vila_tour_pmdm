@@ -9,6 +9,7 @@ Widget buildTextField({
   required String hintText,
   required FormFieldValidator<String> validator,
   required ValueChanged<String> onChanged,
+  required bool enabled,
   bool obscureText = false,
 }) {
   return Column(
@@ -21,6 +22,10 @@ Widget buildTextField({
         onChanged: onChanged,
         obscureText: obscureText,
         decoration: InputDecorations.authInputDecoration(hintText: hintText),
+        enabled: enabled,
+        style: const TextStyle(
+          color: Colors.black, // Asegura que el texto siempre sea negro
+        ),
       ),
     ],
   );
@@ -31,8 +36,28 @@ String? validateRequiredField(String? value) {
   if (value == null || value.isEmpty) {
     return 'El nombre de usuario es obligatorio';
   }
-  if (value.length > 250) {
+  if (value.length > 40) {
+    return 'El nombre de usuario es demasiado largo';
+  }
+  return null;
+}
+
+String? validateName(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'El nombre es obligatorio';
+  }
+  if (value.length > 50) {
     return 'El nombre es demasiado largo';
+  }
+  return null;
+}
+
+String? validateSurname(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'El apellido es obligatorio';
+  }
+  if (value.length > 50) {
+    return 'El apellido es demasiado largo';
   }
   return null;
 }

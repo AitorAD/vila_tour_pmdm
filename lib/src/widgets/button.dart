@@ -3,7 +3,7 @@ import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 class CustomButton extends StatelessWidget {
   final String text; // Texto que se pasará al botón
-  final VoidCallback onPressed; // Función a ejecutar al presionar el botón
+  final VoidCallback? onPressed; // Función a ejecutar al presionar el botón
   final double radius; // Radio de las esquinas del botón
   final double width; // Ancho fijo del botón
   final double height; // Altura fija del botón
@@ -11,7 +11,7 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     Key? key,
     required this.text,
-    required this.onPressed,
+    this.onPressed,
     this.radius = 40, // Valor predeterminado para el radio
     this.width = 150, // Ancho predeterminado
     this.height = 50, // Altura predeterminada
