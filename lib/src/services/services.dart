@@ -1,0 +1,9 @@
+export 'package:vila_tour_pmdm/src/services/routes_service.dart';
+export 'package:vila_tour_pmdm/src/services/user_service.dart';
+export 'package:vila_tour_pmdm/src/services/recipe_service.dart';
+export 'package:vila_tour_pmdm/src/services/review_service.dart';
+export 'package:vila_tour_pmdm/src/services/place_service.dart';
+export 'package:vila_tour_pmdm/src/services/login_service.dart';
+export 'package:vila_tour_pmdm/src/services/ingredient_service.dart';
+export 'package:vila_tour_pmdm/src/services/image_service.dart';
+export 'package:vila_tour_pmdm/src/services/festival_service.dart';

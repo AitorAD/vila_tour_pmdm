@@ -14,3 +14,4 @@ export 'package:vila_tour_pmdm/src/screens/user_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/password_recovery.dart';
 export 'package:vila_tour_pmdm/src/screens/languages_screen.dart';
 export 'package:vila_tour_pmdm/src/screens/routes_screen.dart';
+export 'package:vila_tour_pmdm/src/screens/route_details_screen.dart';

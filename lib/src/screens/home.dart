@@ -81,7 +81,7 @@ class _MainContent extends StatelessWidget {
               text: AppLocalizations.of(context).translate('recipes'),
             ),
             _SingleCard(
-              route: LoginScreen.routeName,
+              route: RoutesScreen.routeName,
               color: Colors.purple,
               icon: Icons.map,
               text: AppLocalizations.of(context).translate('routes'),

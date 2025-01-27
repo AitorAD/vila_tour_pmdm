@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
-import 'package:vila_tour_pmdm/src/services/place_service.dart';
-import 'package:vila_tour_pmdm/src/services/routes_service.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RoutesScreen extends StatefulWidget {
@@ -133,9 +132,7 @@ class _RoutesScreenState extends State<RoutesScreen> {
                         itemBuilder: (context, index) {
                           final route = routes[index];
                           // TODO: hacer un contenedor con la información de la ruta
-                          return Container(
-                            child: Text(route.name),
-                          );
+                          return RouteBox(route: route);
                         },
                       );
                     }
@@ -149,3 +146,4 @@ class _RoutesScreenState extends State<RoutesScreen> {
     );
   }
 }
+

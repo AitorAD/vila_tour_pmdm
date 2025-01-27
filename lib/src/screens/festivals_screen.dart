@@ -115,12 +115,14 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
           ),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Festivales y Tradiciones', arrowBack: true),
+              BarScreenArrow(
+                  labelText: 'Festivales y Tradiciones', arrowBack: true),
               SearchBox(
                 hintText: 'Buscar festivales',
                 controller: searchController,
                 onChanged: (text) {
-                  _festivalsFuture.then((festivals) => _filterFestivals(text, festivals));
+                  _festivalsFuture
+                      .then((festivals) => _filterFestivals(text, festivals));
                 },
                 onFilterPressed: _showFilterOptions,
               ),
@@ -140,8 +142,7 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                       final festivals = _filteredFestivals.isEmpty
                           ? snapshot.data!
                           : _filteredFestivals;
-
-                      return ListView.builder(
+                      ListView list = ListView.builder(
                         padding: EdgeInsets.zero,
                         itemCount: festivals.length,
                         itemBuilder: (context, index) {
@@ -149,6 +150,8 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                           return ArticleBox(article: festival);
                         },
                       );
+                      print("ACABA AQUI: " + DateTime.now().toString());
+                      return list;
                     }
                   },
                 ),

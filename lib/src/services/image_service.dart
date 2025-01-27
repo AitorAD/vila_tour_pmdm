@@ -9,7 +9,7 @@ import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 class ImageService {
 
   Future<List<customImage.Image>> getImagesByArticle(Article article) async {
-    final url = Uri.parse('$baseURL/images/byArticle/${article.id}');
+    final url = Uri.parse('$baseURL/images/getImagesByArticle/${article.id}');
 
     String? token = await UserPreferences.instance.readData('token');
 
@@ -23,6 +23,24 @@ class ImageService {
 
     List<customImage.Image> images = customImage.Image.fromJsonList(jsonDecode(response.body));
     return images;
+  }
+
+  Future<customImage.Image> getImageByArticle(Article article) async {
+    final url = Uri.parse('$baseURL/images/getImageByArticle/${article.id}');
+
+    String? token = await UserPreferences.instance.readData('token');
+
+    final response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+    );
+
+    customImage.Image image = customImage.Image.fromJson(response.body);
+    print ('RESPUESTA IMAGE: ' + response.body);
+    return image;
   }
 
   Future<customImage.Image> uploadImage(customImage.Image image) async {
