@@ -64,6 +64,72 @@ class MyApp extends StatelessWidget {
               : const LoginScreen(),
         );
       },
+      home: SessionManager(
+        child: userPreferences.token != null
+            ? const HomePage()
+            : const LoginScreen(),
+      ),
     );
+  }
+}
+
+class SessionManager extends StatefulWidget {
+  final Widget child;
+
+  const SessionManager({Key? key, required this.child}) : super(key: key);
+
+  @override
+  _SessionManagerState createState() => _SessionManagerState();
+}
+
+class _SessionManagerState extends State<SessionManager> {
+  @override
+  void initState() {
+    super.initState();
+    _checkTokenExpiration();
+  }
+
+  Future<void> _checkTokenExpiration() async {
+    final userPreferences = UserPreferences.instance;
+    while (true) {
+      await Future.delayed(const Duration(seconds: 1));
+      if (!userPreferences.isTokenValid()) {
+        _showSessionExpiredDialog();
+        break;
+      }
+    }
+  }
+
+  void _showSessionExpiredDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Session Expired'),
+          content: const Text('Your session has expired. Please log in again.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _logout();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _logout() async {
+    final loginService = Provider.of<LoginService>(context, listen: false);
+    await loginService.logout(context);
+    Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }
