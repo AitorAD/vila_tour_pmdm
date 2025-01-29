@@ -39,7 +39,6 @@ class ImageService {
     );
 
     customImage.Image image = customImage.Image.fromJson(response.body);
-    print ('RESPUESTA IMAGE: ' + response.body);
     return image;
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/services/festival_service.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class FestivalsScreen extends StatefulWidget {
@@ -13,6 +13,9 @@ class FestivalsScreen extends StatefulWidget {
 
 class _FestivalsScreenState extends State<FestivalsScreen> {
   final TextEditingController searchController = TextEditingController();
+
+  final festivalService = FestivalService();
+  final imageService = ImageService();
   late Future<List<Festival>> _festivalsFuture;
   List<Festival> _filteredFestivals = [];
   String _selectedAttribute = 'name'; // Atributo inicial para filtrar
@@ -24,10 +27,20 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
   }
 
   void _loadFestivals() {
-    final festivalService = FestivalService();
     setState(() {
-      _festivalsFuture = festivalService.getFestivals();
+      _festivalsFuture = _fetchFestivalsWithImages();
     });
+  }
+
+  Future<List<Festival>> _fetchFestivalsWithImages() async {
+    List<Festival> festivals = await festivalService.getFestivals();
+
+    for (var festival in festivals) {
+      var image = await imageService.getImageByArticle(festival);
+      festival.images.add(image);
+    }
+
+    return festivals;
   }
 
   void _filterFestivals(String query, List<Festival> festivals) {
@@ -142,6 +155,10 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                       final festivals = _filteredFestivals.isEmpty
                           ? snapshot.data!
                           : _filteredFestivals;
+
+                      // Ordenar la lista por ID antes de mostrarla
+                      festivals.sort((a, b) => a.id.compareTo(b.id));
+
                       ListView list = ListView.builder(
                         padding: EdgeInsets.zero,
                         itemCount: festivals.length,
