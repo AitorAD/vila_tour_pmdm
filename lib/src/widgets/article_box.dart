@@ -4,7 +4,6 @@ import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
-import 'package:vila_tour_pmdm/src/services/review_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ArticleBox extends StatefulWidget {
   final Article article;
-  ArticleBox({required this.article});
+  const ArticleBox({required this.article});
   
   @override
   State<ArticleBox> createState() => _ArticleBoxState();
@@ -21,15 +20,15 @@ class ArticleBox extends StatefulWidget {
 class _ArticleBoxState extends State<ArticleBox> {
   @override
   Widget build(BuildContext context) {
-    String _routeName = "/";
+    String routeName = "/";
     return GestureDetector(
       onTap: () => {
-        if (widget.article is Festival) _routeName = DetailsFestival.routeName,
-        if (widget.article is Recipe) _routeName = RecipeDetails.routeName,
-        if (widget.article is Place) _routeName = PlacesDetails.routeName,
+        if (widget.article is Festival) routeName = DetailsFestival.routeName,
+        if (widget.article is Recipe) routeName = RecipeDetails.routeName,
+        if (widget.article is Place) routeName = PlacesDetails.routeName,
         Navigator.pushNamed(
           context,
-          _routeName,
+          routeName,
           arguments: widget.article,
         ),
       },
@@ -92,7 +91,7 @@ class __FavoriteState extends State<_Favorite> {
             await reviewProvider.toggleFavorite(currentReview);
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text('Error al actualizar el estado de favorito'),
                 backgroundColor: Colors.red,
               ),
@@ -155,7 +154,7 @@ class _HowToGetThere extends StatelessWidget {
             throw 'Could not launch url';
           }
         },
-        child: Icon(Icons.directions, color: Colors.white, size: 30),
+        child: const Icon(Icons.directions, color: Colors.white, size: 30),
       ),
     );
   }
@@ -188,7 +187,7 @@ class _FestivalInfo extends StatelessWidget {
           children: [
             Text(
               widget.article.name,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -196,22 +195,22 @@ class _FestivalInfo extends StatelessWidget {
             ),
             Text(
               'Lugar: ${(widget.article as Festival).coordinate.name}',
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
             Text(
               '${formatDate((widget.article as Festival).startDate)} - ${formatDate((widget.article as Festival).endDate)}',
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               children: [
                 PaintStars(
                     rating: (widget.article as Festival).averageScore,
                     color: Colors.yellow),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(
                   (widget.article as Festival).averageScore.toStringAsFixed(1),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                   ),
@@ -245,14 +244,14 @@ class _PlaceInfo extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           color: Colors.black.withOpacity(0.4),
         ),
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               widget.article.name,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -260,18 +259,18 @@ class _PlaceInfo extends StatelessWidget {
             ),
             Text(
               'Lugar: ${(widget.article as Place).coordinate.name}',
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               children: [
                 PaintStars(
                     rating: (widget.article as Place).averageScore,
                     color: Colors.yellow),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(
                   (widget.article as Place).averageScore.toStringAsFixed(1),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                   ),

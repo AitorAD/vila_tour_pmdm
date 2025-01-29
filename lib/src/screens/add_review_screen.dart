@@ -22,10 +22,10 @@ class AddReviewScreen extends StatelessWidget {
       bottomNavigationBar: CustomNavigationBar(),
       body: Stack(
         children: [
-          WavesWidget(),
+          const WavesWidget(),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Añadir Reseña', arrowBack: true),
+              const BarScreenArrow(labelText: 'Añadir Reseña', arrowBack: true),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -64,9 +64,9 @@ class _ReviewForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           StarRating(reviewFormProvider: reviewFormProvider),
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -80,7 +80,7 @@ class _ReviewForm extends StatelessWidget {
               const SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(color: Colors.white),
                   filled: true,
                   fillColor: Colors.black.withOpacity(0.3),
                   enabledBorder: _borderReviewBox(),
@@ -98,7 +98,7 @@ class _ReviewForm extends StatelessWidget {
             onPressed: () async {
               if (reviewFormProvider.rating == 0) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text('Añade una puntuación'),
                   ),
                 );
@@ -144,7 +144,7 @@ class _ReviewForm extends StatelessWidget {
   OutlineInputBorder _borderReviewBox() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),
-      borderSide: BorderSide(color: Colors.transparent),
+      borderSide: const BorderSide(color: Colors.transparent),
     );
   }
 }
@@ -191,8 +191,8 @@ class _StarRatingState extends State<StarRating> {
             ),
           ],
         ),
-        SizedBox(height: 15),
-        Text('$_selectedStars/5', style: TextStyle(fontSize: 40)),
+        const SizedBox(height: 15),
+        Text('$_selectedStars/5', style: const TextStyle(fontSize: 40)),
       ],
     );
   }

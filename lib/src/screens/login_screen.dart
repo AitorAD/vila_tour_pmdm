@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 import 'package:vila_tour_pmdm/src/providers/login_form_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/password_recovery.dart';
 import 'package:vila_tour_pmdm/src/ui/input_decorations.dart';
@@ -238,6 +239,17 @@ class LoginBtn extends StatelessWidget {
           switch (loginResult) {
             case Result.success:
               print('Login exitoso.');
+
+              // Obtener el token tras el login
+              final token = await loginService.getToken();
+              final expiration = await loginService.getTokenDurationMs();
+              if (token != null && token.isNotEmpty) {
+                await UserPreferences.instance.saveToken(token, expiration!);
+                print('Token guardado correctamente en SecureStorage.');
+              } else {
+                print('Error: No se recibió un token válido.');
+              }
+
               Navigator.pushReplacementNamed(context, HomePage.routeName);
               break;
 

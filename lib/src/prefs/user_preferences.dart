@@ -10,13 +10,18 @@ class UserPreferences {
   final FlutterSecureStorage _prefs = FlutterSecureStorage();
 
   String? _token;
+  int? _tokenDurationMs;
 
-  get token => _token;
+  String? get token => _token;
+  int? get tokenDurationMs => _tokenDurationMs;
 
   Future<void> initPrefs() async {
     try {
-      deleteAllData();
-      _token = await _prefs.read(key: 'token') ?? '';
+      _token = await _prefs.read(key: 'token');
+      String? tokenDurationMsString = await _prefs.read(key: 'expiration');
+      if (tokenDurationMsString != null) {
+        _tokenDurationMs = int.tryParse(tokenDurationMsString);
+      }
       print("Token leido correctamente: $_token");
     } catch (e) {
       print("Error leyendo el token: $e");
@@ -35,7 +40,33 @@ class UserPreferences {
     await _prefs.delete(key: key);
   }
 
-  Future<void> deleteAllData() async {
-    await _prefs.deleteAll();
+  Future<void> saveToken(String token, int tokenDurationMs) async {
+    await _prefs.write(key: 'token', value: token);
+    await _prefs.write(key: 'expiration', value: tokenDurationMs.toString());
+    _token = token;
+    _tokenDurationMs = tokenDurationMs;
+  }
+
+  Future<void> deleteToken() async {
+    await _prefs.delete(key: 'token');
+    await _prefs.delete(key: 'expiration');
+    _token = null;
+    _tokenDurationMs = null;
+  }
+
+  bool isTokenValid() {
+    if (_token == null || _tokenDurationMs == null) {
+      return false;
+    }
+    final expiryDate = DateTime.fromMillisecondsSinceEpoch(_tokenDurationMs!);
+    return DateTime.now().isBefore(expiryDate);
+  }
+
+  Duration getTokenRemainingDuration() {
+    if (_tokenDurationMs == null) {
+      return Duration.zero;
+    }
+    final expiryDate = DateTime.fromMillisecondsSinceEpoch(_tokenDurationMs!);
+    return expiryDate.difference(DateTime.now());
   }
 }

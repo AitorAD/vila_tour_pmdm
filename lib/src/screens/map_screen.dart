@@ -8,11 +8,10 @@ import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/places_provider.dart';
 import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
-import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 class MapScreen extends StatefulWidget {
-  static final routeName = 'map_screen';
+  static const routeName = 'map_screen';
 
   static final Map<String, IconData> categoryIcons = {
     'PLAYA': Icons.beach_access_rounded,
@@ -331,7 +330,7 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
                       ),
                       title: Text(
                         place.name,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0,
                         ),
@@ -351,7 +350,7 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
         else if (_controller.text.isNotEmpty && _filteredPlaces.isEmpty)
           Container(
             height: 50,
-            margin: EdgeInsets.symmetric(horizontal: 16.0),
+            margin: const EdgeInsets.symmetric(horizontal: 16.0),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
@@ -363,7 +362,7 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
                 ),
               ],
             ),
-            child: Center(
+            child: const Center(
               child: Text("No se encontraron lugares."),
             ),
           ),
@@ -373,11 +372,11 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
 
   Future<String?> _showFilterMenu(BuildContext context) {
     return showMenu(
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       context: context,
-      position: RelativeRect.fromLTRB(100.0, 100.0, 20.0, 0.0),
+      position: const RelativeRect.fromLTRB(100.0, 100.0, 20.0, 0.0),
       items: MapScreen.categoryIcons.entries.map(
         (entry) {
           return PopupMenuItem<String>(
@@ -400,7 +399,7 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
                   ),
                 ),
                 Icon(entry.value),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 Text(entry.key),
               ],
             ),

@@ -73,7 +73,7 @@ class _RegisterScreenBody extends StatelessWidget {
   }
 
   Widget _buildHeaderBar(BuildContext context) {
-    return BarScreenArrow(labelText: 'Registrarse', arrowBack: true);
+    return const BarScreenArrow(labelText: 'Registrarse', arrowBack: true);
   }
 
   Widget _buildRegisterForm({
@@ -118,7 +118,6 @@ class _RegisterScreenBody extends StatelessWidget {
                   validateRepeatedPassword(value, registerForm.password),
               enabled: true),
           const SizedBox(height: 40),
-          // _buildSubmitButton(registerForm, loginService),
           _RegisterButton(
               registerForm: registerForm, loginService: loginService)
         ],
@@ -143,19 +142,6 @@ class _RegisterButton extends StatelessWidget {
       text: 'Crear cuenta',
       onPressed: () async {
         if (registerForm.isValidForm()) {
-          // Mostrar un indicador de carga
-          /*
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          );
-          */
-
           // Intentar registrar al usuario
           final result = await loginService.register(
             registerForm.username,
