@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
@@ -10,28 +11,66 @@ import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:flutter_compass/flutter_compass.dart';
 
 class MapScreen extends StatefulWidget {
   static final routeName = 'map_screen';
 
   static final Map<String, IconData> categoryIcons = {
-    'PLAYA': Icons.beach_access_rounded,
-    'PARQUE': Icons.park_rounded,
-    'RESTAURANTE': Icons.restaurant_rounded,
-    'HOTEL': Icons.hotel_rounded,
-    'MONUMENTO': Icons.account_balance_rounded,
-    'MUSEO': Icons.museum_rounded,
-    'IGLESIA': Icons.church_rounded,
+    'Playa': Icons.beach_access_rounded,
+    'Montaña': Icons.terrain_rounded,
+    'Museo': Icons.museum_rounded,
+    'Parque': Icons.park_rounded,
+    'Centro histórico': Icons.history_edu_rounded,
+    'Monumento': Icons.account_balance_rounded,
+    'Jardin': Icons.nature_rounded,
+    'Iglesia': Icons.church_rounded,
+    'Castillo': Icons.castle_rounded,
+    'Centro cultrular': Icons.celebration_rounded,
+    'Zona arqueologica': Icons.pages_outlined,
+    'Teatro': Icons.theater_comedy_rounded,
+    'Mercado': Icons.shopping_basket_rounded,
+    'Paseo Marítimo': Icons.anchor_rounded,
+    'Reserva Natural': Icons.nature_people_rounded,
+    'Mirador': Icons.camera_alt_rounded,
+    'Cueva': Icons.landscape_rounded,
+    'Lago': Icons.water_rounded,
+    'Puente':Icons.linear_scale_outlined,
+    'Faro': Icons.lightbulb_circle_rounded,
+    'Restaurante': Icons.restaurant_outlined,
+    'Hotel': Icons.hotel_rounded,
+    'Bar': Icons.restaurant_menu_outlined,
+    'Cafeteria': Icons.coffee_rounded,
+    'Spa': Icons.spa_rounded
   };
 
   static final Map<String, Color> categoryColors = {
-    'PLAYA': const Color.fromARGB(255, 243, 152, 33),
-    'PARQUE': Colors.green,
-    'RESTAURANTE': const Color.fromARGB(255, 240, 20, 4),
-    'HOTEL': const Color.fromARGB(255, 45, 10, 204),
-    'MONUMENTO': const Color.fromARGB(255, 180, 97, 3),
-    'MUSEO': const Color.fromARGB(255, 125, 7, 223),
-    'IGLESIA': Colors.brown,
+   
+    'Playa': const Color.fromARGB(255, 243, 152, 33),
+    'Montaña': const Color.fromARGB(255, 243, 152, 33),
+    'Museo': const Color.fromARGB(255, 243, 152, 33),
+    'Parque': const Color.fromARGB(255, 243, 152, 33),
+    'Centro histórico': const Color.fromARGB(255, 243, 152, 33),
+    'Monumento': const Color.fromARGB(255, 243, 152, 33),
+    'Jardin': const Color.fromARGB(255, 243, 152, 33),
+    'Iglesia': const Color.fromARGB(255, 243, 152, 33),
+    'Castillo': const Color.fromARGB(255, 243, 152, 33),
+    'Centro cultrular': const Color.fromARGB(255, 243, 152, 33),
+    'Zona arqueologica': const Color.fromARGB(255, 243, 152, 33),
+    'Teatro': const Color.fromARGB(255, 243, 152, 33),
+    'Mercado':const Color.fromARGB(255, 243, 152, 33),
+    'Paseo Marítimo': const Color.fromARGB(255, 243, 152, 33),
+    'Reserva Natural': const Color.fromARGB(255, 243, 152, 33) ,
+    'Mirador': const Color.fromARGB(255, 243, 152, 33),
+    'Cueva': const Color.fromARGB(255, 243, 152, 33),
+    'Lago': const Color.fromARGB(255, 243, 152, 33),
+    'Puente':const Color.fromARGB(255, 243, 152, 33),
+    'Faro': const Color.fromARGB(255, 243, 152, 33),
+    'Restaurante': const Color.fromARGB(255, 243, 152, 33),
+    'Hotel': const Color.fromARGB(255, 243, 152, 33),
+    'Bar': const Color.fromARGB(255, 243, 152, 33),
+    'Cafeteria': const Color.fromARGB(255, 243, 152, 33),
+    'Spa': const Color.fromARGB(255, 243, 152, 33)
   };
 
   static List<String> selectedCategories = List.from(categoryIcons.keys);
@@ -46,11 +85,21 @@ class _MapScreenState extends State<MapScreen> {
   final PopupController _popupController = PopupController();
   List<Marker> _markers = [];
   bool _showList = false;
+  double? _heading;
+  bool _isMapboxLayerActive = false;
 
   @override
   void initState() {
     super.initState();
     _loadMarkers();
+  }
+
+  void _listenToCompass() {
+    FlutterCompass.events?.listen((event) {
+      setState(() {
+        _heading = event.heading;
+      });
+    });
   }
 
   void _loadMarkers() async {
@@ -72,7 +121,8 @@ class _MapScreenState extends State<MapScreen> {
                 LatLng(place.coordinate.latitude, place.coordinate.longitude),
             child: Icon(
               iconData,
-              color: MapScreen.categoryColors[place.categoryPlace.name] ?? Colors.red,
+              color: MapScreen.categoryColors[place.categoryPlace.name] ??
+                  Colors.red,
               size: 30.0,
             ),
           );
@@ -129,8 +179,9 @@ class _MapScreenState extends State<MapScreen> {
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'vila_tour',
+                urlTemplate: _isMapboxLayerActive
+                ? 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+                : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
               PopupMarkerLayer(
                 options: PopupMarkerLayerOptions(
@@ -180,6 +231,27 @@ class _MapScreenState extends State<MapScreen> {
                   _showList = !_showList;
                 });
               },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 110.0, right: 10),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Column(
+                children: [
+                  FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        _isMapboxLayerActive = !_isMapboxLayerActive;
+                      });
+                    },
+                    backgroundColor: vilaBlueColor(),
+                    focusColor: Colors.white,
+                    child: Icon(Icons.layers_outlined, color: Colors.white),
+                  ),
+                  SizedBox(height: 10), // Espacio entre los botones
+                ],
+              ),
             ),
           ),
           Padding(
@@ -264,9 +336,10 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
       _selectedMarkerId =
           place.id.toString(); // Asocia el marcador seleccionado
     });
-    widget.mapController.move(
+    widget.mapController.moveAndRotate(
       LatLng(place.coordinate.latitude, place.coordinate.longitude),
       15.0,
+      0.0,
     );
     // Activa el popup del marcador correspondiente
     widget.popupController.togglePopup(
