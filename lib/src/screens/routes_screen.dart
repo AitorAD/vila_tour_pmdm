@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
 import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
@@ -102,7 +103,7 @@ class _RoutesScreenState extends State<RoutesScreen> {
             children: [
               BarScreenArrow(labelText: 'Rutas', arrowBack: true),
               SearchBox(
-                hintText: 'Buscar rutas',
+                hintText:  AppLocalizations.of(context).translate('searchRoutes'),
                 controller: searchController,
                 onChanged: (text) {
                   _routesFuture.then((routes) => _filterRoutes(text, routes));
@@ -120,7 +121,7 @@ class _RoutesScreenState extends State<RoutesScreen> {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(
-                          child: Text('No se encontraron rutas.'));
+                          child: Text(AppLocalizations.of(context).translate('noRoutes')));
                     } else {
                       final routes = _filteredRoutes.isEmpty
                           ? snapshot.data!

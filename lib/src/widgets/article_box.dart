@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
@@ -10,7 +11,7 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 class ArticleBox extends StatefulWidget {
   final Article article;
   ArticleBox({required this.article});
-  
+
   @override
   State<ArticleBox> createState() => _ArticleBoxState();
 }
@@ -71,11 +72,13 @@ class __FavoriteState extends State<_Favorite> {
             isLoading = true;
           });
 
-          final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
+          final reviewProvider =
+              Provider.of<ReviewProvider>(context, listen: false);
           final currentReview = widget.article.reviews.firstWhere(
             (review) => review.id.userId == currentUser.id,
             orElse: () => Review(
-              id: ReviewId(articleId: widget.article.id, userId: currentUser.id),
+              id: ReviewId(
+                  articleId: widget.article.id, userId: currentUser.id),
               favorite: false,
               comment: "",
               postDate: DateTime.now(),
@@ -88,7 +91,8 @@ class __FavoriteState extends State<_Favorite> {
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Error al actualizar el estado de favorito'),
+                content: Text(
+                    AppLocalizations.of(context).translate('updateFavError')),
                 backgroundColor: Colors.red,
               ),
             );
@@ -120,8 +124,6 @@ class __FavoriteState extends State<_Favorite> {
     );
   }
 }
-
-
 
 class _FestivalInfo extends StatelessWidget {
   const _FestivalInfo({
@@ -157,7 +159,7 @@ class _FestivalInfo extends StatelessWidget {
               ),
             ),
             Text(
-              'Lugar: ${(widget.article as Festival).coordinate.name}',
+              "${AppLocalizations.of(context).translate('place')}: ${(widget.article as Festival).coordinate.name}",
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             Text(
@@ -221,7 +223,7 @@ class _PlaceInfo extends StatelessWidget {
               ),
             ),
             Text(
-              'Lugar: ${(widget.article as Place).coordinate.name}',
+              '${AppLocalizations.of(context).translate('place')}: ${(widget.article as Place).coordinate.name}',
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
             SizedBox(height: 10),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
@@ -33,14 +34,14 @@ class RouteBox extends StatelessWidget {
           const SizedBox(height: 10),
           // Origen y destino
           Text(
-            'Origen: ${route.places.first.name}',
+            "${AppLocalizations.of(context).translate('origin')}: ${route.places.first.name}",
             style: const TextStyle(
               fontSize: 16,
               color: Colors.white70,
             ),
           ),
           Text(
-            'Destino: ${route.places.last.name}',
+            "${AppLocalizations.of(context).translate('destiny')}: ${route.places.last.name}",
             style: const TextStyle(
               fontSize: 16,
               color: Colors.white70,
@@ -49,7 +50,7 @@ class RouteBox extends StatelessWidget {
           const SizedBox(height: 10),
           // Número de lugares
           Text(
-            'Lugares en la ruta: ${route.places.length}',
+            "${AppLocalizations.of(context).translate('routePlaces')}:  ${route.places.length}",
             style: const TextStyle(
               fontSize: 16,
               color: Colors.white70,
@@ -70,8 +71,8 @@ class RouteBox extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: const Text(
-                'Ver más',
+              child: Text(
+                AppLocalizations.of(context).translate('seeMore'),
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,

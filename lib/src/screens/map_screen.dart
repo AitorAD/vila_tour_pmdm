@@ -4,6 +4,7 @@ import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/places_provider.dart';
 import 'package:vila_tour_pmdm/src/services/place_service.dart';
@@ -129,11 +130,11 @@ class _MapScreen2State extends State<MapScreen> {
                         width: 300,
                         height: 170,
                         child: place.id == -1
-                            ? const Card(
+                            ? Card(
                                 color: Colors.white,
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),
-                                  child: Text('Lugar no encontrado'),
+                                  child: Text(AppLocalizations.of(context).translate('place404')),
                                 ),
                               )
                             : ArticleBox(article: place),
@@ -174,7 +175,7 @@ class SearchBoxFiltered extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SearchBox(
-      hintText: "Buscar lugar",
+      hintText: AppLocalizations.of(context).translate('searchPlaces'),
       controller: TextEditingController(),
       onChanged: (value) {},
       onFilterPressed: () {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
@@ -129,9 +130,9 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
           Column(
             children: [
               BarScreenArrow(
-                  labelText: 'Festivales y Tradiciones', arrowBack: true),
+                  labelText: AppLocalizations.of(context).translate('festivlasAndTraditions'), arrowBack: true),
               SearchBox(
-                hintText: 'Buscar festivales',
+                hintText: AppLocalizations.of(context).translate('searchFestivals'),
                 controller: searchController,
                 onChanged: (text) {
                   _festivalsFuture
@@ -149,8 +150,8 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                       print(snapshot.error);
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                          child: Text('No se encontraron festivales.'));
+                      return Center(
+                          child: Text(AppLocalizations.of(context).translate('noFestivals')));
                     } else {
                       final festivals = _filteredFestivals.isEmpty
                           ? snapshot.data!

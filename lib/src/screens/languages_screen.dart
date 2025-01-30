@@ -27,6 +27,12 @@ class LanguagesScreen extends StatelessWidget {
               languageProvider.setLanguage('es');
             },
           ),
+           ListTile(
+            title: Text('Valenciano'),
+            onTap: () {
+              languageProvider.setLanguage('vl');
+            },
+          ),
           ListTile(
             title: Text('Galego'),
             onTap: () {
