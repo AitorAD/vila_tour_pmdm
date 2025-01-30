@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/review_form_provider.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
@@ -25,7 +26,7 @@ class AddReviewScreen extends StatelessWidget {
           const WavesWidget(),
           Column(
             children: [
-              const BarScreenArrow(labelText: 'Añadir Reseña', arrowBack: true),
+              BarScreenArrow(labelText: AppLocalizations.of(context).translate('addReview'), arrowBack: true),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -71,7 +72,7 @@ class _ReviewForm extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Escribe tu reseña: ',
+                AppLocalizations.of(context).translate('writeReview'),
                 style: textStyleVilaTourTitle(
                   color: Colors.black,
                   fontSize: 20,
@@ -93,13 +94,13 @@ class _ReviewForm extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           CustomButton(
-            text: 'Enviar',
+            text: AppLocalizations.of(context).translate('send'),
             radius: 30,
             onPressed: () async {
               if (reviewFormProvider.rating == 0) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Añade una puntuación'),
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context).translate('addPoints')),
                   ),
                 );
                 return;
@@ -118,8 +119,8 @@ class _ReviewForm extends StatelessWidget {
               );
               bool isAddedReview = await reviewService.addUpdateReview(review);
               String message = isAddedReview
-                  ? 'Reseña añadida correctamente'
-                  : 'Error al añadir la reseña';
+                  ? AppLocalizations.of(context).translate('reviewSucces')
+                  : AppLocalizations.of(context).translate('reviewNotSucces');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(message),

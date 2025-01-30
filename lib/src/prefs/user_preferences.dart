@@ -22,6 +22,7 @@ class UserPreferences {
       if (tokenDurationMsString != null) {
         _tokenDurationMs = int.tryParse(tokenDurationMsString);
       }
+
       print("Token leido correctamente: $_token");
     } catch (e) {
       print("Error leyendo el token: $e");
@@ -70,3 +71,15 @@ class UserPreferences {
     return expiryDate.difference(DateTime.now());
   }
 }
+
+  Future<void> saveLanguage(String languageCode) async {
+    await _prefs.write(key: 'language', value: languageCode);
+    print("Idioma guardado correctamente: $languageCode");
+  }
+
+  Future<String?> getLanguage() async {
+    print("Idioma leido correctamente: ${await _prefs.read(key: 'language')}");
+    return await _prefs.read(key: 'language') ?? 'en';
+  }
+}
+

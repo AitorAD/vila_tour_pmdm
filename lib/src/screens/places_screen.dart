@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
@@ -109,9 +110,9 @@ class _PlacesScreenState extends State<PlacesScreen> {
           ),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Lugares', arrowBack: true),
+              BarScreenArrow(labelText: AppLocalizations.of(context).translate('places'), arrowBack: true),
               SearchBox(
-                hintText: 'Buscar lugares',
+                hintText: AppLocalizations.of(context).translate('searchPlaces'),
                 controller: searchController,
                 onChanged: (text) {
                   _placesFuture.then((places) => _filterPlaces(text, places));
@@ -128,8 +129,8 @@ class _PlacesScreenState extends State<PlacesScreen> {
                       print(snapshot.error);
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                          child: Text('No se encontraron lugares.'));
+                      return Center(
+                          child: Text(AppLocalizations.of(context).translate('noPlaces')));
                     } else {
                       final places = _filteredPlaces.isEmpty
                           ? snapshot.data!

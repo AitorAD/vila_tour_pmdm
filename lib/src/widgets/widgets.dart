@@ -12,3 +12,4 @@ export 'package:vila_tour_pmdm/src/widgets/custom_navigation_bar.dart';
 export 'package:vila_tour_pmdm/src/widgets/custom_app_bar.dart';
 export 'package:vila_tour_pmdm/src/widgets/build_text_field.dart';
 export 'package:vila_tour_pmdm/src/widgets/elevated_custom_button.dart';
+export 'package:vila_tour_pmdm/src/widgets/routeBox.dart';

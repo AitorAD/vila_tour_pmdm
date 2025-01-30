@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
@@ -60,7 +61,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
       FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
-              text: 'Añadir reseña',
+              text: AppLocalizations.of(context).translate('addReview'),
               radius: 20,
               onPressed: () {
                 Navigator.pushNamed(context, AddReviewScreen.routeName,
@@ -76,10 +77,10 @@ class _RecipeDetailsState extends State<RecipeDetails>
             TabBar(
               controller: _tabController,
               indicatorColor: const Color.fromARGB(255, 54, 71, 71),
-              tabs: const [
-                Tab(text: 'Receta'),
-                Tab(text: 'Visión General'),
-                Tab(text: 'Reseñas'),
+              tabs: [
+                Tab(text: AppLocalizations.of(context).translate('recipe')),
+                Tab(text: AppLocalizations.of(context).translate('generalVision')),
+                Tab(text: AppLocalizations.of(context).translate('reviews')),
               ],
             ),
             Expanded(
@@ -103,7 +104,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'Preparación',
+                            AppLocalizations.of(context).translate('preparation'),
                             style: textStyleVilaTourTitle(color: Colors.black),
                           ),
                           const SizedBox(height: 8),
@@ -182,7 +183,7 @@ class IngredientsWrap extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Ingredientes',
+          AppLocalizations.of(context).translate('ingredients'),
           style: textStyleVilaTourTitle(color: Colors.black),
         ),
         const SizedBox(height: 8),

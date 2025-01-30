@@ -1,57 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
-import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
 import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
-class FestivalsScreen extends StatefulWidget {
-  static final routeName = 'festivals_screen';
-  const FestivalsScreen({super.key});
+class RoutesScreen extends StatefulWidget {
+  static final routeName = 'routes_screen';
+  const RoutesScreen({super.key});
 
   @override
-  _FestivalsScreenState createState() => _FestivalsScreenState();
+  State<RoutesScreen> createState() => _RoutesScreenState();
 }
 
-class _FestivalsScreenState extends State<FestivalsScreen> {
+class _RoutesScreenState extends State<RoutesScreen> {
   final TextEditingController searchController = TextEditingController();
-
-  final festivalService = FestivalService();
-  final imageService = ImageService();
-  late Future<List<Festival>> _festivalsFuture;
-  List<Festival> _filteredFestivals = [];
+  late Future<List<vilaModels.Route>> _routesFuture;
+  List<vilaModels.Route> _filteredRoutes = [];
   String _selectedAttribute = 'name'; // Atributo inicial para filtrar
 
   @override
   void initState() {
     super.initState();
-    _loadFestivals();
+    final routeService = RouteService();
+    _routesFuture = routeService.getRoutes();
   }
 
-  void _loadFestivals() {
-    setState(() {
-      _festivalsFuture = _fetchFestivalsWithImages();
-    });
-  }
-
-  Future<List<Festival>> _fetchFestivalsWithImages() async {
-    List<Festival> festivals = await festivalService.getFestivals();
-
-    for (var festival in festivals) {
-      var image = await imageService.getImageByArticle(festival);
-      festival.images.add(image);
-    }
-
-    return festivals;
-  }
-
-  void _filterFestivals(String query, List<Festival> festivals) {
+  void _filterRoutes(String query, List<vilaModels.Route> routes) {
     setState(() {
       if (query.isEmpty) {
-        _filteredFestivals = festivals;
+        _filteredRoutes = routes;
       } else {
-        _filteredFestivals = festivals.where(
-          (festival) {
-            final value = _getAttributeValue(festival, _selectedAttribute);
+        _filteredRoutes = routes.where(
+          (route) {
+            final value = _getAttributeValue(route, _selectedAttribute);
             return value != null &&
                 value.toLowerCase().contains(query.toLowerCase());
           },
@@ -60,16 +41,10 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
     });
   }
 
-  String? _getAttributeValue(Festival festival, String attribute) {
+  String? _getAttributeValue(vilaModels.Route route, String attribute) {
     switch (attribute) {
       case 'name':
-        return festival.name;
-      case 'description':
-        return festival.description;
-      case 'coordinate.name':
-        return festival.coordinate.name;
-      case 'averageScore':
-        return festival.averageScore.toString();
+        return route.name;
       default:
         return null;
     }
@@ -78,9 +53,6 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
   void _showFilterOptions() {
     final Map<String, String> filterOptions = {
       'Nombre': 'name',
-      'Descripción': 'description',
-      'Ubicación': 'coordinate.name',
-      'Puntuación': 'averageScore',
     };
 
     showModalBottomSheet(
@@ -102,8 +74,8 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                           isSelected ?? false ? attribute : _selectedAttribute;
 
                       // Aplicar el filtro
-                      _festivalsFuture.then((festivals) {
-                        _filterFestivals(searchController.text, festivals);
+                      _routesFuture.then((routes) {
+                        _filterRoutes(searchController.text, routes);
                       });
                     });
 
@@ -129,20 +101,18 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
           ),
           Column(
             children: [
-              BarScreenArrow(
-                  labelText: AppLocalizations.of(context).translate('festivlasAndTraditions'), arrowBack: true),
+              BarScreenArrow(labelText: 'Rutas', arrowBack: true),
               SearchBox(
-                hintText: AppLocalizations.of(context).translate('searchFestivals'),
+                hintText:  AppLocalizations.of(context).translate('searchRoutes'),
                 controller: searchController,
                 onChanged: (text) {
-                  _festivalsFuture
-                      .then((festivals) => _filterFestivals(text, festivals));
+                  _routesFuture.then((routes) => _filterRoutes(text, routes));
                 },
                 onFilterPressed: _showFilterOptions,
               ),
               Expanded(
-                child: FutureBuilder<List<Festival>>(
-                  future: _festivalsFuture,
+                child: FutureBuilder<List<vilaModels.Route>>(
+                  future: _routesFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -151,25 +121,21 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Center(
-                          child: Text(AppLocalizations.of(context).translate('noFestivals')));
+                          child: Text(AppLocalizations.of(context).translate('noRoutes')));
                     } else {
-                      final festivals = _filteredFestivals.isEmpty
+                      final routes = _filteredRoutes.isEmpty
                           ? snapshot.data!
-                          : _filteredFestivals;
+                          : _filteredRoutes;
 
-                      // Ordenar la lista por ID antes de mostrarla
-                      festivals.sort((a, b) => a.id.compareTo(b.id));
-
-                      ListView list = ListView.builder(
+                      return ListView.builder(
                         padding: EdgeInsets.zero,
-                        itemCount: festivals.length,
+                        itemCount: routes.length,
                         itemBuilder: (context, index) {
-                          final festival = festivals[index];
-                          return ArticleBox(article: festival);
+                          final route = routes[index];
+                          // TODO: hacer un contenedor con la información de la ruta
+                          return RouteBox(route: route);
                         },
                       );
-                      print("ACABA AQUI: " + DateTime.now().toString());
-                      return list;
                     }
                   },
                 ),
@@ -181,3 +147,4 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
     );
   }
 }
+

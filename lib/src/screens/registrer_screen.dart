@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/providers/register_form_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';
@@ -51,6 +52,7 @@ class _RegisterScreenBody extends StatelessWidget {
                           vertical: 50,
                         ),
                         child: _buildRegisterForm(
+                            context: context,
                             registerForm: registerForm,
                             loginService: loginService),
                       ),
@@ -73,10 +75,11 @@ class _RegisterScreenBody extends StatelessWidget {
   }
 
   Widget _buildHeaderBar(BuildContext context) {
-    return const BarScreenArrow(labelText: 'Registrarse', arrowBack: true);
+    return BarScreenArrow(labelText: AppLocalizations.of(context).translate('registerVerb'), arrowBack: true);
   }
 
   Widget _buildRegisterForm({
+    required BuildContext context,
     required RegisterFormProvider registerForm,
     required LoginService loginService,
   }) {
@@ -88,34 +91,34 @@ class _RegisterScreenBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           buildTextField(
-              label: 'Usuario:',
-              hintText: 'Nombre de usuario',
+              label: AppLocalizations.of(context).translate('User'),
+              hintText: AppLocalizations.of(context).translate('Username'),
               onChanged: (value) => registerForm.username = value,
-              validator: validateRequiredField,
+              validator: (value) => validateRequiredField(context, value),
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
-              label: 'E-mail:',
+              label: AppLocalizations.of(context).translate('email'),
               hintText: 'ejemplo@ejemplo.com',
               onChanged: (value) => registerForm.email = value,
-              validator: validateEmail,
+              validator: (value) => validateEmail(context, value),
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
-              label: 'Contraseña:',
+              label: AppLocalizations.of(context).translate('username'),
               hintText: '**********',
               obscureText: true,
               onChanged: (value) => registerForm.changePassword(value),
-              validator: validatePassword,
+              validator: (value) => validatePassword(context, value),
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
-              label: 'Repita la contraseña:',
+              label: AppLocalizations.of(context).translate('repeatPassword'),
               hintText: '**********',
               obscureText: true,
               onChanged: (value) => repeatedPassword = value,
               validator: (value) =>
-                  validateRepeatedPassword(value, registerForm.password),
+                  validateRepeatedPassword(context, value, registerForm.password),
               enabled: true),
           const SizedBox(height: 40),
           _RegisterButton(
@@ -139,7 +142,7 @@ class _RegisterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomButton(
-      text: 'Crear cuenta',
+      text: AppLocalizations.of(context).translate('createAccount'),
       onPressed: () async {
         if (registerForm.isValidForm()) {
           // Intentar registrar al usuario
@@ -157,33 +160,33 @@ class _RegisterButton extends StatelessWidget {
 
             case Result.invalidCredentials:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('El correo ya está en uso.'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context).translate('emailAoU')),
                 ),
               );
               break;
 
             case Result.noConnection:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   content:
-                      Text('Sin conexión. Por favor, inténtalo más tarde.'),
+                      Text(AppLocalizations.of(context).translate('noConnection')),
                 ),
               );
               break;
 
             case Result.serverError:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Error en el servidor. Inténtalo más tarde.'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context).translate('serverError')),
                 ),
               );
               break;
 
             case Result.unexpectedError:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Ocurrió un error inesperado.'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context).translate('unexpectedError')),
                 ),
               );
               break;
@@ -193,9 +196,9 @@ class _RegisterButton extends StatelessWidget {
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content:
-                  Text('Por favor, completa todos los campos correctamente.'),
+                  Text(AppLocalizations.of(context).translate('fillFields')),
             ),
           );
         }

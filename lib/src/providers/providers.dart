@@ -12,3 +12,4 @@ export 'theme_provider.dart';
 export 'ui_provider.dart';
 export 'user_form_provider.dart';
 export 'review_provider.dart';
+export '../languages/language_provider.dart';

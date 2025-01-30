@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
@@ -57,7 +58,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
       FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
-              text: 'Añadir reseña',
+              text: AppLocalizations.of(context).translate('addReview'),
               radius: 20,
               onPressed: () {
                 Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: festival);
@@ -73,9 +74,9 @@ class _DetailsFestivalState extends State<DetailsFestival>
               controller: _tabController,
               labelColor: const Color.fromARGB(255, 2, 110, 96),
               indicatorColor: const Color(0xFF01C2A9),
-              tabs: const [
-                Tab(text: 'General'),
-                Tab(text: 'Reseñas'),
+              tabs: [
+                Tab(text: AppLocalizations.of(context).translate('general')),
+                Tab(text: AppLocalizations.of(context).translate('reviews')),
               ],
             ),
             Expanded(

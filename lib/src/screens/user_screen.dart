@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/providers/user_form_provider.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
@@ -24,15 +26,15 @@ class UserScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
-      drawer: drawer(),
-      bottomNavigationBar: const CustomNavigationBar(),
-      body: SizedBox(
+      drawer: drawer(context),
+      bottomNavigationBar: CustomNavigationBar(),
+      body: Container(
         width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             BarScreenArrow(
-              labelText: 'Perfil',
+              labelText: AppLocalizations.of(context).translate('profile'),
               arrowBack: false,
               iconRight: iconRightBarMenu(_scaffoldKey),
             ),
@@ -66,14 +68,13 @@ class UserScreen extends StatelessWidget {
                       bool isModified = await userService.modifyUser(
                           currentUser, userFormProvider.user!);
                       if (isModified) {
-                        message = 'Usuario modificado con éxito.';
+                        message = AppLocalizations.of(context).translate('userModSuccesful');
                         userFormProvider.isEditing = false;
                       } else {
-                        message = 'Error al modificar los datos del usuario.';
+                        message = AppLocalizations.of(context).translate('userModError');
                       }
                     } else {
-                      message =
-                          'Por favor, completa todos los campos correctamente.';
+                      message = AppLocalizations.of(context).translate('fillFields');
                     }
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text(message)));
@@ -102,14 +103,28 @@ class UserScreen extends StatelessWidget {
     );
   }
 
-  Drawer drawer() {
+  Drawer drawer(BuildContext context) {
     return Drawer(
       width: double.infinity,
       child: Column(
         children: [
-          const BarScreenArrow(labelText: 'Configuración', arrowBack: true),
+          BarScreenArrow(
+            labelText: AppLocalizations.of(context)!.translate('settings'),
+            arrowBack: true,
+          ),
           Row(
-            children: [IconButton(onPressed: () {}, icon: Icon(Icons.sunny))],
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.sunny),
+              ),
+            ],
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, LanguagesScreen.routeName);
+            },
+            icon: Icon(Icons.language),
           )
         ],
       ),
@@ -134,33 +149,33 @@ class _ProfileForm extends StatelessWidget {
         child: Column(
           children: [
             buildTextField(
-              initialValue: userFormProvider.user?.username ?? '',
-              label: 'Nombre de usuario:',
+              initialValue: currentUser.username,
+              label: ("${AppLocalizations.of(context).translate('username')}:"),
               hintText: currentUser.username,
               onChanged: (value) {
                 userFormProvider.user?.username = value;
                 userFormProvider.checkForChanges();
               },
-              validator: validateRequiredField,
+              validator: (value) => validateRequiredField(context, value),
               enabled: userFormProvider.isEditing,
             ),
             const SizedBox(height: 20),
             buildTextField(
-              initialValue: userFormProvider.user?.email ?? '',
-              label: 'E-mail:',
+              initialValue: currentUser.email,
+              label: AppLocalizations.of(context).translate('email'),
               hintText: 'ejemplo@ejemplo.com',
               onChanged: (value) {
                 userFormProvider.user?.email = value;
                 userFormProvider.checkForChanges();
               },
-              validator: validateEmail,
+              validator: (value) => validateEmail(context, value),
               enabled: userFormProvider.isEditing,
             ),
             const SizedBox(height: 20),
             buildTextField(
-              initialValue: userFormProvider.user?.name ?? '',
-              label: 'Nombre:',
-              hintText: currentUser.name ?? 'Tu nombre',
+              initialValue: currentUser.name,
+              label: AppLocalizations.of(context).translate('name'),
+              hintText: currentUser.name ?? AppLocalizations.of(context).translate('yourname'),
               onChanged: (value) {
                 if (value.isEmpty) {
                   userFormProvider.user?.name = null;
@@ -169,14 +184,14 @@ class _ProfileForm extends StatelessWidget {
                 }
                 userFormProvider.checkForChanges();
               },
-              validator: validateName,
+              validator: (value) => validateName(context, value),
               enabled: userFormProvider.isEditing,
             ),
             const SizedBox(height: 20),
             buildTextField(
-              initialValue: userFormProvider.user?.surname ?? '',
-              label: 'Apellidos:',
-              hintText: currentUser.surname ?? 'Tus apellidos',
+              initialValue: currentUser.surname,
+              label: AppLocalizations.of(context).translate('surname'),
+              hintText: currentUser.surname ?? AppLocalizations.of(context).translate('yourSurname'),
               onChanged: (value) {
                 if (value.isEmpty) {
                   userFormProvider.user?.surname = null;
@@ -185,7 +200,7 @@ class _ProfileForm extends StatelessWidget {
                 }
                 userFormProvider.checkForChanges();
               },
-              validator: validateSurname,
+              validator: (value) => validateSurname(context, value),
               enabled: userFormProvider.isEditing,
             ),
           ],
@@ -227,6 +242,7 @@ class _Header extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   _processImage(
+                    context,
                     userService,
                     userFormProvider,
                     ImageSource.camera,
@@ -257,7 +273,7 @@ class _Header extends StatelessWidget {
     );
   }
 
-  Future<void> _processImage(UserService userService,
+  Future<void> _processImage(BuildContext context, userService,
       UserFormProvider userFormProvider, ImageSource imageSource) async {
     final _picker = ImagePicker();
     final XFile? pickedFile =
