@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:vila_tour_pmdm/main.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 import 'package:vila_tour_pmdm/src/screens/login_screen.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/result.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
+import 'dart:async';
 
 class LoginService extends ChangeNotifier {
   bool isLoading = true;
+  Timer? _sessionTimer;
 
   Future<Result> login(String username, String password) async {
     try {
@@ -32,6 +35,9 @@ class LoginService extends ChangeNotifier {
 
         int id = responseData['id'];
         currentUser = await UserService().getCurrentUser(id);
+
+        _startSessionTimer(tokenDurationMs);
+
         return Result.success;
       } else if (response.statusCode == 401) {
         return Result.invalidCredentials;
@@ -43,6 +49,42 @@ class LoginService extends ChangeNotifier {
     } catch (e) {
       return Result.noConnection;
     }
+  }
+
+  void _startSessionTimer(int durationMs) {
+    _sessionTimer?.cancel();  // Cancelar cualquier temporizador previo
+    _sessionTimer = Timer(Duration(milliseconds: durationMs), () {
+      _handleSessionExpiry();
+    });
+  }
+
+  void _handleSessionExpiry() {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Sesión expirada'),
+            content: const Text('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  _logout(context);
+                },
+                child: const Text('Aceptar'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    await logout(context);
+    Navigator.pushReplacementNamed(context, LoginScreen.routeName);
   }
 
   Future<String?> getToken() async {

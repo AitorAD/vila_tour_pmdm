@@ -9,6 +9,8 @@ import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/login_service.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.instance.initPrefs();
@@ -46,6 +48,7 @@ class MyApp extends StatelessWidget {
     final userPreferences = UserPreferences.instance;
 
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'VILATOUR',
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
@@ -106,15 +109,15 @@ class _SessionManagerState extends State<SessionManager> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Session Expired'),
-          content: const Text('Your session has expired. Please log in again.'),
+          title: const Text('Sesión expirada'),
+          content: const Text('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 _logout();
               },
-              child: const Text('OK'),
+              child: const Text('Aceptar'),
             ),
           ],
         );

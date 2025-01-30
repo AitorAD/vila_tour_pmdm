@@ -52,8 +52,7 @@ class LoginScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start, 
                                 children: [
                                   _LoginForm(
-                                    key:
-                                        Key('login_form_${loginForm.hashCode}'),
+                                    key: UniqueKey(), // Asegúrate de que cada instancia tenga una clave única
                                     loginForm: loginForm,
                                   ),
                                   const SizedBox(height: 10),
@@ -174,7 +173,7 @@ class _Botones extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             LoginBtn(
-              key: Key('login_button_${loginForm.hashCode}'),
+              key: UniqueKey(), // Asegúrate de que cada instancia tenga una clave única
               loginForm: loginForm,
               loginService: loginService,
             ),
