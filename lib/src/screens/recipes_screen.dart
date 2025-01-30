@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
@@ -115,9 +116,9 @@ class _RecipesScreenState extends State<RecipesScreen> {
           ),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Recetas', arrowBack: true),
+              BarScreenArrow(labelText: AppLocalizations.of(context).translate('recipes'), arrowBack: true),
               SearchBox(
-                hintText: 'Buscar recetas',
+                hintText: AppLocalizations.of(context).translate('searchRecipes'),
                 controller: searchController,
                 onChanged: (text) {
                   _recipesFuture.then((recipes) => _filterRecipes(text, recipes));
@@ -134,8 +135,8 @@ class _RecipesScreenState extends State<RecipesScreen> {
                       print(snapshot.error);
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                          child: Text('No se encontraron recetas.'));
+                      return  Center(
+                          child: Text(AppLocalizations.of(context).translate('norecipes')));
                     } else {
                       final recipes = _filteredRecipes.isEmpty
                           ? snapshot.data!

@@ -1,5 +1,7 @@
 import 'dart:ui';
-
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +11,7 @@ import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/article_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+import '../providers/providers.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 
 class HomePage extends StatefulWidget {
@@ -223,13 +226,13 @@ class _MainContent extends StatelessWidget {
               route: PlacesScreen.routeName,
               color: Colors.blueAccent,
               icon: Icons.place,
-              text: 'Lugares de Interés',
+              text: AppLocalizations.of(context).translate('places'),
             ),
             _SingleCard(
               route: FestivalsScreen.routeName,
               color: Colors.pinkAccent,
               icon: Icons.celebration,
-              text: 'Festivales',
+              text: AppLocalizations.of(context).translate('festivals'),
             ),
           ],
         ),
@@ -239,13 +242,13 @@ class _MainContent extends StatelessWidget {
               route: RecipesScreen.routeName,
               color: Colors.purpleAccent,
               icon: Icons.restaurant_menu,
-              text: 'Recetas',
+              text: AppLocalizations.of(context).translate('recipes'),
             ),
             _SingleCard(
-              route: LoginScreen.routeName,
+              route: RoutesScreen.routeName,
               color: Colors.purple,
               icon: Icons.map,
-              text: 'Rutas',
+              text: AppLocalizations.of(context).translate('routes'),
             ),
           ],
         ),

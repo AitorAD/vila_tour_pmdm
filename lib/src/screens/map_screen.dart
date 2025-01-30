@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/places_provider.dart';
 import 'package:vila_tour_pmdm/src/services/place_service.dart';
@@ -204,11 +205,11 @@ class _MapScreenState extends State<MapScreen> {
                         width: 300,
                         height: 170,
                         child: place.id == -1
-                            ? const Card(
+                            ? Card(
                                 color: Colors.white,
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),
-                                  child: Text('Lugar no encontrado'),
+                                  child: Text(AppLocalizations.of(context).translate('place404')),
                                 ),
                               )
                             : ArticleBox(article: place),

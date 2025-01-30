@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
@@ -58,7 +59,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
     );
 
     return Scaffold(
-      appBar: CustomAppBar(title: 'Subir Receta'),
+      appBar: CustomAppBar(title: AppLocalizations.of(context).translate('uploadRecipe')),
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
@@ -106,7 +107,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
   Widget _buildNameField(RecipeFormProvider recipeFormProvider) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: "Nombre",
+        labelText: AppLocalizations.of(context).translate('name'),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -114,7 +115,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
       onChanged: (value) => recipeFormProvider.recipe!.name = value,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Por favor ingrese el nombre de la receta';
+          return AppLocalizations.of(context).translate('requiredName');
         }
         return null;
       },
@@ -126,7 +127,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Ingredientes',
+          AppLocalizations.of(context).translate('ingredients'),
           style: textStyleVilaTourTitle(color: Colors.black, fontSize: 20),
         ),
         const SizedBox(height: 10),
@@ -138,7 +139,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
           },
           child: TextField(
             decoration: InputDecoration(
-              hintText: 'Buscar ingredientes...',
+              hintText: AppLocalizations.of(context).translate('searchIngredients'),
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -240,14 +241,14 @@ class _UploadRecipeState extends State<UploadRecipe> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Elaboración',
+          AppLocalizations.of(context).translate('elaboration'),
           style: textStyleVilaTourTitle(color: Colors.black, fontSize: 20),
         ),
         const SizedBox(height: 10),
         TextFormField(
           maxLines: 6,
           decoration: InputDecoration(
-            hintText: 'Escribe la descripción de la receta...',
+            hintText: AppLocalizations.of(context).translate('writeRecipeDesc'),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -255,7 +256,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
           onChanged: (value) => recipeFormProvider.recipe!.description = value,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Por favor ingrese la descripción de la receta';
+              return AppLocalizations.of(context).translate('pleaseWriteRecipe');
             }
             return null;
           },

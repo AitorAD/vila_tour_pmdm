@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/review_provider.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
@@ -47,7 +48,7 @@ class _FavoriteFloatingActionButtonState extends State<FavoriteFloatingActionBut
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error al actualizar el estado de favorito'),
+              content: Text(AppLocalizations.of(context).translate('updateFavError')),
               backgroundColor: Colors.red,
             ),
           );

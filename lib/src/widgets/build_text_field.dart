@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/ui/input_decorations.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
@@ -32,67 +33,67 @@ Widget buildTextField({
 }
 
 // Funciones validadoras reutilizables
-String? validateRequiredField(String? value) {
+String? validateRequiredField(BuildContext context, String? value) {
   if (value == null || value.isEmpty) {
-    return 'El nombre de usuario es obligatorio';
+    return AppLocalizations.of(context).translate('passwordNotMatch');
   }
   if (value.length > 40) {
-    return 'El nombre de usuario es demasiado largo';
+    return AppLocalizations.of(context).translate('usernameToLong');
   }
   return null;
 }
 
-String? validateName(String? value) {
+String? validateName(BuildContext context, String? value) {
   if (value == null || value.isEmpty) {
-    return 'El nombre es obligatorio';
+    return AppLocalizations.of(context).translate('requieredName');
   }
   if (value.length > 50) {
-    return 'El nombre es demasiado largo';
+    return AppLocalizations.of(context).translate('nameTooLong');
   }
   return null;
 }
 
-String? validateSurname(String? value) {
+String? validateSurname(BuildContext context, String? value) {
   if (value == null || value.isEmpty) {
-    return 'El apellido es obligatorio';
+    return AppLocalizations.of(context).translate('requiredSurname');
   }
   if (value.length > 50) {
-    return 'El apellido es demasiado largo';
+    return AppLocalizations.of(context).translate('surnameTooLong');
   }
   return null;
 }
 
-String? validateEmail(String? value) {
+String? validateEmail(BuildContext context, String? value) {
   if (value == null || value.isEmpty) {
-    return 'El email es obligatorio';
+    return AppLocalizations.of(context).translate('requieredEmail');
   }
   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
   if (!emailRegex.hasMatch(value)) {
-    return 'Ingrese un email válido';
+    return AppLocalizations.of(context).translate('emailNotValid');
   }
   return null;
 }
 
-String? validatePassword(String? value) {
+String? validatePassword(BuildContext context, String? value) {
   if (value == null || value.isEmpty) {
-    return 'La contraseña es obligatoria';
+    return AppLocalizations.of(context).translate('requiredPassword');
   }
   if (value.length > 250) {
-    return 'La contraseña es demasiado larga';
+    return AppLocalizations.of(context).translate('passwordTooLong');
   }
   final regex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d).+$');
   if (!regex.hasMatch(value)) {
-    return 'Debe contener al menos un número';
+    return AppLocalizations.of(context).translate('password1');
   }
   return null;
 }
 
-String? validateRepeatedPassword(String? value, String password) {
+String? validateRepeatedPassword(BuildContext context, String? value, String password) {
   if (value == null || value.isEmpty) {
-    return 'Debe repetir la contraseña';
+    return AppLocalizations.of(context).translate('repeatPassword');
   }
   if (value != password) {
-    return 'Las contraseñas no coinciden';
+    return AppLocalizations.of(context).translate('passwordNotMatch');
   }
   return null;
 }
