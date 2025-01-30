@@ -38,4 +38,9 @@ class UserFormProvider extends ChangeNotifier {
   void checkForChanges() {
     haveChanges = user != currentUser;
   }
+
+  void resetForm() {
+    user = currentUser.copyWith();
+    notifyListeners();
+  }
 }

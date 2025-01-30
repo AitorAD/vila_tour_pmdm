@@ -15,6 +15,10 @@ TextStyle textStyleVilaTourTitle(
   return TextStyle(color: color, fontFamily: 'PontanoSans', fontSize: fontSize);
 }
 
+Color vilaBlueColor() {
+  return Color(0xFF4FC3F6); // Verde en formato hexadecimal
+}
+
 // Función que devuelve la decoración predeterminada con el radio personalizado
 BoxDecoration defaultDecoration(double radius, {double opacity = 0.75}) {
   return BoxDecoration(
