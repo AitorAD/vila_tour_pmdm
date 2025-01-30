@@ -94,14 +94,14 @@ class _RegisterScreenBody extends StatelessWidget {
               label: AppLocalizations.of(context).translate('User'),
               hintText: AppLocalizations.of(context).translate('Username'),
               onChanged: (value) => registerForm.username = value,
-              validator: validateRequiredField,
+              validator: (value) => validateRequiredField(context, value),
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
               label: AppLocalizations.of(context).translate('email'),
               hintText: 'ejemplo@ejemplo.com',
               onChanged: (value) => registerForm.email = value,
-              validator: validateEmail,
+              validator: (value) => validateEmail(context, value),
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
@@ -109,7 +109,7 @@ class _RegisterScreenBody extends StatelessWidget {
               hintText: '**********',
               obscureText: true,
               onChanged: (value) => registerForm.changePassword(value),
-              validator: validatePassword,
+              validator: (value) => validatePassword(context, value),
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
@@ -118,7 +118,7 @@ class _RegisterScreenBody extends StatelessWidget {
               obscureText: true,
               onChanged: (value) => repeatedPassword = value,
               validator: (value) =>
-                  validateRepeatedPassword(value, registerForm.password),
+                  validateRepeatedPassword(context, value, registerForm.password),
               enabled: true),
           const SizedBox(height: 40),
           // _buildSubmitButton(registerForm, loginService),

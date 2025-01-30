@@ -271,7 +271,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: CustomButton(
-          text: "Enviar",
+          text: AppLocalizations.of(context).translate('send'),
           onPressed: () async {
             if (recipeFormProvider.formLogKey.currentState!.validate()) {
               bool? confirm = await showDialog(
@@ -279,17 +279,17 @@ class _UploadRecipeState extends State<UploadRecipe> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     backgroundColor: Colors.white,
-                    title: const Text('¿Estás seguro de enviar la receta?'),
-                    content: const Text('Una vez enviada, la receta irá a revisión.'),
+                    title:  Text(AppLocalizations.of(context).translate('confirmRecipe')),
+                    content: Text(AppLocalizations.of(context).translate('sendrecipeMessage')),
                     actions: <Widget>[
                       TextButton(
-                        child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+                        child: Text(AppLocalizations.of(context).translate('cancel'), style: TextStyle(color: Colors.black)),
                         onPressed: () {
                           Navigator.of(context).pop(false);
                         },
                       ),
                       TextButton(
-                        child: const Text('Enviar', style: TextStyle(color: Colors.black)),
+                        child: Text(AppLocalizations.of(context).translate('send'), style: TextStyle(color: Colors.black)),
                         onPressed: () {
                           Navigator.of(context).pop(true);
                         },
@@ -311,8 +311,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
                   await recipeService.createRecipe(recipeFormProvider.recipe!);
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Receta enviada a revisión'),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context).translate('recipeSended')),
                       duration: Duration(seconds: 2),
                     ),
                   );
@@ -321,8 +321,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
                 } catch (e) {
                   print("RECETAERROR:" + e.toString());
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Error al enviar la receta'),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context).translate('recipeError')),
                       backgroundColor: Colors.red,
                       duration: Duration(seconds: 2),
                     ),
@@ -350,7 +350,7 @@ class _ProductImageStack extends StatelessWidget {
   final String? selectedImage;
   final Function(customImage.Image?) onImageSelected;
 
-  Future<void> _pickImage(ImageSource source) async {
+  Future<void> _pickImage(BuildContext context, ImageSource source) async {
     try {
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(source: source, imageQuality: 50);
@@ -361,10 +361,10 @@ class _ProductImageStack extends StatelessWidget {
 
         onImageSelected(image); // Pasar la imagen no codificada
       } else {
-        print('No se seleccionó ninguna imagen.');
+        print(AppLocalizations.of(context).translate('noImageSelected'));
       }
     } catch (e) {
-      print('Error al seleccionar la imagen: $e');
+      print(AppLocalizations.of(context).translate('errorSelectedImage'));
     }
   }
 
@@ -375,12 +375,12 @@ class _ProductImageStack extends StatelessWidget {
         RecipeImage(url: selectedImage),
         _IconPositionedButton(
           icon: Icons.photo_library_outlined,
-          onPressed: () => _pickImage(ImageSource.gallery),
+          onPressed: () => _pickImage(context, ImageSource.gallery),
           position: const Offset(65, 12),
         ),
         _IconPositionedButton(
           icon: Icons.camera_alt_outlined,
-          onPressed: () => _pickImage(ImageSource.camera),
+          onPressed: () => _pickImage(context, ImageSource.camera),
           position: const Offset(15, 12),
         ),
       ],
