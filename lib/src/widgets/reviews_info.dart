@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
@@ -42,10 +43,10 @@ class ReviewsInfo extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           // Manejar errores en la carga
-          return Center(child: Text('Error al cargar las reseñas'));
+          return Center(child: Text(AppLocalizations.of(context).translate('loadReviewsError')));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           // Manejar el caso de datos vacíos
-          return Center(child: Text('No hay reseñas disponibles'));
+          return Center(child: Text(AppLocalizations.of(context).translate('noReviews')));
         } else {
           // Mostrar las reseñas con los usuarios
           final reviewsWithUsers = snapshot.data!;

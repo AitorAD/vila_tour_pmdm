@@ -120,7 +120,7 @@ class _RoutesScreenState extends State<RoutesScreen> {
                       print(snapshot.error);
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
+                      return Center(
                           child: Text(AppLocalizations.of(context).translate('noRoutes')));
                     } else {
                       final routes = _filteredRoutes.isEmpty

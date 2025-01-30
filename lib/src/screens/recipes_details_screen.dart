@@ -104,7 +104,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'Preparación',
+                            AppLocalizations.of(context).translate('preparation'),
                             style: textStyleVilaTourTitle(color: Colors.black),
                           ),
                           const SizedBox(height: 8),
@@ -183,7 +183,7 @@ class IngredientsWrap extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Ingredientes',
+          AppLocalizations.of(context).translate('ingredients'),
           style: textStyleVilaTourTitle(color: Colors.black),
         ),
         const SizedBox(height: 8),
