@@ -79,7 +79,7 @@ class UserScreen extends StatelessWidget {
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text(message)));
                   },
-                  child: Icon(Icons.save),
+                  child: const Icon(Icons.save),
                 ),
               ],
             )
@@ -88,7 +88,7 @@ class UserScreen extends StatelessWidget {
               onPressed: () {
                 userFormProvider.isEditing = true;
               },
-              child: Icon(Icons.edit),
+              child: const Icon(Icons.edit),
             ),
     );
   }
@@ -224,7 +224,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Container(
+      child: SizedBox(
         width: 200,
         height: 150,
         child: Stack(
@@ -264,7 +264,7 @@ class _Header extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: Text(
                 '@${currentUser.username}',
-                style: TextStyle(fontSize: 24),
+                style: const TextStyle(fontSize: 24),
               ),
             )
           ],
@@ -280,7 +280,6 @@ class _Header extends StatelessWidget {
         await _picker.pickImage(source: imageSource, imageQuality: 100);
 
     if (pickedFile == null) {
-      print(AppLocalizations.of(context).translate('nothingSelected'));
       return;
     }
 
@@ -297,11 +296,10 @@ class _Header extends StatelessWidget {
       try {
         return MemoryImage(decodeImageBase64(picture));
       } catch (e) {
-        print('Error al decodificar la imagen base64: $e');
-        return AssetImage('assets/logo.ico');
+        return const AssetImage('assets/logo.ico');
       }
     } else {
-      return AssetImage('assets/logo.ico');
+      return const AssetImage('assets/logo.ico');
     }
   }
 }

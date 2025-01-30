@@ -121,7 +121,6 @@ class _RegisterScreenBody extends StatelessWidget {
                   validateRepeatedPassword(context, value, registerForm.password),
               enabled: true),
           const SizedBox(height: 40),
-          // _buildSubmitButton(registerForm, loginService),
           _RegisterButton(
               registerForm: registerForm, loginService: loginService)
         ],
@@ -146,19 +145,6 @@ class _RegisterButton extends StatelessWidget {
       text: AppLocalizations.of(context).translate('createAccount'),
       onPressed: () async {
         if (registerForm.isValidForm()) {
-          // Mostrar un indicador de carga
-          /*
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          );
-          */
-
           // Intentar registrar al usuario
           final result = await loginService.register(
             registerForm.username,

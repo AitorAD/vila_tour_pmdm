@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/models.dart';
@@ -12,8 +11,6 @@ class ReviewService {
 
     String? token = await UserPreferences.instance.readData('token');
 
-    print('REVIEW JSON: ' + review.toJson());
-
     final response = await http.post(
       url,
       headers: {
@@ -22,8 +19,6 @@ class ReviewService {
       },
       body: review.toJson(),
     );
-
-    print('RESPONSE BODY: ' + response.body);
 
     return response.statusCode == 200;
   }

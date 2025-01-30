@@ -10,7 +10,7 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class DetailsFestival extends StatefulWidget {
-  static final routeName = 'general_festival';
+  static const routeName = 'general_festival';
   const DetailsFestival({super.key});
 
   @override
@@ -52,7 +52,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
         : 0;
 
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       floatingActionButtonLocation: showFab ?
       FloatingActionButtonLocation.centerFloat :
       FloatingActionButtonLocation.endFloat,
@@ -66,7 +66,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
             )
           : FavoriteFloatingActionButton(article: festival),
       body: Stack(children: [
-        WavesWidget(),
+        const WavesWidget(),
         Column(
           children: [
             BarScreenArrow(labelText: festival.name, arrowBack: true),
@@ -98,7 +98,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                                 height: 350,
                                 enableInfiniteScroll: true,
                                 autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 5),
+                                autoPlayInterval: const Duration(seconds: 5),
                                 enlargeCenterPage: true,
                                 viewportFraction: 0.85,
                               ),
@@ -106,7 +106,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                                 return ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: FadeInImage(
-                                    placeholder: AssetImage('assets/logo.ico'),
+                                    placeholder: const AssetImage('assets/logo.ico'),
                                     image: image.path.startsWith('assets/')
                                         ? AssetImage(image.path)
                                             as ImageProvider
@@ -200,30 +200,3 @@ class _DetailsFestivalState extends State<DetailsFestival>
     );
   }
 }
-
-
-/*
-
-      // Floating action button for "favorite"
-
-      // El widget consumer reconstruye automaticamente el floatingActionButton
-      // cuando es estado de FestivalsProvider cambia
-      floatingActionButton: Consumer<FestivalsProvider>(
-        builder: (context, festivalsProvider, child) {
-          // Verifica si el festival actual es favorito
-          final isFavourite = festivalsProvider.festivals
-              .any((f) => f.name == festival.name && f.favourite);
-
-          return FloatingActionButton(
-            onPressed: () {
-              festivalsProvider.toggleFavorite(festival);
-            },
-            backgroundColor: isFavourite ? Colors.white : Colors.redAccent,
-            child: isFavourite
-                ? Icon(Icons.favorite, color: Colors.redAccent)
-                : Icon(Icons.favorite_border),
-          );
-        },
-      ),
-
-      */
