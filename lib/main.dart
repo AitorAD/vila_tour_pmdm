@@ -35,7 +35,8 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => UserFormProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => PlacesProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => ReviewProvider(), lazy: false),
-    ], child: const MyApp());
+      ChangeNotifierProvider(create: (_) => LanguageProvider(), lazy: false),
+    ], child: MyApp());
   }
 }
 
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en'), Locale('es'), Locale('gl')],
+      supportedLocales: const [Locale('en'), Locale('es'), Locale('gl'), Locale('vl')],
       routes: getApplicationRoutes(),
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(

@@ -47,9 +47,9 @@ class MapScreen extends StatefulWidget {
   static final Map<String, Color> categoryColors = {
    
     'Playa': const Color.fromARGB(255, 243, 152, 33),
-    'Montaña': const Color.fromARGB(255, 243, 152, 33),
-    'Museo': const Color.fromARGB(255, 243, 152, 33),
-    'Parque': const Color.fromARGB(255, 243, 152, 33),
+    'Montaña': const Color.fromARGB(255, 155, 41, 12),
+    'Museo': const Color.fromARGB(255, 143, 138, 132),
+    'Parque': const Color.fromARGB(255, 5, 138, 44),
     'Centro histórico': const Color.fromARGB(255, 243, 152, 33),
     'Monumento': const Color.fromARGB(255, 243, 152, 33),
     'Jardin': const Color.fromARGB(255, 243, 152, 33),
@@ -57,7 +57,7 @@ class MapScreen extends StatefulWidget {
     'Castillo': const Color.fromARGB(255, 243, 152, 33),
     'Centro cultrular': const Color.fromARGB(255, 243, 152, 33),
     'Zona arqueologica': const Color.fromARGB(255, 243, 152, 33),
-    'Teatro': const Color.fromARGB(255, 243, 152, 33),
+    'Teatro': const Color.fromARGB(255, 180, 9, 180),
     'Mercado':const Color.fromARGB(255, 243, 152, 33),
     'Paseo Marítimo': const Color.fromARGB(255, 243, 152, 33),
     'Reserva Natural': const Color.fromARGB(255, 243, 152, 33) ,
