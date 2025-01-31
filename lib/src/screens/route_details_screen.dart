@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:vila_tour_pmdm/src/services/openRoutes_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
-import 'package:latlong2/latlong.dart';
 
 class RouteDetailsScreen extends StatefulWidget {
   static final routeName = 'route_details_screen';
@@ -16,18 +16,59 @@ class RouteDetailsScreen extends StatefulWidget {
 class _RouteDetailsScreenState extends State<RouteDetailsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late MapController _mapController;
+  List<LatLng> routePoints = []; // Se inicializa como lista vacía
+
+  bool isLoading = false; // Estado de carga
+  final OpenRouteService _routeService =
+      OpenRouteService(); // Instancia del servicio
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _mapController = MapController();
+    _loadRoute(); // Carga la ruta al iniciar la pantalla
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  // Método para cargar la ruta desde la API
+  
+Future<void> _loadRoute() async {
+  setState(() {
+    isLoading = true;
+  });
+
+  try {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args != null && args is vilaModels.Route) {
+      final route = args as vilaModels.Route;
+
+      // Obtener la ruta desde la API
+      final response = await _routeService.getRoute(route.places);
+      final String encodedPolyline = response['geometry']; // Extrae la geometría
+
+      print('Polyline recibida: $encodedPolyline');
+
+      // Decodificar la polyline
+      List<PointLatLng> decodedPoints = PolylinePoints().decodePolyline(encodedPolyline);
+      List<LatLng> points = decodedPoints.map((point) => LatLng(point.latitude, point.longitude)).toList();
+
+      if (points.isEmpty) {
+        print('Error: La polyline decodificada está vacía.');
+      }
+
+      setState(() {
+        routePoints = points;
+      });
+    }
+  } catch (e) {
+    print('Error al cargar la ruta: $e');
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +90,10 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
       bottomNavigationBar: CustomNavigationBar(),
       body: Stack(
         children: [
-          // Fondo con WavesWidget
           WavesWidget(),
-
-          // Contenido principal
           Column(
             children: [
-              // Barra superior con flecha de retroceso
               BarScreenArrow(labelText: route.name, arrowBack: true),
-
-              // Pestañas
               TabBar(
                 controller: _tabController,
                 tabs: const [
@@ -66,16 +101,11 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
                   Tab(text: 'Lugares'),
                 ],
               ),
-
-              // Área deslizable con TabBarView
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    // Primera pantalla
                     _buildFirstScreen(route),
-
-                    // Segunda pantalla
                     _buildSecondScreen(route),
                   ],
                 ),
@@ -89,44 +119,45 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
 
 // Método para construir la primera pantalla (Mapa)
   Widget _buildFirstScreen(vilaModels.Route route) {
-    // Crear una lista de coordenadas de los lugares
-    List<LatLng> coordinates = route.places.map((place) {
-      return LatLng(place.coordinate.latitude, place.coordinate.longitude);
-    }).toList();
+    if (isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
 
-    // Calcular los límites del mapa (latitudes y longitudes mínimas y máximas)
-    LatLngBounds bounds = LatLngBounds.fromPoints(coordinates);
+    if (routePoints.isEmpty) {
+      return Center(child: Text('No hay puntos de ruta disponibles.'));
+    }
 
-    // Crear el controlador del mapa
-    MapController mapController = MapController();
+    // Calcular los límites del mapa con los puntos obtenidos de la API
+    final bounds = LatLngBounds.fromPoints(routePoints);
 
     return FlutterMap(
-      mapController: mapController, // Asignamos el controlador al mapa
+      mapController: _mapController,
       options: MapOptions(
-        initialCenter: LatLng(
-          route.places.first.coordinate.latitude,
-          route.places.first.coordinate.longitude,
-        ), // Centrado en el primer lugar de la ruta
-        initialZoom: 13.0, // Nivel de zoom inicial
-        minZoom: 10.0, // Mínimo nivel de zoom
-        maxZoom: 18.0, // Máximo nivel de zoom
-       onMapReady: () {
-        // Calcular el centro de los límites
-        final center = bounds.center;
-
-        // Ajustar el zoom para que todos los lugares sean visibles
-        mapController.move(center, 13.0); // Usa un valor de zoom fijo o calcula el adecuado
-      },
-    ),
+        initialCenter: bounds.center,
+        initialZoom: 13.0,
+        minZoom: 10.0,
+        maxZoom: 18.0,
+        onMapReady: () {
+          _mapController.move(bounds.center, 13.0);
+        },
+      ),
       children: [
-        // Capa de tiles (mapa base)
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          subdomains: ['a', 'b', 'c'], // Subdominios para cargar los tiles
-          userAgentPackageName:
-              'com.example.vila_tour_pmdm', // User-Agent para OpenStreetMap
+          subdomains: ['a', 'b', 'c'],
+          userAgentPackageName: 'com.example.vila_tour_pmdm',
         ),
-        // Capa de marcadores
+        // Dibujar la ruta con los puntos devueltos por la API
+        PolylineLayer(
+          polylines: [
+            Polyline(
+              points: routePoints, // Se usa la ruta obtenida de la API
+              color: Colors.blue,
+              strokeWidth: 4.0,
+            ),
+          ],
+        ),
+        // Dibujar los marcadores de los lugares
         MarkerLayer(
           markers: route.places.map((place) {
             return Marker(
@@ -135,8 +166,8 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
               point:
                   LatLng(place.coordinate.latitude, place.coordinate.longitude),
               child: Icon(
-                Icons.place, // Puedes usar cualquier ícono o imagen
-                color: Colors.red, // Color del marcador
+                Icons.place,
+                color: Colors.red,
               ),
             );
           }).toList(),
@@ -152,6 +183,8 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
         children: [
           ListView.builder(
             shrinkWrap: true,
+            physics:
+                NeverScrollableScrollPhysics(), // Evita conflictos con el scroll padre
             itemCount: route.places.length,
             itemBuilder: (context, index) {
               return ArticleBox(article: route.places[index]);
