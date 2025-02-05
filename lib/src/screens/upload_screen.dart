@@ -68,7 +68,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
               child: Form(
-                key: recipeFormProvider.formLogKey,
+                key: recipeFormProvider.formRecipeKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -272,7 +272,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
         child: CustomButton(
           text: AppLocalizations.of(context).translate('send'),
           onPressed: () async {
-            if (recipeFormProvider.formLogKey.currentState!.validate()) {
+            if (recipeFormProvider.formRecipeKey.currentState!.validate()) {
               bool? confirm = await showDialog(
                 context: context,
                 builder: (BuildContext context) {

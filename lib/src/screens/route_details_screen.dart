@@ -1,9 +1,11 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:vila_tour_pmdm/src/models/models.dart';
+import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
+import 'package:vila_tour_pmdm/src/services/open_routes_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
-import 'package:latlong2/latlong.dart';
 
 class RouteDetailsScreen extends StatefulWidget {
   static final routeName = 'route_details_screen';
@@ -12,6 +14,7 @@ class RouteDetailsScreen extends StatefulWidget {
   @override
   _RouteDetailsScreenState createState() => _RouteDetailsScreenState();
 }
+
 class _RouteDetailsScreenState extends State<RouteDetailsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
@@ -20,11 +23,13 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments;
@@ -42,16 +47,19 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
     final route = args as vilaModels.Route;
 
     return Scaffold(
+      floatingActionButton: _ButtonStartRoute(route: route),
       bottomNavigationBar: CustomNavigationBar(),
       body: Stack(
         children: [
           // Fondo con WavesWidget
           WavesWidget(),
+
           // Contenido principal
           Column(
             children: [
               // Barra superior con flecha de retroceso
               BarScreenArrow(labelText: route.name, arrowBack: true),
+
               // Pestañas
               TabBar(
                 controller: _tabController,
@@ -60,7 +68,9 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
                   Tab(text: 'Lugares'),
                 ],
               ),
+
               // Área deslizable con TabBarView
+
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
@@ -78,14 +88,29 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
       ),
     );
   }
-// Método para construir la primera pantalla (Mapa)
+
+// Método para construir la primera pantalla (Información de la ruta)
   Widget _buildFirstScreen(vilaModels.Route route) {
-    return Container(
-      child: Text(route.name),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CarouselSlider.builder(
+            options: ImageCarousel.carouselOptions(),
+            itemCount: route.places.length,
+            itemBuilder: (context, index, realIndex) {
+              var place = route.places[index];
+              return ImageCarousel(article: place);
+            },
+          ),
+          Divider(),
+          Text(route.description),
+          Divider(),
+        ],
+      ),
     );
   }
-
-
 
   // Método para construir la segunda pantalla (Lista de lugares)
   Widget _buildSecondScreen(vilaModels.Route route) {
@@ -101,6 +126,39 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ButtonStartRoute extends StatelessWidget {
+  const _ButtonStartRoute({
+    super.key,
+    required this.route,
+  });
+
+  final vilaModels.Route route;
+
+  @override
+  Widget build(BuildContext context) {
+    final uiProvider = Provider.of<UiProvider>(context);
+    // final openRouteService = OpenRouteService();
+
+    return FloatingActionButton(
+      onPressed: () async {
+        // final routeRequesAPI = await openRouteService.getOpenRouteByRoute(route, 'foot-walking');
+
+        uiProvider.selectedMenuOpt = 2;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                MapScreen(route: route), 
+          ),
+        );
+        // Navigator.pushReplacementNamed(context, MapScreen.routeName, arguments: route);
+      },
+      child: Icon(Icons.map),
+      tooltip: 'Iniciar ruta',
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class RecipeFormProvider extends ChangeNotifier {
-  GlobalKey<FormState> formLogKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formRecipeKey = GlobalKey<FormState>();
 
   Recipe? recipe = null;
   bool _isLoading = false;
@@ -15,7 +15,7 @@ class RecipeFormProvider extends ChangeNotifier {
   }
 
   bool isValidForm() {
-    print(formLogKey.currentState?.validate());
-    return formLogKey.currentState?.validate() ?? false;
+    print(formRecipeKey.currentState?.validate());
+    return formRecipeKey.currentState?.validate() ?? false;
   }
 }

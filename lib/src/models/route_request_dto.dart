@@ -1,6 +1,34 @@
 import 'dart:convert';
-import 'package:latlong2/latlong.dart';
 
+class RouteRequestDTO {
+  List<List<double>> coordinates;
+  String profile;
+
+  RouteRequestDTO({
+    required this.coordinates,
+    required this.profile,
+  });
+
+  factory RouteRequestDTO.fromJson(String str) =>
+      RouteRequestDTO.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory RouteRequestDTO.fromMap(Map<String, dynamic> json) => RouteRequestDTO(
+        coordinates: List<List<double>>.from(json["coordinates"]
+            .map((x) => List<double>.from(x.map((x) => x?.toDouble())))),
+        profile: json["profile"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "coordinates": List<dynamic>.from(
+            coordinates.map((x) => List<dynamic>.from(x.map((x) => x)))),
+        "profile": profile,
+      };
+}
+
+
+/*
 class RouteRequestDTO {
   final List<List<double>> coordinates;
   final String profile;
@@ -33,3 +61,4 @@ class RouteResponse {
     return RouteResponse(coordinates: points);
   }
 }
+*/

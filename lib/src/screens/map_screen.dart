@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
-import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/places_provider.dart';
 import 'package:vila_tour_pmdm/src/services/place_service.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 
 class MapScreen extends StatefulWidget {
+  vilaModels.Route? route;
   static const routeName = 'map_screen';
 
   static final Map<String, IconData> categoryIcons = {
@@ -35,7 +38,7 @@ class MapScreen extends StatefulWidget {
     'Mirador': Icons.camera_alt_rounded,
     'Cueva': Icons.landscape_rounded,
     'Lago': Icons.water_rounded,
-    'Puente':Icons.linear_scale_outlined,
+    'Puente': Icons.linear_scale_outlined,
     'Faro': Icons.lightbulb_circle_rounded,
     'Restaurante': Icons.restaurant_outlined,
     'Hotel': Icons.hotel_rounded,
@@ -45,7 +48,6 @@ class MapScreen extends StatefulWidget {
   };
 
   static final Map<String, Color> categoryColors = {
-   
     'Playa': const Color.fromARGB(255, 243, 152, 33),
     'Montaña': const Color.fromARGB(255, 155, 41, 12),
     'Museo': const Color.fromARGB(255, 143, 138, 132),
@@ -58,13 +60,13 @@ class MapScreen extends StatefulWidget {
     'Centro cultrular': const Color.fromARGB(255, 243, 152, 33),
     'Zona arqueologica': const Color.fromARGB(255, 243, 152, 33),
     'Teatro': const Color.fromARGB(255, 180, 9, 180),
-    'Mercado':const Color.fromARGB(255, 243, 152, 33),
+    'Mercado': const Color.fromARGB(255, 243, 152, 33),
     'Paseo Marítimo': const Color.fromARGB(255, 243, 152, 33),
-    'Reserva Natural': const Color.fromARGB(255, 243, 152, 33) ,
+    'Reserva Natural': const Color.fromARGB(255, 243, 152, 33),
     'Mirador': const Color.fromARGB(255, 243, 152, 33),
     'Cueva': const Color.fromARGB(255, 243, 152, 33),
     'Lago': const Color.fromARGB(255, 243, 152, 33),
-    'Puente':const Color.fromARGB(255, 243, 152, 33),
+    'Puente': const Color.fromARGB(255, 243, 152, 33),
     'Faro': const Color.fromARGB(255, 243, 152, 33),
     'Restaurante': const Color.fromARGB(255, 243, 152, 33),
     'Hotel': const Color.fromARGB(255, 243, 152, 33),
@@ -74,7 +76,8 @@ class MapScreen extends StatefulWidget {
   };
 
   static List<String> selectedCategories = List.from(categoryIcons.keys);
-  static List<Place> places = [];
+  static List<vilaModels.Place> places = [];
+  MapScreen({this.route});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -87,6 +90,9 @@ class _MapScreenState extends State<MapScreen> {
   bool _showList = false;
   double? _heading;
   bool _isMapboxLayerActive = false;
+  final openRouteService = OpenRouteService();
+  vilaModels.ResponseRouteAPI? routeResponse;
+  List<LatLng>? decodedGeometry;
 
   @override
   void initState() {
@@ -133,6 +139,15 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  void loadRouteResponse() async {
+    if (widget.route != null) {
+      routeResponse = await openRouteService.getOpenRouteByRoute(
+          widget.route!, 'foot-walking');
+    }
+    decodedGeometry =
+        await _decodeGeometry(routeResponse!.routes.first.geometry);
+  }
+
   void _updateMarkers() {
     setState(() {
       _loadMarkers();
@@ -164,8 +179,24 @@ class _MapScreenState extends State<MapScreen> {
     _mapController.move(LatLng(position.latitude, position.longitude), 15.0);
   }
 
+  // Función para decodificar la cadena `geometry` usando flutter_polyline_points
+  Future<List<LatLng>> _decodeGeometry(String geometry) async {
+    PolylinePoints polylinePoints = PolylinePoints();
+    List<PointLatLng> decodedPoints =
+        await polylinePoints.decodePolyline(geometry);
+
+    // Convertir los puntos decodificados a una lista de LatLng
+    List<LatLng> latLngPoints = decodedPoints
+        .map((point) => LatLng(point.latitude, point.longitude))
+        .toList();
+
+    return latLngPoints;
+  }
+
   @override
   Widget build(BuildContext context) {
+    //final vilaModels.Route? route = ModalRoute.of(context)?.settings.arguments as vilaModels.Route;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -180,9 +211,19 @@ class _MapScreenState extends State<MapScreen> {
             children: [
               TileLayer(
                 urlTemplate: _isMapboxLayerActive
-                ? 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
-                : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    ? 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+                    : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
+              if (widget.route != null)
+                PolylineLayer(
+                  polylines: [
+                    Polyline(
+                      points: decodedGeometry!,
+                      strokeWidth: 4.0,
+                      color: Colors.blue,
+                    ),
+                  ],
+                ),
               PopupMarkerLayer(
                 options: PopupMarkerLayerOptions(
                   markers: _markers,
@@ -198,8 +239,9 @@ class _MapScreenState extends State<MapScreen> {
                                         marker.point.latitude &&
                                     p.coordinate.longitude ==
                                         marker.point.longitude,
-                                orElse: () => Place.nullPlace(),
+                                orElse: () => vilaModels.Place.nullPlace(),
                               );
+
                       return Container(
                         width: 300,
                         height: 170,
@@ -208,7 +250,8 @@ class _MapScreenState extends State<MapScreen> {
                                 color: Colors.white,
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),
-                                  child: Text(AppLocalizations.of(context).translate('place404')),
+                                  child: Text(AppLocalizations.of(context)
+                                      .translate('place404')),
                                 ),
                               )
                             : ArticleBox(article: place),
@@ -293,8 +336,8 @@ class SearchBoxFiltered extends StatefulWidget {
 class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
   PlaceService placeService = PlaceService();
   TextEditingController _controller = TextEditingController();
-  List<Place> _places = []; // Datos iniciales
-  List<Place> _filteredPlaces = [];
+  List<vilaModels.Place> _places = []; // Datos iniciales
+  List<vilaModels.Place> _filteredPlaces = [];
   bool _showList = false;
   String? _selectedMarkerId; // Variable para el marcador seleccionado
 
@@ -329,7 +372,7 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
     });
   }
 
-  void _onPlaceTap(Place place) {
+  void _onPlaceTap(vilaModels.Place place) {
     _controller.text = place.name;
     setState(() {
       _showList = false;
