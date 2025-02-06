@@ -70,7 +70,6 @@ class UserPreferences {
     final expiryDate = DateTime.fromMillisecondsSinceEpoch(_tokenDurationMs!);
     return expiryDate.difference(DateTime.now());
   }
-}
 
   Future<void> saveLanguage(String languageCode) async {
     await _prefs.write(key: 'language', value: languageCode);
