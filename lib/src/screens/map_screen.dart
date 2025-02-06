@@ -98,6 +98,7 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     _loadMarkers();
+    _loadRouteResponse();
   }
 
   void _listenToCompass() {
@@ -139,7 +140,7 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  void loadRouteResponse() async {
+  void _loadRouteResponse() async {
     if (widget.route != null) {
       routeResponse = await openRouteService.getOpenRouteByRoute(
           widget.route!, 'foot-walking');
@@ -214,7 +215,7 @@ class _MapScreenState extends State<MapScreen> {
                     ? 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
                     : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
-              if (widget.route != null)
+              if (decodedGeometry != null)
                 PolylineLayer(
                   polylines: [
                     Polyline(
