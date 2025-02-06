@@ -215,7 +215,7 @@ class _MapScreenState extends State<MapScreen> {
                     : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
               if (widget.route != null)
-                PolylineLayer(
+                /*PolylineLayer(
                   polylines: [
                     Polyline(
                       points: decodedGeometry!,
@@ -223,7 +223,7 @@ class _MapScreenState extends State<MapScreen> {
                       color: Colors.blue,
                     ),
                   ],
-                ),
+                ),*/
               PopupMarkerLayer(
                 options: PopupMarkerLayerOptions(
                   markers: _markers,

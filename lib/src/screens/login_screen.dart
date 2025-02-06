@@ -123,10 +123,6 @@ class _LoginForm extends StatelessWidget {
               if (value == null || value.isEmpty) {
                 return AppLocalizations.of(context).translate('completeFields');
               }
-              /*final regex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d).+$');
-              if (!regex.hasMatch(value)) {
-                return 'Debe contener al menos un número';
-              }*/
               return null;
             },
             autocorrect: false,
@@ -201,7 +197,7 @@ class _Botones extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: AppLocalizations.of(context).translate('register'),
+                      text: ' ' + AppLocalizations.of(context).translate('register'),
                       style: TextStyle(
                         color: Color.fromARGB(210, 11, 145, 185),
                       ),
