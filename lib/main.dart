@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en'), Locale('es'), Locale('gl')],
+      supportedLocales: const [Locale('en'), Locale('es'), Locale('gl'), Locale('vl')],
       routes: getApplicationRoutes(),
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(

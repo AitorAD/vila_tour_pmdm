@@ -8,10 +8,8 @@ class UserPreferences {
   static UserPreferences get instance => _instance;
 
   final FlutterSecureStorage _prefs = FlutterSecureStorage();
-
   String? _token;
   int? _tokenDurationMs;
-
   String? get token => _token;
   int? get tokenDurationMs => _tokenDurationMs;
 
@@ -81,4 +79,3 @@ class UserPreferences {
     return await _prefs.read(key: 'language') ?? 'en';
   }
 }
-
