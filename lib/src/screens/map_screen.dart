@@ -144,9 +144,10 @@ class _MapScreenState extends State<MapScreen> {
     if (widget.route != null) {
       routeResponse = await openRouteService.getOpenRouteByRoute(
           widget.route!, 'foot-walking');
+      decodedGeometry =
+          await _decodeGeometry(routeResponse!.routes.first.geometry);
+      setState(() {}); // Solo actualiza cuando la geometría ya esté lista.
     }
-    decodedGeometry =
-        await _decodeGeometry(routeResponse!.routes.first.geometry);
   }
 
   void _updateMarkers() {
@@ -215,16 +216,17 @@ class _MapScreenState extends State<MapScreen> {
                     ? 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
                     : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
-              if (decodedGeometry != null)
-                PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: decodedGeometry!,
-                      strokeWidth: 4.0,
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),
+              PolylineLayer<Polyline>(
+                polylines: decodedGeometry != null
+                    ? [
+                        Polyline(
+                          points: decodedGeometry!,
+                          strokeWidth: 4.0,
+                          color: Colors.blue,
+                        ),
+                      ]
+                    : [],
+              ),
               PopupMarkerLayer(
                 options: PopupMarkerLayerOptions(
                   markers: _markers,
