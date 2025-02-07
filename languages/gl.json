@@ -101,5 +101,7 @@
     "requiredPassword": "O contrasinal é obrigatorio",
     "passwordToLong": "O contrasinal é demasiado longo",
     "password1": "Debe conter polo menos un número",
-    "passwordNotMatch": "Os contrasinais non coinciden"
+    "passwordNotMatch": "Os contrasinais non coinciden",
+    "searchIngredients": "Buscar ingredientes",
+    "userModSuccesful": "Usuario modificado con éxito"
 }

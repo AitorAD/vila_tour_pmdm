@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
@@ -87,21 +88,33 @@ class SessionManager extends StatefulWidget {
 }
 
 class _SessionManagerState extends State<SessionManager> {
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
     _checkTokenExpiration();
   }
-
+ 
   Future<void> _checkTokenExpiration() async {
     final userPreferences = UserPreferences.instance;
-    while (true) {
-      await Future.delayed(const Duration(seconds: 1));
-      if (!userPreferences.isTokenValid()) {
-        _showSessionExpiredDialog();
-        break;
-      }
+    final expiryDate = await userPreferences.getExpirationDate();
+
+    if (expiryDate != null && DateTime.now().isBefore(expiryDate)) {
+      final remainingDuration = expiryDate.difference(DateTime.now());
+      _startTokenExpiryTimer(remainingDuration);
+    } else {
+      _showSessionExpiredDialog();
     }
+  }
+
+  void _startTokenExpiryTimer(Duration duration) {
+    _timer?.cancel(); // Cancelar cualquier temporizador previo
+    _timer = Timer(duration, _handleTokenExpiry);
+  }
+
+  void _handleTokenExpiry() {
+    _showSessionExpiredDialog();
   }
 
   void _showSessionExpiredDialog() {
@@ -130,6 +143,12 @@ class _SessionManagerState extends State<SessionManager> {
     final loginService = Provider.of<LoginService>(context, listen: false);
     await loginService.logout(context);
     Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override

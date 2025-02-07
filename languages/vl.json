@@ -101,5 +101,7 @@
     "requiredPassword": "La contrasenya és obligatòria",
     "passwordToLong": "La contrasenya és massa llarga",
     "password1": "Ha de contindre almenys un número",
-    "passwordNotMatch": "Les contrasenyes no coincideixen"
+    "passwordNotMatch": "Les contrasenyes no coincideixen",
+    "searchIngredients": "Buscar ingredients",
+    "userModSuccesful": "Usuari modificat amb èxit"
 }

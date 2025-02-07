@@ -52,7 +52,7 @@ class LoginService extends ChangeNotifier {
   }
 
   void _startSessionTimer(int durationMs) {
-    _sessionTimer?.cancel();  // Cancelar cualquier temporizador previo
+    _sessionTimer?.cancel(); // Cancelar temporizadores previos
     _sessionTimer = Timer(Duration(milliseconds: durationMs), () {
       _handleSessionExpiry();
     });

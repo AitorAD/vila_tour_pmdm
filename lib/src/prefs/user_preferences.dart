@@ -42,8 +42,21 @@ class UserPreferences {
   Future<void> saveToken(String token, int tokenDurationMs) async {
     await _prefs.write(key: 'token', value: token);
     await _prefs.write(key: 'expiration', value: tokenDurationMs.toString());
+
+    // Guardar la fecha de expiración
+    final expiryDate = DateTime.now().add(Duration(milliseconds: tokenDurationMs));
+    await _prefs.write(key: 'expirationDate', value: expiryDate.toIso8601String());
+
     _token = token;
     _tokenDurationMs = tokenDurationMs;
+  }
+
+  Future<DateTime?> getExpirationDate() async {
+    final expiryDateString = await _prefs.read(key: 'expirationDate');
+    if (expiryDateString != null) {
+      return DateTime.parse(expiryDateString);
+    }
+    return null;
   }
 
   Future<void> deleteToken() async {

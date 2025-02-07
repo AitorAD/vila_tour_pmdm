@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/providers/user_form_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
+import 'package:vila_tour_pmdm/src/services/login_service.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
@@ -68,13 +71,16 @@ class UserScreen extends StatelessWidget {
                       bool isModified = await userService.modifyUser(
                           currentUser, userFormProvider.user!);
                       if (isModified) {
-                        message = AppLocalizations.of(context).translate('userModSuccesful');
+                        message = AppLocalizations.of(context)
+                            .translate('userModSuccesful');
                         userFormProvider.isEditing = false;
                       } else {
-                        message = AppLocalizations.of(context).translate('userModError');
+                        message = AppLocalizations.of(context)
+                            .translate('userModError');
                       }
                     } else {
-                      message = AppLocalizations.of(context).translate('fillFields');
+                      message =
+                          AppLocalizations.of(context).translate('fillFields');
                     }
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text(message)));
@@ -104,31 +110,76 @@ class UserScreen extends StatelessWidget {
   }
 
   Drawer drawer(BuildContext context) {
-    return Drawer(
-      width: double.infinity,
-      child: Column(
-        children: [
-          BarScreenArrow(
-            labelText: AppLocalizations.of(context)!.translate('settings'),
-            arrowBack: true,
+  return Drawer(
+    width: MediaQuery.of(context).size.width * 0.75, // Ancho del drawer (75% de la pantalla)
+    child: Column(
+      children: [
+        // Encabezado del Drawer
+        UserAccountsDrawerHeader(
+          accountName: Text(
+            currentUser.username, // Nombre del usuario
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.sunny),
-              ),
-            ],
+          accountEmail: Text(
+            currentUser.email, // Correo del usuario
+            style: const TextStyle(fontSize: 14),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, LanguagesScreen.routeName);
-            },
-            icon: Icon(Icons.language),
-          )
-        ],
-      ),
-    );
+          currentAccountPicture: CircleAvatar(
+            backgroundColor: Colors.blue,
+            child: Text(
+              currentUser.username[0].toUpperCase(), // Inicial del nombre del usuario
+              style: const TextStyle(fontSize: 30, color: Colors.white),
+            ),
+          ),
+          decoration: defaultDecoration(0)
+        ),
+
+        // Sección de tema
+        ListTile(
+          leading: const Icon(Icons.sunny, color: Colors.orange),
+          title: Text(
+            AppLocalizations.of(context).translate('theme'),
+            style: const TextStyle(fontSize: 16),
+          ),
+          onTap: () {
+            // Cambiar el tema de la app
+          },
+        ),
+
+        // Sección de idioma
+        ListTile(
+          leading: const Icon(Icons.language, color: Colors.blue),
+          title: Text(
+            AppLocalizations.of(context).translate('language'),
+            style: const TextStyle(fontSize: 16),
+          ),
+          onTap: () {
+            Navigator.pushNamed(context, LanguagesScreen.routeName);
+          },
+        ),
+
+        const Divider(), // Línea divisoria
+
+        // Sección de cerrar sesión
+        ListTile(
+          leading: const Icon(Icons.logout, color: Colors.red),
+          title: Text(
+            AppLocalizations.of(context).translate('logout'),
+            style: const TextStyle(fontSize: 16, color: Colors.red),
+          ),
+          onTap: () => logout(context),
+        ),
+      ],
+    ),
+  );
+}
+
+  void logout(BuildContext context){
+    final loginService = Provider.of<LoginService>(context, listen: false);
+    loginService.logout(context);
+
+    final uiProvider = Provider.of<UiProvider>(context, listen: false);
+    uiProvider.selectedMenuOpt = 0;
   }
 }
 
@@ -175,7 +226,8 @@ class _ProfileForm extends StatelessWidget {
             buildTextField(
               initialValue: currentUser.name,
               label: AppLocalizations.of(context).translate('name'),
-              hintText: currentUser.name ?? AppLocalizations.of(context).translate('yourname'),
+              hintText: currentUser.name ??
+                  AppLocalizations.of(context).translate('yourname'),
               onChanged: (value) {
                 if (value.isEmpty) {
                   userFormProvider.user?.name = null;
@@ -191,7 +243,8 @@ class _ProfileForm extends StatelessWidget {
             buildTextField(
               initialValue: currentUser.surname,
               label: AppLocalizations.of(context).translate('surname'),
-              hintText: currentUser.surname ?? AppLocalizations.of(context).translate('yourSurname'),
+              hintText: currentUser.surname ??
+                  AppLocalizations.of(context).translate('yourSurname'),
               onChanged: (value) {
                 if (value.isEmpty) {
                   userFormProvider.user?.surname = null;

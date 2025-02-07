@@ -101,5 +101,7 @@
     "requiredPassword": "La contraseña es obligatoria",
     "passwordToLong":"La contraseña es demasiado larga",
     "password1": "Debe contener al menos un numero",
-    "passwordNotMatch": "Las contraeñas no coinciden"
+    "passwordNotMatch": "Las contraeñas no coinciden",
+    "searchIngredients": "Buscar ingredientes",
+    "userModSuccesful": "Usuario modificado con éxito"
 }

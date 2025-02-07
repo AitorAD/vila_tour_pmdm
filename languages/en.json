@@ -101,5 +101,7 @@
     "requiredPassword": "Password is required",
     "passwordToLong": "Password is too long",
     "password1": "Must contain at least one number",
-    "passwordNotMatch": "Passwords do not match"
+    "passwordNotMatch": "Passwords do not match",
+    "searchIngredients": "Search ingredients",
+    "userModSuccesful": "User successfully modified"
 }
