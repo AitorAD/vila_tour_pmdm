@@ -46,6 +46,8 @@ class RecipeService {
       final url = Uri.parse('$_baseUrl/recipes');
       final String jsonBody = jsonEncode(recipe.toMap());
 
+      print('RECETA JSON BODY: ' + jsonBody);
+
       final response = await http.post(
         url,
         headers: {

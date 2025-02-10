@@ -7,7 +7,6 @@ import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 
 class ImageService {
-
   Future<List<customImage.Image>> getImagesByArticle(Article article) async {
     final url = Uri.parse('$baseURL/images/getImagesByArticle/${article.id}');
 
@@ -21,7 +20,8 @@ class ImageService {
       },
     );
 
-    List<customImage.Image> images = customImage.Image.fromJsonList(jsonDecode(response.body));
+    List<customImage.Image> images =
+        customImage.Image.fromJsonList(jsonDecode(response.body));
     return images;
   }
 
@@ -53,6 +53,8 @@ class ImageService {
     try {
       final String jsonBody = jsonEncode(image.toMap());
 
+      print('IMAGE JSON BODY' + jsonBody);
+
       final response = await http.post(
         url,
         headers: {
@@ -61,6 +63,8 @@ class ImageService {
         },
         body: jsonBody,
       );
+
+      print('IMAGE RESPONSE BODY' + response.body);
 
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseData = json.decode(response.body);

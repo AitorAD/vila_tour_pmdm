@@ -76,15 +76,44 @@ class MapScreen extends StatefulWidget {
   };
 
   static final List<Map<String, dynamic>> profiles = [
-  {'name': 'Caminando', 'icon': Icons.directions_walk},
-  {'name': 'Senderismo', 'icon': Icons.hiking},
-  {'name': 'Bicicleta', 'icon': Icons.directions_bike},
-  {'name': 'Bici Montaña', 'icon': Icons.electric_bike},
-  {'name': 'Coche', 'icon': Icons.directions_car},
-  {'name': 'Camión', 'icon': Icons.fire_truck},
-  {'name': 'Bus', 'icon': Icons.directions_bus},
-  {'name': 'Silla Ruedas', 'icon': Icons.accessible},
-];
+    {
+      'name': 'Caminando',
+      'icon': Icons.directions_walk,
+      'ors_profile': 'foot-walking'
+    },
+    {'name': 'Senderismo', 'icon': Icons.hiking, 'ors_profile': 'foot-hiking'},
+    {
+      'name': 'Bicicleta',
+      'icon': Icons.directions_bike,
+      'ors_profile': 'cycling-regular'
+    },
+    {
+      'name': 'Bici Montaña',
+      'icon': Icons.electric_bike,
+      'ors_profile': 'cycling-mountain'
+    },
+    {
+      'name': 'Bici de Carretera',
+      'icon': Icons.pedal_bike,
+      'ors_profile': 'cycling-road'
+    },
+    {
+      'name': 'Bici Eléctrica',
+      'icon': Icons.electric_bike,
+      'ors_profile': 'cycling-electric'
+    },
+    {
+      'name': 'Coche',
+      'icon': Icons.directions_car,
+      'ors_profile': 'driving-car'
+    },
+    {'name': 'Camión', 'icon': Icons.fire_truck, 'ors_profile': 'driving-hgv'},
+    {
+      'name': 'Silla de Ruedas',
+      'icon': Icons.accessible,
+      'ors_profile': 'wheelchair'
+    },
+  ];
 
   static List<String> selectedCategories = List.from(categoryIcons.keys);
   static List<vilaModels.Place> places = [];
@@ -298,32 +327,43 @@ class _MapScreenState extends State<MapScreen> {
                 ),
 
                 // Lista de perfiles
-                SizedBox(
-  height: 40, // Ajusta la altura según necesites
-  child: ListView.builder(
-    scrollDirection: Axis.horizontal,
-    itemCount: profiles.length, // Se ajusta a la cantidad de perfiles
-    itemBuilder: (context, index) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            children: [
-              Icon(profiles[index]['icon'], color: Colors.black),
-              SizedBox(width: 5), // Espaciado entre icono y texto
-              Text(profiles[index]['name']),
-            ],
-          ),
-        ),
-      );
-    },
-  ),
-);
+                if (routeResponse != null)
+                  SizedBox(
+                    height: 40,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: MapScreen.profiles.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: GestureDetector(
+                            onTap: () {
+                              openRouteService.getOpenRouteWithPositionByRoute(
+                                widget.route!,
+                                MapScreen.profiles[index]['ors_profile'],
+                                null,
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                children: [
+                                  Icon(MapScreen.profiles[index]['icon'],
+                                      color: Colors.black),
+                                  SizedBox(width: 5),
+                                  Text(MapScreen.profiles[index]['name']),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
               ],
             ),
           ),

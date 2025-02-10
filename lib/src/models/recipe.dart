@@ -89,4 +89,13 @@ class Recipe extends Article {
   static List<Recipe> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((item) => Recipe.fromMap(item)).toList();
   }
+
+  @override
+  String toString() {
+    return 'Recipe(id: $id, name: $name, description: $description, '
+        'averageScore: $averageScore, creationDate: $creationDate, '
+        'lastModificationDate: $lastModificationDate, approved: $approved, '
+        'recent: $recent, ingredients: ${ingredients.map((i) => i.name).toList()}, '
+        'creator: ${creator.toString()})';
+  }
 }
