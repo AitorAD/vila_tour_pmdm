@@ -130,6 +130,8 @@ class _MapScreenState extends State<MapScreen> {
   bool _showList = false;
   double? _heading;
   bool _isMapboxLayerActive = false;
+  int _selectedProfileIndex = 0;
+
   final openRouteService = OpenRouteService();
   vilaModels.ResponseRouteAPI? routeResponse;
   List<LatLng>? decodedGeometry;
@@ -184,8 +186,11 @@ class _MapScreenState extends State<MapScreen> {
     if (widget.route != null) {
       Position currentPosition = await Geolocator.getCurrentPosition();
 
+      String profile = MapScreen.profiles[_selectedProfileIndex]['ors_profile'];
+      print('PROFILE SELECTED: ' + profile);
+
       routeResponse = await openRouteService.getOpenRouteWithPositionByRoute(
-          widget.route!, 'foot-walking', currentPosition);
+          widget.route!, profile, currentPosition);
 
       decodedGeometry =
           await _decodeGeometry(routeResponse!.routes.first.geometry);
@@ -338,16 +343,28 @@ class _MapScreenState extends State<MapScreen> {
                           padding: EdgeInsets.symmetric(horizontal: 5),
                           child: GestureDetector(
                             onTap: () {
+                              setState(() {
+                                _selectedProfileIndex = index;
+                              });
+                              _loadRouteResponse();
+                              /*
                               openRouteService.getOpenRouteWithPositionByRoute(
                                 widget.route!,
                                 MapScreen.profiles[index]['ors_profile'],
                                 null,
                               );
+                              */
                             },
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  width: 3,
+                                  color: _selectedProfileIndex == index
+                                      ? Colors.blue
+                                      : const Color.fromARGB(0, 0, 0, 0),
+                                ),
                               ),
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               child: Row(

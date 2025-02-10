@@ -345,9 +345,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     String base64Image =
                         await fileToBase64(File(selectedImage!.path));
 
-                    customImage.Image image = customImage.Image(
-                        path: base64Image, article: createdRecipe.id);
-
+                    // customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe.id);
+                    customImage.Image image = customImage.Image(path: base64Image);
                     print('IMAGE ID ARTICLE:' + createdRecipe.id.toString());
 
                     await imageService.uploadImage(image);
