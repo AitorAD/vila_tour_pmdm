@@ -347,13 +347,6 @@ class _MapScreenState extends State<MapScreen> {
                                 _selectedProfileIndex = index;
                               });
                               _loadRouteResponse();
-                              /*
-                              openRouteService.getOpenRouteWithPositionByRoute(
-                                widget.route!,
-                                MapScreen.profiles[index]['ors_profile'],
-                                null,
-                              );
-                              */
                             },
                             child: Container(
                               decoration: BoxDecoration(
