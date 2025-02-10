@@ -279,7 +279,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                   return AlertDialog(
                     backgroundColor: Colors.white,
                     title:  Text(AppLocalizations.of(context).translate('confirmRecipe')),
-                    content: Text(AppLocalizations.of(context).translate('sendrecipeMessage')),
+                    content: Text(AppLocalizations.of(context).translate('sendRecipeMessage')),
                     actions: <Widget>[
                       TextButton(
                         child: Text(AppLocalizations.of(context).translate('cancel'), style: TextStyle(color: Colors.black)),
@@ -318,7 +318,6 @@ class _UploadRecipeState extends State<UploadRecipe> {
 
                   Navigator.pushReplacementNamed(context, HomePage.routeName);
                 } catch (e) {
-                  print("RECETAERROR:" + e.toString());
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(AppLocalizations.of(context).translate('recipeError')),

@@ -37,7 +37,6 @@ class CategoryIngredientProvider with ChangeNotifier {
   }
 
   void filterCategories(String query) {
-    print("Filtrando categorías con la query: $query"); // Verificar que la query se recibe
     if (query.isEmpty) {
       _filteredCategories = List.from(_categories); // Si no hay búsqueda, mostrar todas las categorías
     } else {
@@ -46,7 +45,6 @@ class CategoryIngredientProvider with ChangeNotifier {
               category.name.toLowerCase().contains(query.toLowerCase()))
           .toList(); // Filtrar según la búsqueda
     }
-    print("Categorías filtradas: $_filteredCategories"); // Verificar las categorías filtradas
     notifyListeners();
   }
 }

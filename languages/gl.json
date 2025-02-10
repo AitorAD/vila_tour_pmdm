@@ -103,5 +103,16 @@
     "password1": "Debe conter polo menos un número",
     "passwordNotMatch": "Os contrasinais non coinciden",
     "searchIngredients": "Buscar ingredientes",
-    "userModSuccesful": "Usuario modificado con éxito"
+    "userModSuccesful": "Usuario modificado con éxito",
+    "search_place": "Buscar lugar",
+    "theme": "Tema",
+    "language": "Idioma",
+    "logout": "Pechar sesión",
+    "selectLanguage": "Elexir idioma",
+    "expiredSession": "A túa sesión caducou. Por favor, inicia sesión de novo.",
+    "expiredSessionTitle": "Sesión caducada",
+    "noArticles": "Non se atoparon artigos",
+    "details": "Detalles",
+    "myRecipes": "As miñas receitas",
+    "favorites": "Favoritos"
 }

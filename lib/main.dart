@@ -123,15 +123,15 @@ class _SessionManagerState extends State<SessionManager> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Sesión expirada'),
-          content: const Text('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.'),
+          title: Text(AppLocalizations.of(context).translate('expiredSessionTitle')),
+          content: Text(AppLocalizations.of(context).translate('expiredSession')),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 _logout();
               },
-              child: const Text('Aceptar'),
+              child: Text(AppLocalizations.of(context).translate('accept')),
             ),
           ],
         );

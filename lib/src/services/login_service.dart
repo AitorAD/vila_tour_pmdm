@@ -36,6 +36,9 @@ class LoginService extends ChangeNotifier {
         int id = responseData['id'];
         currentUser = await UserService().getCurrentUser(id);
 
+        // Guardar la información del usuario en FlutterSecureStorage
+        await UserPreferences.instance.saveUser(currentUser);
+
         _startSessionTimer(tokenDurationMs);
 
         return Result.success;
@@ -71,6 +74,7 @@ class LoginService extends ChangeNotifier {
             actions: [
               TextButton(
                 onPressed: () {
+                  Navigator.of(context).pop();
                   _logout(context);
                 },
                 child: const Text('Aceptar'),
