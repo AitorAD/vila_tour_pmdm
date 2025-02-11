@@ -36,6 +36,9 @@ class LoginService extends ChangeNotifier {
         int id = responseData['id'];
         currentUser = await UserService().getCurrentUser(id);
 
+        // Guardar la información del usuario en FlutterSecureStorage
+        await UserPreferences.instance.saveUser(currentUser);
+
         _startSessionTimer(tokenDurationMs);
 
         return Result.success;
@@ -52,7 +55,7 @@ class LoginService extends ChangeNotifier {
   }
 
   void _startSessionTimer(int durationMs) {
-    _sessionTimer?.cancel();  // Cancelar cualquier temporizador previo
+    _sessionTimer?.cancel(); // Cancelar temporizadores previos
     _sessionTimer = Timer(Duration(milliseconds: durationMs), () {
       _handleSessionExpiry();
     });
@@ -71,6 +74,7 @@ class LoginService extends ChangeNotifier {
             actions: [
               TextButton(
                 onPressed: () {
+                  Navigator.of(context).pop();
                   _logout(context);
                 },
                 child: const Text('Aceptar'),
@@ -129,9 +133,9 @@ class LoginService extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         // Registro exitoso, intentar iniciar sesión automáticamente
-        final loginResult = await this.login(username, password);
+        final loginResult = await login(username, password);
         return loginResult == Result.success ? Result.success : loginResult;
       } else if (response.statusCode == 400) {
         final responseData = json.decode(response.body);

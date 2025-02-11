@@ -5,7 +5,7 @@ import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class PlacesScreen extends StatefulWidget {
-  static final routeName = 'places_screen';
+  static const routeName = 'places_screen';
   const PlacesScreen({super.key});
 
   @override
@@ -102,10 +102,10 @@ class _PlacesScreenState extends State<PlacesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          Positioned.fill(
+          const Positioned.fill(
             child: WavesWidget(),
           ),
           Column(
@@ -135,6 +135,8 @@ class _PlacesScreenState extends State<PlacesScreen> {
                       final places = _filteredPlaces.isEmpty
                           ? snapshot.data!
                           : _filteredPlaces;
+
+                      places.sort((a, b) => a.name.compareTo(b.name));
 
                       return ListView.builder(
                         padding: EdgeInsets.zero,

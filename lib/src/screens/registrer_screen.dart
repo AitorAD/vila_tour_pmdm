@@ -75,7 +75,9 @@ class _RegisterScreenBody extends StatelessWidget {
   }
 
   Widget _buildHeaderBar(BuildContext context) {
-    return BarScreenArrow(labelText: AppLocalizations.of(context).translate('registerVerb'), arrowBack: true);
+    return BarScreenArrow(
+        labelText: AppLocalizations.of(context).translate('registerVerb'),
+        arrowBack: true);
   }
 
   Widget _buildRegisterForm({
@@ -105,7 +107,7 @@ class _RegisterScreenBody extends StatelessWidget {
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
-              label: AppLocalizations.of(context).translate('username'),
+              label: AppLocalizations.of(context).translate('password'),
               hintText: '**********',
               obscureText: true,
               onChanged: (value) => registerForm.changePassword(value),
@@ -117,8 +119,8 @@ class _RegisterScreenBody extends StatelessWidget {
               hintText: '**********',
               obscureText: true,
               onChanged: (value) => repeatedPassword = value,
-              validator: (value) =>
-                  validateRepeatedPassword(context, value, registerForm.password),
+              validator: (value) => validateRepeatedPassword(
+                  context, value, registerForm.password),
               enabled: true),
           const SizedBox(height: 40),
           _RegisterButton(
@@ -152,6 +154,8 @@ class _RegisterButton extends StatelessWidget {
             registerForm.password,
           );
 
+          print(result);
+
           // Manejar los resultados
           switch (result) {
             case Result.success:
@@ -161,7 +165,8 @@ class _RegisterButton extends StatelessWidget {
             case Result.invalidCredentials:
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context).translate('emailAoU')),
+                  content:
+                      Text(AppLocalizations.of(context).translate('emailAoU')),
                 ),
               );
               break;
@@ -169,8 +174,8 @@ class _RegisterButton extends StatelessWidget {
             case Result.noConnection:
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content:
-                      Text(AppLocalizations.of(context).translate('noConnection')),
+                  content: Text(
+                      AppLocalizations.of(context).translate('noConnection')),
                 ),
               );
               break;
@@ -178,7 +183,8 @@ class _RegisterButton extends StatelessWidget {
             case Result.serverError:
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context).translate('serverError')),
+                  content: Text(
+                      AppLocalizations.of(context).translate('serverError')),
                 ),
               );
               break;
@@ -186,7 +192,8 @@ class _RegisterButton extends StatelessWidget {
             case Result.unexpectedError:
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context).translate('unexpectedError')),
+                  content: Text(AppLocalizations.of(context)
+                      .translate('unexpectedError')),
                 ),
               );
               break;

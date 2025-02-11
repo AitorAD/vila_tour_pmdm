@@ -5,7 +5,7 @@ import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RecipesScreen extends StatefulWidget {
-  static final routeName = 'recipes_screen';
+  static const routeName = 'recipes_screen';
   const RecipesScreen({super.key});
 
   @override
@@ -110,10 +110,10 @@ class _RecipesScreenState extends State<RecipesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          Positioned.fill(
+          const Positioned.fill(
             child: WavesWidget(),
           ),
           Column(
@@ -138,7 +138,6 @@ class _RecipesScreenState extends State<RecipesScreen> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
-                      print(snapshot.error);
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Center(
@@ -149,8 +148,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
                           ? snapshot.data!
                           : _filteredRecipes;
 
-                      // Ordenar la lista por ID antes de mostrarla
-                      recipes.sort((a, b) => a.id.compareTo(b.id));
+                      recipes.sort((a, b) => a.name.compareTo(b.name));
 
                       // Elimina las recetas no aprobadas, de esta forma no se muestran
                       recipes.removeWhere((recipe) => recipe.approved == false);

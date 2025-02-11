@@ -3,12 +3,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
-import 'package:vila_tour_pmdm/src/providers/places_provider.dart';
-import 'package:vila_tour_pmdm/src/services/place_service.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
@@ -264,7 +262,6 @@ class _MapScreenState extends State<MapScreen> {
                     ? 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
                     : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
-
               // Pinta la ruta
               PolylineLayer<Polyline>(
                 polylines: decodedGeometry != null
@@ -395,7 +392,7 @@ class _MapScreenState extends State<MapScreen> {
                     },
                     backgroundColor: vilaBlueColor(),
                     focusColor: Colors.white,
-                    child: Icon(Icons.layers_outlined, color: Colors.white),
+                    child: const Icon(Icons.layers_outlined, color: Colors.white),
                   ),
                   SizedBox(height: 10),
                   FloatingActionButton(
@@ -500,7 +497,7 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
         Padding(
           padding: const EdgeInsets.only(top: 16),
           child: SearchBox(
-            hintText: "Buscar lugar",
+            hintText: AppLocalizations.of(context).translate('search_place'),
             controller: _controller,
             onChanged: (value) {
               _filterPlaces();
@@ -578,8 +575,8 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
                 ),
               ],
             ),
-            child: const Center(
-              child: Text("No se encontraron lugares."),
+            child: Center(
+              child: Text(AppLocalizations.of(context).translate('noPlaces')),
             ),
           ),
       ],

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/providers/review_form_provider.dart';
-import 'package:vila_tour_pmdm/src/services/config.dart';
-import 'package:vila_tour_pmdm/src/services/review_service.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class AddReviewScreen extends StatelessWidget {
-  static final routeName = 'add_review';
+  static const routeName = 'add_review';
 
   const AddReviewScreen({super.key});
 
@@ -20,7 +19,7 @@ class AddReviewScreen extends StatelessWidget {
     ReviewFormProvider reviewFormProvider = ReviewFormProvider();
 
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
           const WavesWidget(),
@@ -153,8 +152,7 @@ class _ReviewForm extends StatelessWidget {
 class StarRating extends StatefulWidget {
   final ReviewFormProvider reviewFormProvider;
 
-  const StarRating({Key? key, required this.reviewFormProvider})
-      : super(key: key);
+  const StarRating({super.key, required this.reviewFormProvider});
 
   @override
   _StarRatingState createState() => _StarRatingState();

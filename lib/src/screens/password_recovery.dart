@@ -5,9 +5,9 @@ import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class PasswordRecovery extends StatefulWidget {
-  const PasswordRecovery({Key? key}) : super(key: key);
+  const PasswordRecovery({super.key});
 
-  static final routeName = 'recovery_password_screen';
+  static const routeName = 'recovery_password_screen';
 
   @override
   State<PasswordRecovery> createState() => _PasswordRecoveryState();
@@ -38,7 +38,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                 child: IntrinsicHeight(
                   child: Column(
                     children: [
-                      SizedBox(height: 25),
+                      const SizedBox(height: 25),
                       BarScreenArrow(
                           labelText: AppLocalizations.of(context)
                               .translate('recoveryPassword'),
@@ -85,12 +85,12 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
             ),
             validator: (value) => EmailValidator.validateEmail(context, value),
           ),
-          SizedBox(height: 100),
+          const SizedBox(height: 100),
           CustomButton(
             text: AppLocalizations.of(context).translate('send'),
             onPressed: _sendRecoveryEmail,
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
         ],
       ),
     );
@@ -101,14 +101,14 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.check_circle_outline, size: 80, color: Colors.green),
-        SizedBox(height: 20),
+        const Icon(Icons.check_circle_outline, size: 80, color: Colors.green),
+        const SizedBox(height: 20),
         Text(
           AppLocalizations.of(context).translate('recoveryEmailSended'),
           style: textStyleVilaTourTitle(color: Colors.black),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
           AppLocalizations.of(context).translate('checkEmail'),
           textAlign: TextAlign.center,

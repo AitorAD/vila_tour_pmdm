@@ -4,20 +4,40 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
-import 'package:vila_tour_pmdm/src/providers/user_form_provider.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/services/config.dart';
-import 'package:vila_tour_pmdm/src/services/user_service.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
+import 'package:vila_tour_pmdm/src/theme/theme.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   static const routeName = 'user_screen';
   const UserScreen({super.key});
 
   @override
+  _UserScreenState createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, initialIndex: 1, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final userFormProvider = Provider.of<UserFormProvider>(context);
     final userService = Provider.of<UserService>(context);
 
@@ -25,10 +45,10 @@ class UserScreen extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      key: _scaffoldKey,
+      key: scaffoldKey,
       drawer: drawer(context),
-      bottomNavigationBar: CustomNavigationBar(),
-      body: Container(
+      bottomNavigationBar: const CustomNavigationBar(),
+      body: SizedBox(
         width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,99 +56,167 @@ class UserScreen extends StatelessWidget {
             BarScreenArrow(
               labelText: AppLocalizations.of(context).translate('profile'),
               arrowBack: false,
-              iconRight: iconRightBarMenu(_scaffoldKey),
+              iconRight: iconRightBarMenu(scaffoldKey),
             ),
             _Header(
               userService: userService,
               userFormProvider: userFormProvider,
             ),
-            _ProfileForm(userFormProvider: userFormProvider),
+            TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: AppLocalizations.of(context).translate('details')),
+                Tab(text: AppLocalizations.of(context).translate('myRecipes')),
+                Tab(text: AppLocalizations.of(context).translate('favorites')),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // Pestaña de Detalles
+                  _ProfileForm(userFormProvider: userFormProvider),
+                  // Pestaña de Mis Recetas (vacía por ahora)
+                  Center(
+                      child: Text(
+                          AppLocalizations.of(context).translate('myRecipes'))),
+                  // Pestaña de Favoritos (vacía por ahora)
+                  Center(
+                      child: Text(
+                          AppLocalizations.of(context).translate('favorites'))),
+                ],
+              ),
+            ),
           ],
         ),
       ),
-      floatingActionButton: userFormProvider.isEditing
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  heroTag: 'cancelButton',
-                  onPressed: () {
-                    userFormProvider.isEditing = false;
-                    userFormProvider.resetForm();
-                  },
-                  backgroundColor: Colors.red,
-                  child: const Icon(Icons.cancel),
-                ),
-                const SizedBox(width: 10),
-                FloatingActionButton(
-                  heroTag: 'saveButton',
-                  onPressed: () async {
-                    String message;
-                    if (userFormProvider.isValidForm()) {
-                      bool isModified = await userService.modifyUser(
-                          currentUser, userFormProvider.user!);
-                      if (isModified) {
-                        message = AppLocalizations.of(context).translate('userModSuccesful');
+      floatingActionButton: _tabController.index == 1
+          ? (userFormProvider.isEditing
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      heroTag: 'cancelButton',
+                      onPressed: () {
                         userFormProvider.isEditing = false;
-                      } else {
-                        message = AppLocalizations.of(context).translate('userModError');
-                      }
-                    } else {
-                      message = AppLocalizations.of(context).translate('fillFields');
-                    }
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(message)));
+                        userFormProvider.resetForm();
+                      },
+                      backgroundColor: Colors.red,
+                      child: const Icon(Icons.cancel),
+                    ),
+                    const SizedBox(width: 10),
+                    FloatingActionButton(
+                      heroTag: 'saveButton',
+                      onPressed: () async {
+                        String message;
+                        if (userFormProvider.isValidForm()) {
+                          bool isModified = await userService.modifyUser(
+                              currentUser, userFormProvider.user!);
+                          if (isModified) {
+                            message = AppLocalizations.of(context)
+                                .translate('userModSuccesful');
+                            userFormProvider.isEditing = false;
+                          } else {
+                            message = AppLocalizations.of(context)
+                                .translate('userModError');
+                          }
+                        } else {
+                          message = AppLocalizations.of(context)
+                              .translate('fillFields');
+                        }
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(message)));
+                      },
+                      child: const Icon(Icons.save),
+                    ),
+                  ],
+                )
+              : FloatingActionButton(
+                  heroTag: 'editButton',
+                  onPressed: () {
+                    userFormProvider.isEditing = true;
                   },
-                  child: const Icon(Icons.save),
-                ),
-              ],
-            )
-          : FloatingActionButton(
-              heroTag: 'editButton',
-              onPressed: () {
-                userFormProvider.isEditing = true;
-              },
-              child: const Icon(Icons.edit),
-            ),
+                  child: const Icon(Icons.edit),
+                ))
+          : null,
     );
   }
 
-  IconButton iconRightBarMenu(GlobalKey<ScaffoldState> _scaffoldKey) {
+  IconButton iconRightBarMenu(GlobalKey<ScaffoldState> scaffoldKey) {
     return IconButton(
       icon: const Icon(Icons.more_vert, color: Colors.white, size: 28),
       onPressed: () {
-        _scaffoldKey.currentState
-            ?.openDrawer(); // Abrir el Drawer al presionar el icono
+        scaffoldKey.currentState?.openDrawer();
       },
     );
   }
 
   Drawer drawer(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return Drawer(
-      width: double.infinity,
+      width: MediaQuery.of(context).size.width * 0.75,
       child: Column(
         children: [
-          BarScreenArrow(
-            labelText: AppLocalizations.of(context)!.translate('settings'),
-            arrowBack: true,
-          ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.sunny),
+          UserAccountsDrawerHeader(
+              accountName: Text(
+                currentUser.username,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ],
+              accountEmail: Text(
+                currentUser.email,
+                style: const TextStyle(fontSize: 14),
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.blue,
+                child: Text(
+                  currentUser.username[0].toUpperCase(),
+                  style: const TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ),
+              decoration: defaultDecoration(0)),
+          ListTile(
+            leading: themeProvider.themeData == lightMode
+                ? const Icon(Icons.sunny, color: Colors.orange)
+                : const Icon(Icons.nightlight, color: Colors.blueGrey),
+            title: Text(
+              AppLocalizations.of(context).translate('theme'),
+              style: const TextStyle(fontSize: 16),
+            ),
+            onTap: () {
+              themeProvider.toggleTheme();
+            },
           ),
-          IconButton(
-            onPressed: () {
+          ListTile(
+            leading: const Icon(Icons.language, color: Colors.blue),
+            title: Text(
+              AppLocalizations.of(context).translate('language'),
+              style: const TextStyle(fontSize: 16),
+            ),
+            onTap: () {
               Navigator.pushNamed(context, LanguagesScreen.routeName);
             },
-            icon: Icon(Icons.language),
-          )
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: Text(
+              AppLocalizations.of(context).translate('logout'),
+              style: const TextStyle(fontSize: 16, color: Colors.red),
+            ),
+            onTap: () => logout(context),
+          ),
         ],
       ),
     );
+  }
+
+  void logout(BuildContext context) {
+    final loginService = Provider.of<LoginService>(context, listen: false);
+    loginService.logout(context);
+
+    final uiProvider = Provider.of<UiProvider>(context, listen: false);
+    uiProvider.selectedMenuOpt = 0;
   }
 }
 
@@ -143,7 +231,7 @@ class _ProfileForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
       child: Form(
         key: userFormProvider.formUserKey,
         child: Column(
@@ -175,7 +263,8 @@ class _ProfileForm extends StatelessWidget {
             buildTextField(
               initialValue: currentUser.name,
               label: AppLocalizations.of(context).translate('name'),
-              hintText: currentUser.name ?? AppLocalizations.of(context).translate('yourname'),
+              hintText: currentUser.name ??
+                  AppLocalizations.of(context).translate('yourname'),
               onChanged: (value) {
                 if (value.isEmpty) {
                   userFormProvider.user?.name = null;
@@ -191,7 +280,8 @@ class _ProfileForm extends StatelessWidget {
             buildTextField(
               initialValue: currentUser.surname,
               label: AppLocalizations.of(context).translate('surname'),
-              hintText: currentUser.surname ?? AppLocalizations.of(context).translate('yourSurname'),
+              hintText: currentUser.surname ??
+                  AppLocalizations.of(context).translate('yourSurname'),
               onChanged: (value) {
                 if (value.isEmpty) {
                   userFormProvider.user?.surname = null;
@@ -275,9 +365,9 @@ class _Header extends StatelessWidget {
 
   Future<void> _processImage(BuildContext context, userService,
       UserFormProvider userFormProvider, ImageSource imageSource) async {
-    final _picker = ImagePicker();
+    final picker = ImagePicker();
     final XFile? pickedFile =
-        await _picker.pickImage(source: imageSource, imageQuality: 100);
+        await picker.pickImage(source: imageSource, imageQuality: 100);
 
     if (pickedFile == null) {
       return;

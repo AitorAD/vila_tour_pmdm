@@ -8,11 +8,8 @@ import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/services/config.dart';
-import 'package:vila_tour_pmdm/src/services/image_service.dart';
-import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/recipe_image.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class UploadRecipe extends StatefulWidget {
@@ -66,7 +63,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
       bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          WavesWidget(),
+          const WavesWidget(),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
@@ -306,7 +303,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     title: Text(AppLocalizations.of(context)
                         .translate('confirmRecipe')),
                     content: Text(AppLocalizations.of(context)
-                        .translate('sendrecipeMessage')),
+                        .translate('sendRecipeMessage')),
                     actions: <Widget>[
                       TextButton(
                         child: Text(
@@ -356,13 +353,13 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     SnackBar(
                       content: Text(AppLocalizations.of(context)
                           .translate('recipeSended')),
+
                       duration: const Duration(seconds: 2),
                     ),
                   );
 
                   Navigator.pushReplacementNamed(context, HomePage.routeName);
                 } catch (e) {
-                  print("RECETAERROR:" + e.toString());
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(AppLocalizations.of(context)

@@ -41,7 +41,7 @@
     "festivlasAndTraditions": "Festivals and Traditions",
     "searchFestivals": "Search festivals",
     "searchPlaces": "Search places",
-    "searchrecipes": "Search recipes",
+    "searchRecipes": "Search recipes",
     "searchRoutes": "Search routes",
     "searchIngredientes": "Search ingredients",
     "noFestivals": "No festivals found.",
@@ -101,5 +101,18 @@
     "requiredPassword": "Password is required",
     "passwordToLong": "Password is too long",
     "password1": "Must contain at least one number",
-    "passwordNotMatch": "Passwords do not match"
+    "passwordNotMatch": "Passwords do not match",
+    "searchIngredients": "Search ingredients",
+    "userModSuccesful": "User successfully modified",
+    "search_place": "Search place",
+    "theme": "Theme",
+    "language": "Language",
+    "logout": "Logout",
+    "selectLanguage": "Select language",
+    "expiredSession": "Your session has expired. Please log in again.",
+    "expiredSessionTitle": "Session expired",
+    "noArticles": "No articles found",
+    "details": "Details",
+    "myRecipes": "My recipes",
+    "favorites": "Favorites"
 }

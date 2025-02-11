@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ArticleBox extends StatefulWidget {
   final Article article;
-  ArticleBox({required this.article});
+  const ArticleBox({super.key, required this.article});
   @override
   State<ArticleBox> createState() => _ArticleBoxState();
 }
@@ -33,7 +33,7 @@ class _ArticleBoxState extends State<ArticleBox> {
         ),
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Stack(
           children: [
             _BackgroundImage(widget: widget),
@@ -51,7 +51,7 @@ class _ArticleBoxState extends State<ArticleBox> {
 }
 
 class _Favorite extends StatefulWidget {
-  const _Favorite({super.key, required this.article});
+  const _Favorite({required this.article});
 
   final Article article;
 
@@ -106,9 +106,9 @@ class __FavoriteState extends State<_Favorite> {
           }
         },
         child: AnimatedSwitcher(
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           transitionBuilder: (Widget child, Animation<double> animation) {
-            return ScaleTransition(child: child, scale: animation);
+            return ScaleTransition(scale: animation, child: child);
           },
           child: Icon(
             getFavourite() ? Icons.favorite : Icons.favorite_border,
@@ -129,7 +129,7 @@ class __FavoriteState extends State<_Favorite> {
 }
 
 class _HowToGetThere extends StatelessWidget {
-  const _HowToGetThere({super.key, required this.article});
+  const _HowToGetThere({required this.article});
 
   final Article article;
 
@@ -144,13 +144,16 @@ class _HowToGetThere extends StatelessWidget {
               desiredAccuracy: LocationAccuracy.high);
           String destination;
           if (article is Place) {
-            destination = '${(article as Place).coordinate.latitude},${(article as Place).coordinate.longitude}';
+            destination =
+                '${(article as Place).coordinate.latitude},${(article as Place).coordinate.longitude}';
           } else if (article is Festival) {
-            destination = '${(article as Festival).coordinate.latitude},${(article as Festival).coordinate.longitude}';
+            destination =
+                '${(article as Festival).coordinate.latitude},${(article as Festival).coordinate.longitude}';
           } else {
             return;
           }
-          String url = 'https://www.google.com/maps/dir/?api=1&origin=${position.latitude},${position.longitude}&destination=$destination&travelmode=driving';
+          String url =
+              'https://www.google.com/maps/dir/?api=1&origin=${position.latitude},${position.longitude}&destination=$destination&travelmode=driving';
           if (await canLaunchUrl(Uri.parse(url))) {
             await launchUrl(Uri.parse(url));
           } else {
@@ -165,7 +168,6 @@ class _HowToGetThere extends StatelessWidget {
 
 class _FestivalInfo extends StatelessWidget {
   const _FestivalInfo({
-    super.key,
     required this.widget,
   });
 
@@ -183,7 +185,7 @@ class _FestivalInfo extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           color: Colors.black.withOpacity(0.4),
         ),
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -198,7 +200,7 @@ class _FestivalInfo extends StatelessWidget {
             ),
             Text(
               "${AppLocalizations.of(context).translate('place')}: ${(widget.article as Festival).coordinate.name}",
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
             Text(
               '${formatDate((widget.article as Festival).startDate)} - ${formatDate((widget.article as Festival).endDate)}',
@@ -229,7 +231,6 @@ class _FestivalInfo extends StatelessWidget {
 
 class _PlaceInfo extends StatelessWidget {
   const _PlaceInfo({
-    super.key,
     required this.widget,
   });
 
@@ -262,7 +263,7 @@ class _PlaceInfo extends StatelessWidget {
             ),
             Text(
               '${AppLocalizations.of(context).translate('place')}: ${(widget.article as Place).coordinate.name}',
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
             const SizedBox(height: 10),
             Row(
@@ -289,7 +290,6 @@ class _PlaceInfo extends StatelessWidget {
 
 class _RecipeInfo extends StatelessWidget {
   const _RecipeInfo({
-    super.key,
     required this.widget,
   });
 
@@ -303,35 +303,35 @@ class _RecipeInfo extends StatelessWidget {
       left: 0,
       right: 0,
       child: Container(
-        margin: EdgeInsets.only(left: 135),
+        margin: const EdgeInsets.only(left: 135),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
               topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
           color: Colors.black.withOpacity(0.4),
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               widget.article.name,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Row(
               children: [
                 PaintStars(
                     rating: (widget.article as Recipe).averageScore,
                     color: Colors.yellow),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(
                   (widget.article as Recipe).averageScore.toStringAsFixed(1),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                   ),
@@ -347,7 +347,6 @@ class _RecipeInfo extends StatelessWidget {
 
 class _BackgroundImage extends StatelessWidget {
   const _BackgroundImage({
-    super.key,
     required this.widget,
   });
 
@@ -369,7 +368,6 @@ class _BackgroundImage extends StatelessWidget {
 
 class _ImageRecipe extends StatelessWidget {
   const _ImageRecipe({
-    super.key,
     required this.widget,
   });
 
@@ -382,15 +380,16 @@ class _ImageRecipe extends StatelessWidget {
       height: 150,
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: 135,
             height: 150,
             child: FadeInImage(
-              placeholder: AssetImage('assets/logo.ico'),
+              placeholder: const AssetImage('assets/logo.ico'),
               image: widget.article.images.isNotEmpty
                   ? MemoryImage(
                       decodeImageBase64(widget.article.images.first.path))
-                  : AssetImage('assets/logo_foreground.png') as ImageProvider,
+                  : const AssetImage('assets/logo_foreground.png')
+                      as ImageProvider,
               fit: BoxFit.cover,
             ),
           ),
@@ -402,7 +401,6 @@ class _ImageRecipe extends StatelessWidget {
 
 class _ImageFestival extends StatelessWidget {
   const _ImageFestival({
-    super.key,
     required this.widget,
   });
 
@@ -411,10 +409,10 @@ class _ImageFestival extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FadeInImage(
-      placeholder: AssetImage('assets/logo.ico'),
+      placeholder: const AssetImage('assets/logo.ico'),
       image: widget.article.images.isNotEmpty
           ? MemoryImage(decodeImageBase64(widget.article.images.first.path))
-          : AssetImage('assets/logo_foreground.png') as ImageProvider,
+          : const AssetImage('assets/logo_foreground.png') as ImageProvider,
       width: double.infinity,
       height: 150,
       fit: BoxFit.cover,

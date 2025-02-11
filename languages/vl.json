@@ -41,7 +41,7 @@
     "festivlasAndTraditions": "Festes i Tradicions",
     "searchFestivals": "Buscar festes",
     "searchPlaces": "Buscar llocs",
-    "searchrecipes": "Buscar receptes",
+    "searchRecipes": "Buscar receptes",
     "searchRoutes": "Buscar rutes",
     "searchIngredientes": "Buscar ingredients",
     "noFestivals": "No s'han trobat festes.",
@@ -101,5 +101,18 @@
     "requiredPassword": "La contrasenya és obligatòria",
     "passwordToLong": "La contrasenya és massa llarga",
     "password1": "Ha de contindre almenys un número",
-    "passwordNotMatch": "Les contrasenyes no coincideixen"
+    "passwordNotMatch": "Les contrasenyes no coincideixen",
+    "searchIngredients": "Buscar ingredients",
+    "userModSuccesful": "Usuari modificat amb èxit",
+    "search_place": "Buscar lloc",
+    "theme": "Tema",
+    "language": "Idioma",
+    "logout": "Tancar sessió",
+    "selectLanguage": "Seleccionar idioma",
+    "expiredSession": "La teua sessió ha expirat. Per favor, inicia sessió de nou.",
+    "expiredSessionTitle": "Sessió expirada",
+    "noArticles": "No s'han trobat articles",
+    "details": "Detalls",
+    "myRecipes": "Les meues receptes",
+    "favorites": "Favorits"
 }

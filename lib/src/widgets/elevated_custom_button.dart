@@ -6,7 +6,7 @@ class ElevatedCustomButton extends StatelessWidget {
   final VoidCallback? onPressed; // Permite pasar una función como parámetro
   final double radius;
 
-  ElevatedCustomButton({
+  const ElevatedCustomButton({
     super.key,
     required this.text,
     required this.radius,
@@ -29,8 +29,7 @@ class ElevatedCustomButton extends StatelessWidget {
         onPressed: onPressed, // Ejecuta la función pasada
         child: Text(
           text,
-          style: textStyleVilaTour(
-              color: Colors.white), // Aplica el estilo del texto
+          style: textStyleVilaTour(color: Colors.white),
         ),
       ),
     );

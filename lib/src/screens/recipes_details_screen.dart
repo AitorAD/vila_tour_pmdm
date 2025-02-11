@@ -3,13 +3,10 @@ import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
-import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
-import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RecipeDetails extends StatefulWidget {
-  static final routeName = 'general_recipe';
+  static const routeName = 'general_recipe';
   const RecipeDetails({super.key});
 
   @override
@@ -55,7 +52,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
         : 0;
 
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       floatingActionButtonLocation: showFab ?
       FloatingActionButtonLocation.centerFloat :
       FloatingActionButtonLocation.endFloat,
@@ -70,7 +67,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
             )
           : FavoriteFloatingActionButton(article: recipe),
       body: Stack(children: [
-        WavesWidget(),
+        const WavesWidget(),
         Column(
           children: [
             BarScreenArrow(labelText: recipe.name, arrowBack: true),
@@ -127,17 +124,17 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           recipe.name,
                           style: textStyleVilaTourTitle(color: Colors.black),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Hero(
                           tag: recipe.id, // Mismo tag que en ArticleBox
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: FadeInImage(
-                              placeholder: AssetImage('assets/logo.ico'),
+                              placeholder: const AssetImage('assets/logo.ico'),
                               image: recipe.images.isNotEmpty
                                   ? MemoryImage(decodeImageBase64(
                                       recipe.images.first.path))
-                                  : AssetImage('assets/logo_foreground.png')
+                                  : const AssetImage('assets/logo_foreground.png')
                                       as ImageProvider,
                               width: double.infinity,
                               height: 200,
@@ -146,7 +143,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           ),
                         ),
 
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         // Row for rating stars
                         RatingRow(
                           averageScore: averageScore,
@@ -174,8 +171,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
 class IngredientsWrap extends StatelessWidget {
   final List<Ingredient> ingredients;
 
-  const IngredientsWrap({Key? key, required this.ingredients})
-      : super(key: key);
+  const IngredientsWrap({super.key, required this.ingredients});
 
   @override
   Widget build(BuildContext context) {

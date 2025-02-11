@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
@@ -26,7 +27,6 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => LoginFormProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => RegisterFormProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => LoginService()),
-      ChangeNotifierProvider(create: (_) => FestivalsProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => ThemeProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => RecipeFormProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => UiProvider(), lazy: false),
@@ -87,21 +87,33 @@ class SessionManager extends StatefulWidget {
 }
 
 class _SessionManagerState extends State<SessionManager> {
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
     _checkTokenExpiration();
   }
-
+ 
   Future<void> _checkTokenExpiration() async {
     final userPreferences = UserPreferences.instance;
-    while (true) {
-      await Future.delayed(const Duration(seconds: 1));
-      if (!userPreferences.isTokenValid()) {
-        _showSessionExpiredDialog();
-        break;
-      }
+    final expiryDate = await userPreferences.getExpirationDate();
+
+    if (expiryDate != null && DateTime.now().isBefore(expiryDate)) {
+      final remainingDuration = expiryDate.difference(DateTime.now());
+      _startTokenExpiryTimer(remainingDuration);
+    } else {
+      _showSessionExpiredDialog();
     }
+  }
+
+  void _startTokenExpiryTimer(Duration duration) {
+    _timer?.cancel(); // Cancelar cualquier temporizador previo
+    _timer = Timer(duration, _handleTokenExpiry);
+  }
+
+  void _handleTokenExpiry() {
+    _showSessionExpiredDialog();
   }
 
   void _showSessionExpiredDialog() {
@@ -110,15 +122,15 @@ class _SessionManagerState extends State<SessionManager> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Sesión expirada'),
-          content: const Text('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.'),
+          title: Text(AppLocalizations.of(context).translate('expiredSessionTitle')),
+          content: Text(AppLocalizations.of(context).translate('expiredSession')),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 _logout();
               },
-              child: const Text('Aceptar'),
+              child: Text(AppLocalizations.of(context).translate('accept')),
             ),
           ],
         );
@@ -130,6 +142,12 @@ class _SessionManagerState extends State<SessionManager> {
     final loginService = Provider.of<LoginService>(context, listen: false);
     await loginService.logout(context);
     Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
