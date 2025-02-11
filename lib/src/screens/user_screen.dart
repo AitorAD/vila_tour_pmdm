@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/services.dart';
@@ -81,9 +82,7 @@ class _UserScreenState extends State<UserScreen>
                       child: Text(
                           AppLocalizations.of(context).translate('myRecipes'))),
                   // Pestaña de Favoritos (vacía por ahora)
-                  Center(
-                      child: Text(
-                          AppLocalizations.of(context).translate('favorites'))),
+                  _FavoritesList()
                 ],
               ),
             ),
@@ -217,6 +216,31 @@ class _UserScreenState extends State<UserScreen>
 
     final uiProvider = Provider.of<UiProvider>(context, listen: false);
     uiProvider.selectedMenuOpt = 0;
+  }
+}
+
+class _FavoritesList extends StatelessWidget{
+  late UserService userService;
+
+  @override
+  Widget build(BuildContext context) {
+    userService = Provider.of<UserService>(context);
+    return FutureBuilder(
+      future: userService.getFavorites(currentUser.id),
+      builder: (BuildContext context, AsyncSnapshot<List<Article>> snapshot) {
+        if (snapshot.hasData) {
+          final List<Article> favorites = snapshot.data!;
+          return ListView.builder(
+            itemCount: favorites.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ArticleBox(article: favorites[index]);
+            },
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 }
 

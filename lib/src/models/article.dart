@@ -53,4 +53,8 @@ abstract class Article {
   static List<Article> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((item) => Article.fromMap(item)).toList();
   }
+
+  static Article fromJson(Map<String, dynamic> json) {
+    return Article.fromMap(json);
+  }
 }
