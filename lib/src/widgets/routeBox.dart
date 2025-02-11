@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 class RouteBox extends StatelessWidget {
   const RouteBox({
@@ -18,7 +17,6 @@ class RouteBox extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       padding: const EdgeInsets.all(15),
       decoration: routeBoxDecoration(),
-      // decoration: defaultDecoration(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -73,7 +71,7 @@ class RouteBox extends StatelessWidget {
               ),
               child: Text(
                 AppLocalizations.of(context).translate('seeMore'),
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),

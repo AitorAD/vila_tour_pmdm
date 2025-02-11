@@ -8,12 +8,12 @@ class HeaderLog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Image.asset("assets/logo.ico", scale: 2),
-          Text(
+          const Text(
             'VILATOUR',
             style: TextStyle(
               fontFamily: 'PontanoSans',

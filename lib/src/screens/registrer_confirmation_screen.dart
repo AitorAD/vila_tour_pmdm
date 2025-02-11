@@ -10,12 +10,12 @@ class RegistrerConfirmationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: <Widget>[
               // Background
-              Positioned.fill(
+              const Positioned.fill(
                 child: WavesWidget(),
               ),
               // BODY
@@ -31,7 +31,7 @@ class RegistrerConfirmationScreen extends StatelessWidget {
                       Text(
                         AppLocalizations.of(context)
                             .translate('succesfulRegistrer'),
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                       CustomButton(
                           text: AppLocalizations.of(context).translate('next'),
@@ -39,7 +39,7 @@ class RegistrerConfirmationScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage()));
+                                    builder: (context) => const HomePage()));
                           }),
                     ]),
               ),

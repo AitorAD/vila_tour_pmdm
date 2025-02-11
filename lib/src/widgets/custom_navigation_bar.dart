@@ -51,8 +51,6 @@ class CustomNavigationBar extends StatelessWidget {
             break;
         }
 
-        // Navigator.pushNamedAndRemoveUntil(context, routeName, (route) => false);
-        // Determinar cual de los 2 metodos usar
         Navigator.pushReplacementNamed(context, routeName);
       },
       showSelectedLabels: false,

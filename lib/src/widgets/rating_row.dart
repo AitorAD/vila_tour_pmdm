@@ -7,10 +7,10 @@ class RatingRow extends StatelessWidget {
   final int reviewCount;
 
   const RatingRow({
-    Key? key,
+    super.key,
     required this.averageScore,
     required this.reviewCount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

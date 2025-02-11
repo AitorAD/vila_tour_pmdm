@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
-import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
-import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 

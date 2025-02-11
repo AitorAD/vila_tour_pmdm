@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
-import 'package:vila_tour_pmdm/src/providers/login_form_provider.dart';
-import 'package:vila_tour_pmdm/src/screens/password_recovery.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/ui/input_decorations.dart';
-import 'package:vila_tour_pmdm/src/screens/home.dart';
-import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
-import 'package:vila_tour_pmdm/src/services/login_service.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/utils/result.dart';
-import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = 'login_screen';
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +83,7 @@ class LoginScreen extends StatelessWidget {
 
 class _LoginForm extends StatelessWidget {
   final LoginFormProvider loginForm;
-  const _LoginForm({Key? key, required this.loginForm}) : super(key: key);
+  const _LoginForm({super.key, required this.loginForm});
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +138,7 @@ class _LoginForm extends StatelessWidget {
 }
 
 class _RecoveryPassword extends StatelessWidget {
-  const _RecoveryPassword({Key? key}) : super(key: key);
+  const _RecoveryPassword();
 
   @override
   Widget build(BuildContext context) {
@@ -163,8 +161,7 @@ class _Botones extends StatelessWidget {
   final LoginFormProvider loginForm;
   final LoginService loginService;
   const _Botones(
-      {Key? key, required this.loginForm, required this.loginService})
-      : super(key: key);
+      {super.key, required this.loginForm, required this.loginService});
 
   @override
   Widget build(BuildContext context) {
@@ -192,13 +189,13 @@ class _Botones extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: AppLocalizations.of(context).translate('noAccount'),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                       ),
                     ),
                     TextSpan(
-                      text: ' ' + AppLocalizations.of(context).translate('register'),
-                      style: TextStyle(
+                      text: ' ${AppLocalizations.of(context).translate('register')}',
+                      style: const TextStyle(
                         color: Color.fromARGB(210, 11, 145, 185),
                       ),
                     ),
@@ -298,7 +295,6 @@ class LoginBtn extends StatelessWidget {
               break;
           }
         } else {
-          print('Formulario inválido.');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(

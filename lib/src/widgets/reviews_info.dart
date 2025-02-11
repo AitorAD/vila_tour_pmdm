@@ -40,27 +40,30 @@ class ReviewsInfo extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Mostrar un único indicador de carga
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           // Manejar errores en la carga
-          return Center(child: Text(AppLocalizations.of(context).translate('loadReviewsError')));
+          return Center(
+              child: Text(
+                  AppLocalizations.of(context).translate('loadReviewsError')));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           // Manejar el caso de datos vacíos
-          return Center(child: Text(AppLocalizations.of(context).translate('noReviews')));
+          return Center(
+              child: Text(AppLocalizations.of(context).translate('noReviews')));
         } else {
           // Mostrar las reseñas con los usuarios
           final reviewsWithUsers = snapshot.data!;
           return Column(
             children: [
               _StarRatingDistribution(reviews: reviews),
-              SizedBox(height: 1), // Ajusta la altura del espacio
+              const SizedBox(height: 1),
               Expanded(
                 child: ListView.builder(
                   itemCount: reviewsWithUsers.length +
                       1, // Añadir un elemento extra para el SizedBox
                   itemBuilder: (context, index) {
                     if (index == reviewsWithUsers.length) {
-                      return SizedBox(height: 65); // Espacio adicional al final
+                      return const SizedBox(height: 65); // Espacio adicional al final
                     }
                     final reviewWithUser = reviewsWithUsers[index];
                     final review = reviewWithUser['review'] as Review;
@@ -91,12 +94,12 @@ class ReviewBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: const Color.fromARGB(255, 255, 255, 255),
@@ -105,7 +108,7 @@ class ReviewBox extends StatelessWidget {
                   color: Colors.black.withOpacity(0.2),
                   spreadRadius: 1,
                   blurRadius: 5,
-                  offset: Offset(3, 3),
+                  offset: const Offset(3, 3),
                 ),
               ],
             ),
@@ -121,7 +124,7 @@ class ReviewBox extends StatelessWidget {
                         backgroundColor: Colors.grey[300],
                         backgroundImage: getImage(user.profilePicture),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -136,7 +139,7 @@ class ReviewBox extends StatelessWidget {
                                 rating: review.rating.toDouble(),
                                 color: Colors.amber,
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
                                 DateFormat('dd-MM-yyyy')
                                     .format(review.postDate),
@@ -159,7 +162,7 @@ class ReviewBox extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
         ],
       ),
     );
@@ -169,7 +172,7 @@ class ReviewBox extends StatelessWidget {
 class _StarRatingDistribution extends StatelessWidget {
   final List<Review> reviews;
 
-  _StarRatingDistribution({
+  const _StarRatingDistribution({
     super.key,
     required this.reviews,
   });
@@ -223,7 +226,7 @@ class _StarRatingDistribution extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text('${entry.key}'),
-                      Icon(Icons.star, color: Colors.amber, size: 20),
+                      const Icon(Icons.star, color: Colors.amber, size: 20),
                     ],
                   ),
                 );
@@ -240,7 +243,7 @@ class _StarRatingDistribution extends StatelessWidget {
               children: [
                 Text(
                   averageRating.toStringAsFixed(1),
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                 ),
                 Row(
                   children: [

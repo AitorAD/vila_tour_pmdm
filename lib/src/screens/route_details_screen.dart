@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/services/open_routes_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart' as vilaModels;
 
 class RouteDetailsScreen extends StatefulWidget {
-  static final routeName = 'route_details_screen';
+  static const routeName = 'route_details_screen';
   const RouteDetailsScreen({super.key});
 
   @override
@@ -38,21 +37,21 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
       Future.delayed(Duration.zero, () {
         Navigator.pop(context);
       });
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: Text('Error: No se proporcionaron argumentos válidos.'),
         ),
       );
     }
-    final route = args as vilaModels.Route;
+    final route = args;
 
     return Scaffold(
       floatingActionButton: _ButtonStartRoute(route: route),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
           // Fondo con WavesWidget
-          WavesWidget(),
+          const WavesWidget(),
 
           // Contenido principal
           Column(
@@ -104,9 +103,9 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
               return ImageCarousel(article: place);
             },
           ),
-          Divider(),
+          const Divider(),
           Text(route.description),
-          Divider(),
+          const Divider(),
         ],
       ),
     );
@@ -132,7 +131,6 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
 
 class _ButtonStartRoute extends StatelessWidget {
   const _ButtonStartRoute({
-    super.key,
     required this.route,
   });
 
@@ -157,8 +155,8 @@ class _ButtonStartRoute extends StatelessWidget {
         );
         // Navigator.pushReplacementNamed(context, MapScreen.routeName, arguments: route);
       },
-      child: Icon(Icons.map),
       tooltip: 'Iniciar ruta',
+      child: const Icon(Icons.map),
     );
   }
 }

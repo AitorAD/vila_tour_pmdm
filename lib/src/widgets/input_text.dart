@@ -18,14 +18,14 @@ class InputText extends StatelessWidget {
           children: <Widget>[
             Text(
               labelText,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: "PontanoSans",
                 fontSize: 20,
               ),
             )
           ],
         ),
-        Center(
+        const Center(
           child: TextField(),
         ),
       ]

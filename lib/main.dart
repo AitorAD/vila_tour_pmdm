@@ -27,7 +27,6 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => LoginFormProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => RegisterFormProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => LoginService()),
-      ChangeNotifierProvider(create: (_) => FestivalsProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => ThemeProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => RecipeFormProvider(), lazy: false),
       ChangeNotifierProvider(create: (_) => UiProvider(), lazy: false),

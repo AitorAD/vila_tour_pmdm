@@ -133,9 +133,9 @@ class LoginService extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         // Registro exitoso, intentar iniciar sesión automáticamente
-        final loginResult = await this.login(username, password);
+        final loginResult = await login(username, password);
         return loginResult == Result.success ? Result.success : loginResult;
       } else if (response.statusCode == 400) {
         final responseData = json.decode(response.body);

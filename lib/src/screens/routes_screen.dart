@@ -5,7 +5,7 @@ import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RoutesScreen extends StatefulWidget {
-  static final routeName = 'routes_screen';
+  static const routeName = 'routes_screen';
   const RoutesScreen({super.key});
 
   @override
@@ -93,15 +93,15 @@ class _RoutesScreenState extends State<RoutesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          Positioned.fill(
+          const Positioned.fill(
             child: WavesWidget(),
           ),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Rutas', arrowBack: true),
+              const BarScreenArrow(labelText: 'Rutas', arrowBack: true),
               SearchBox(
                 hintText:  AppLocalizations.of(context).translate('searchRoutes'),
                 controller: searchController,

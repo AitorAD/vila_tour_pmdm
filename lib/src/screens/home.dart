@@ -1,17 +1,15 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/services/article_service.dart';
-import 'package:vila_tour_pmdm/src/services/login_service.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
-  static final routeName = 'home_screen';
+  static const routeName = 'home_screen';
   const HomePage({super.key});
 
   @override
@@ -41,7 +39,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 const BarScreenArrow(labelText: 'VILATOUR', arrowBack: false),
-                Container(
+                SizedBox(
                   height: 320,
                   child: FutureBuilder(
                     future: _futureArticles,
@@ -136,9 +134,7 @@ class DockIndex extends StatelessWidget {
 }
 
 class _MainContent extends StatelessWidget {
-  const _MainContent({
-    super.key,
-  });
+  const _MainContent();
 
   @override
   Widget build(BuildContext context) {
@@ -187,8 +183,7 @@ class _SingleCard extends StatelessWidget {
   final String text;
   final String route;
 
-  _SingleCard({
-    super.key,
+  const _SingleCard({
     required this.icon,
     required this.color,
     required this.text,

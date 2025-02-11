@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/languages/language_provider.dart';
-import 'package:vila_tour_pmdm/src/widgets/bar_decoration.dart';
+import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class LanguagesScreen extends StatelessWidget {
   static const routeName = 'languages_screen';

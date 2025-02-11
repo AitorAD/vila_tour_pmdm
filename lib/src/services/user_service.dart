@@ -57,10 +57,7 @@ class UserService extends ChangeNotifier {
     final url = Uri.parse('$baseURL/users/${user.id}');
 
     String? token = await UserPreferences.instance.readData('token');
-    print('Token: $token');
-
     String jsonData = newUser.toJson();
-    print('Request body: $jsonData');
 
     final response = await http.put(
       url,
@@ -70,9 +67,6 @@ class UserService extends ChangeNotifier {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
     );
-
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       currentUser = User.fromJson(response.body);

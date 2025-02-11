@@ -5,7 +5,7 @@ import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class FestivalsScreen extends StatefulWidget {
-  static final routeName = 'festivals_screen';
+  static const routeName = 'festivals_screen';
   const FestivalsScreen({super.key});
 
   @override
@@ -121,10 +121,10 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          Positioned.fill(
+          const Positioned.fill(
             child: WavesWidget(),
           ),
           Column(
@@ -157,8 +157,8 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                           ? snapshot.data!
                           : _filteredFestivals;
 
-                      // Ordenar la lista por ID antes de mostrarla
-                      festivals.sort((a, b) => a.id.compareTo(b.id));
+                      // Ordenar la lista por nombre antes de mostrarla
+                      festivals.sort((a, b) => a.name.compareTo(b.name));
 
                       ListView list = ListView.builder(
                         padding: EdgeInsets.zero,
@@ -168,7 +168,6 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                           return ArticleBox(article: festival);
                         },
                       );
-                      print("ACABA AQUI: " + DateTime.now().toString());
                       return list;
                     }
                   },

@@ -28,7 +28,7 @@ ThemeData darkMode = ThemeData(
     titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
     iconTheme: IconThemeData(color: Colors.white),
   ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     selectedItemColor: Colors.white,
     unselectedItemColor: Colors.white,
   ),
