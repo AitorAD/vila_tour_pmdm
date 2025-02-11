@@ -33,6 +33,21 @@ class _UploadRecipeState extends State<UploadRecipe> {
       Provider.of<IngredientsProvider>(context, listen: false)
           .loadIngredients();
     });
+    Provider.of<RecipeFormProvider>(context, listen: false).recipe = Recipe(
+      type: "recipe",
+      id: 0,
+      creationDate: DateTime.now(),
+      lastModificationDate: DateTime.now(),
+      name: 'PRUEBA NOMBRE',
+      description: 'PRUEBA DESCRIPCIÓN',
+      ingredients: _selectedIngredients.value,
+      averageScore: 0.0,
+      reviews: [],
+      approved: false,
+      recent: true,
+      creator: currentUser,
+      images: [],
+    );
   }
 
   @override
@@ -40,22 +55,6 @@ class _UploadRecipeState extends State<UploadRecipe> {
     final recipeService = RecipeService();
     final recipeFormProvider = Provider.of<RecipeFormProvider>(context);
     final ingredientsProvider = Provider.of<IngredientsProvider>(context);
-
-    recipeFormProvider.recipe = Recipe(
-      type: "recipe",
-      id: 0,
-      creationDate: DateTime.now(),
-      lastModificationDate: DateTime.now(),
-      name: '',
-      description: '',
-      ingredients: _selectedIngredients.value,
-      averageScore: 1.2,
-      reviews: [],
-      approved: false,
-      recent: true,
-      creator: currentUser,
-      images: [],
-    );
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -112,7 +111,9 @@ class _UploadRecipeState extends State<UploadRecipe> {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      onChanged: (value) => recipeFormProvider.recipe!.name = value,
+      onChanged: (value) {
+        recipeFormProvider.setRecipeParams(value, null);
+      },
       validator: (value) {
         if (value == null || value.isEmpty) {
           return AppLocalizations.of(context).translate('requiredName');
@@ -269,7 +270,9 @@ class _UploadRecipeState extends State<UploadRecipe> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onChanged: (value) => recipeFormProvider.recipe!.description = value,
+          onChanged: (value) {
+            recipeFormProvider.setRecipeParams(null, value);
+          },
           validator: (value) {
             if (value == null || value.isEmpty) {
               return AppLocalizations.of(context)
@@ -305,7 +308,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                       TextButton(
                         child: Text(
                             AppLocalizations.of(context).translate('cancel'),
-                            style: TextStyle(color: Colors.black)),
+                            style: const TextStyle(color: Colors.black)),
                         onPressed: () {
                           Navigator.of(context).pop(false);
                         },
@@ -313,7 +316,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                       TextButton(
                         child: Text(
                             AppLocalizations.of(context).translate('send'),
-                            style: TextStyle(color: Colors.black)),
+                            style: const TextStyle(color: Colors.black)),
                         onPressed: () {
                           Navigator.of(context).pop(true);
                         },
@@ -328,20 +331,30 @@ class _UploadRecipeState extends State<UploadRecipe> {
                   recipeFormProvider.recipe!.ingredients =
                       _selectedIngredients.value;
 
+                  // print('RECETA FORM TO CREATE: ' + recipeFormProvider.recipe!.toString());
+
+                  Recipe createdRecipe = await recipeService
+                      .createRecipe(recipeFormProvider.recipe);
+
                   if (selectedImage != null) {
+                    ImageService imageService = ImageService();
+
                     String base64Image =
                         await fileToBase64(File(selectedImage!.path));
-                    recipeFormProvider.recipe!.images
-                        .add(customImage.Image(path: base64Image));
+
+                    // customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe.id);
+                    customImage.Image image = customImage.Image(path: base64Image);
+                    print('IMAGE ID ARTICLE:' + createdRecipe.id.toString());
+
+                    await imageService.uploadImage(image);
+                    // recipeFormProvider.recipe!.images.add(customImage.Image(path: base64Image));
                   }
-
-                  await recipeService.createRecipe(recipeFormProvider.recipe!);
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(AppLocalizations.of(context)
                           .translate('recipeSended')),
-                      duration: Duration(seconds: 2),
+
+                      duration: const Duration(seconds: 2),
                     ),
                   );
 
@@ -352,7 +365,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                       content: Text(AppLocalizations.of(context)
                           .translate('recipeError')),
                       backgroundColor: Colors.red,
-                      duration: Duration(seconds: 2),
+                      duration: const Duration(seconds: 2),
                     ),
                   );
                 }

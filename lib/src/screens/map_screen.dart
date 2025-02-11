@@ -73,6 +73,46 @@ class MapScreen extends StatefulWidget {
     'Spa': const Color.fromARGB(255, 243, 152, 33)
   };
 
+  static final List<Map<String, dynamic>> profiles = [
+    {
+      'name': 'Caminando',
+      'icon': Icons.directions_walk,
+      'ors_profile': 'foot-walking'
+    },
+    {'name': 'Senderismo', 'icon': Icons.hiking, 'ors_profile': 'foot-hiking'},
+    {
+      'name': 'Bicicleta',
+      'icon': Icons.directions_bike,
+      'ors_profile': 'cycling-regular'
+    },
+    {
+      'name': 'Bici Montaña',
+      'icon': Icons.electric_bike,
+      'ors_profile': 'cycling-mountain'
+    },
+    {
+      'name': 'Bici de Carretera',
+      'icon': Icons.pedal_bike,
+      'ors_profile': 'cycling-road'
+    },
+    {
+      'name': 'Bici Eléctrica',
+      'icon': Icons.electric_bike,
+      'ors_profile': 'cycling-electric'
+    },
+    {
+      'name': 'Coche',
+      'icon': Icons.directions_car,
+      'ors_profile': 'driving-car'
+    },
+    {'name': 'Camión', 'icon': Icons.fire_truck, 'ors_profile': 'driving-hgv'},
+    {
+      'name': 'Silla de Ruedas',
+      'icon': Icons.accessible,
+      'ors_profile': 'wheelchair'
+    },
+  ];
+
   static List<String> selectedCategories = List.from(categoryIcons.keys);
   static List<vilaModels.Place> places = [];
   MapScreen({this.route});
@@ -88,6 +128,8 @@ class _MapScreenState extends State<MapScreen> {
   bool _showList = false;
   double? _heading;
   bool _isMapboxLayerActive = false;
+  int _selectedProfileIndex = 0;
+
   final openRouteService = OpenRouteService();
   vilaModels.ResponseRouteAPI? routeResponse;
   List<LatLng>? decodedGeometry;
@@ -96,6 +138,7 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     _loadMarkers();
+    _loadRouteResponse();
   }
 
   void _listenToCompass() {
@@ -112,38 +155,45 @@ class _MapScreenState extends State<MapScreen> {
       final places = await placeService.getPlaces();
       Provider.of<PlacesProvider>(context, listen: false).setPlaces(places);
 
+      final newMarkers = places
+          .where((place) =>
+              MapScreen.selectedCategories.contains(place.categoryPlace.name))
+          .map((place) {
+        IconData iconData = MapScreen.categoryIcons[place.categoryPlace.name] ??
+            Icons.location_on;
+        return Marker(
+          point: LatLng(place.coordinate.latitude, place.coordinate.longitude),
+          child: Icon(
+            iconData,
+            color: MapScreen.categoryColors[place.categoryPlace.name] ??
+                Colors.red,
+            size: 30.0,
+          ),
+        );
+      }).toList();
+
       setState(() {
-        _markers = places
-            .where((place) =>
-                MapScreen.selectedCategories.contains(place.categoryPlace.name))
-            .map((place) {
-          IconData iconData =
-              MapScreen.categoryIcons[place.categoryPlace.name] ??
-                  Icons.location_on;
-          return Marker(
-            point:
-                LatLng(place.coordinate.latitude, place.coordinate.longitude),
-            child: Icon(
-              iconData,
-              color: MapScreen.categoryColors[place.categoryPlace.name] ??
-                  Colors.red,
-              size: 30.0,
-            ),
-          );
-        }).toList();
+        _markers = newMarkers;
       });
     } catch (e) {
       print('Error al cargar los lugares: $e');
     }
   }
 
-  void loadRouteResponse() async {
+  void _loadRouteResponse() async {
     if (widget.route != null) {
-      routeResponse = await openRouteService.getOpenRouteByRoute(
-          widget.route!, 'foot-walking');
+      Position currentPosition = await Geolocator.getCurrentPosition();
+
+      String profile = MapScreen.profiles[_selectedProfileIndex]['ors_profile'];
+      print('PROFILE SELECTED: ' + profile);
+
+      routeResponse = await openRouteService.getOpenRouteWithPositionByRoute(
+          widget.route!, profile, currentPosition);
+
+      decodedGeometry =
+          await _decodeGeometry(routeResponse!.routes.first.geometry);
+      setState(() {}); // Solo actualiza cuando la geometría ya esté lista.
     }
-    decodedGeometry =
-        await _decodeGeometry(routeResponse!.routes.first.geometry);
   }
 
   void _updateMarkers() {
@@ -212,16 +262,18 @@ class _MapScreenState extends State<MapScreen> {
                     ? 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
                     : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
-              if (widget.route != null)
-                /*PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: decodedGeometry!,
-                      strokeWidth: 4.0,
-                      color: Colors.blue,
-                    ),
-                  ],
-                ),*/
+              // Pinta la ruta
+              PolylineLayer<Polyline>(
+                polylines: decodedGeometry != null
+                    ? [
+                        Polyline(
+                          points: decodedGeometry!,
+                          strokeWidth: 4.0,
+                          color: const Color.fromARGB(255, 243, 33, 33),
+                        ),
+                      ]
+                    : [],
+              ),
               PopupMarkerLayer(
                 options: PopupMarkerLayerOptions(
                   markers: _markers,
@@ -263,22 +315,74 @@ class _MapScreenState extends State<MapScreen> {
           SafeArea(
             top: false,
             minimum: EdgeInsets.only(top: 15),
-            child: SearchBoxFiltered(
-              mapController: _mapController,
-              popupController: _popupController,
-              updateMarkers: _updateMarkers,
-              onTap: () {
-                setState(() {
-                  _showList = !_showList;
-                });
-              },
+            child: Column(
+              children: [
+                SearchBoxFiltered(
+                  mapController: _mapController,
+                  popupController: _popupController,
+                  updateMarkers: _updateMarkers,
+                  onTap: () {
+                    setState(() {
+                      _showList = !_showList;
+                    });
+                  },
+                ),
+
+                // Lista de perfiles
+                if (routeResponse != null)
+                  SizedBox(
+                    height: 40,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: MapScreen.profiles.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedProfileIndex = index;
+                              });
+                              _loadRouteResponse();
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  width: 3,
+                                  color: _selectedProfileIndex == index
+                                      ? Colors.blue
+                                      : const Color.fromARGB(0, 0, 0, 0),
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                children: [
+                                  Icon(MapScreen.profiles[index]['icon'],
+                                      color: Colors.black),
+                                  SizedBox(width: 5),
+                                  Text(MapScreen.profiles[index]['name']),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
             ),
           ),
+
+          // Botones
           Padding(
-            padding: const EdgeInsets.only(top: 110.0, right: 10),
+            padding: EdgeInsets.only(bottom: 10, right: 10),
             child: Align(
-              alignment: Alignment.topRight,
+              alignment: Alignment.bottomRight,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   FloatingActionButton(
                     onPressed: () {
@@ -290,20 +394,14 @@ class _MapScreenState extends State<MapScreen> {
                     focusColor: Colors.white,
                     child: const Icon(Icons.layers_outlined, color: Colors.white),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
+                  FloatingActionButton(
+                    backgroundColor: vilaBlueColor(),
+                    focusColor: Colors.white,
+                    onPressed: _centerMapOnUser,
+                    child: Icon(Icons.my_location, color: Colors.white),
+                  )
                 ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0, right: 10),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: FloatingActionButton(
-                backgroundColor: vilaBlueColor(),
-                focusColor: Colors.white,
-                onPressed: _centerMapOnUser,
-                child: Icon(Icons.my_location, color: Colors.white),
               ),
             ),
           ),
