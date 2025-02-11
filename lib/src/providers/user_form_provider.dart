@@ -3,7 +3,7 @@ import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
 
 class UserFormProvider extends ChangeNotifier {
-  GlobalKey<FormState> formLogKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formUserKey = GlobalKey<FormState>();
 
   User? user = null;
   bool _isLoading = false;
@@ -32,7 +32,7 @@ class UserFormProvider extends ChangeNotifier {
   }
 
   bool isValidForm() {
-    return formLogKey.currentState?.validate() ?? false;
+    return formUserKey.currentState?.validate() ?? false;
   }
 
   void checkForChanges() {

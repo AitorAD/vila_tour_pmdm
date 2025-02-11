@@ -7,3 +7,4 @@ export 'package:vila_tour_pmdm/src/services/login_service.dart';
 export 'package:vila_tour_pmdm/src/services/ingredient_service.dart';
 export 'package:vila_tour_pmdm/src/services/image_service.dart';
 export 'package:vila_tour_pmdm/src/services/festival_service.dart';
+export 'package:vila_tour_pmdm/src/services/open_routes_service.dart';

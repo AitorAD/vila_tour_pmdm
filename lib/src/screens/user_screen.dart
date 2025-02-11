@@ -145,7 +145,7 @@ class _ProfileForm extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Form(
-        key: userFormProvider.formLogKey,
+        key: userFormProvider.formUserKey,
         child: Column(
           children: [
             buildTextField(

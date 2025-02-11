@@ -11,3 +11,5 @@ export 'package:vila_tour_pmdm/src/models/category_ingredient.dart';
 export 'package:vila_tour_pmdm/src/models/place.dart';
 export 'package:vila_tour_pmdm/src/models/image.dart';
 export 'package:vila_tour_pmdm/src/models/route.dart';
+export 'package:vila_tour_pmdm/src/models/route_request_dto.dart';
+export 'package:vila_tour_pmdm/src/models/response_route_api.dart';

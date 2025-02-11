@@ -9,6 +9,7 @@ import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
+import 'package:vila_tour_pmdm/src/services/image_service.dart';
 import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/recipe_image.dart';
@@ -23,7 +24,8 @@ class UploadRecipe extends StatefulWidget {
 }
 
 class _UploadRecipeState extends State<UploadRecipe> {
-  final ValueNotifier<List<Ingredient>> _selectedIngredients = ValueNotifier([]);
+  final ValueNotifier<List<Ingredient>> _selectedIngredients =
+      ValueNotifier([]);
   customImage.Image? selectedImage;
   bool _isSearchFocused = false;
 
@@ -31,8 +33,24 @@ class _UploadRecipeState extends State<UploadRecipe> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<IngredientsProvider>(context, listen: false).loadIngredients();
+      Provider.of<IngredientsProvider>(context, listen: false)
+          .loadIngredients();
     });
+    Provider.of<RecipeFormProvider>(context, listen: false).recipe = Recipe(
+      type: "recipe",
+      id: 0,
+      creationDate: DateTime.now(),
+      lastModificationDate: DateTime.now(),
+      name: 'PRUEBA NOMBRE',
+      description: 'PRUEBA DESCRIPCIÓN',
+      ingredients: _selectedIngredients.value,
+      averageScore: 0.0,
+      reviews: [],
+      approved: false,
+      recent: true,
+      creator: currentUser,
+      images: [],
+    );
   }
 
   @override
@@ -41,24 +59,9 @@ class _UploadRecipeState extends State<UploadRecipe> {
     final recipeFormProvider = Provider.of<RecipeFormProvider>(context);
     final ingredientsProvider = Provider.of<IngredientsProvider>(context);
 
-    recipeFormProvider.recipe = Recipe(
-      type: "recipe",
-      id: 0,
-      creationDate: DateTime.now(),
-      lastModificationDate: DateTime.now(),
-      name: '',
-      description: '',
-      ingredients: _selectedIngredients.value,
-      averageScore: 1.2,
-      reviews: [],
-      approved: false,
-      recent: true,
-      creator: currentUser,
-      images: [],
-    );
-
     return Scaffold(
-      appBar: CustomAppBar(title: AppLocalizations.of(context).translate('uploadRecipe')),
+      appBar: CustomAppBar(
+          title: AppLocalizations.of(context).translate('uploadRecipe')),
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
@@ -68,7 +71,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
               child: Form(
-                key: recipeFormProvider.formLogKey,
+                key: recipeFormProvider.formRecipeKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -111,7 +114,9 @@ class _UploadRecipeState extends State<UploadRecipe> {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      onChanged: (value) => recipeFormProvider.recipe!.name = value,
+      onChanged: (value) {
+        recipeFormProvider.setRecipeParams(value, null);
+      },
       validator: (value) {
         if (value == null || value.isEmpty) {
           return AppLocalizations.of(context).translate('requiredName');
@@ -138,7 +143,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
           },
           child: TextField(
             decoration: InputDecoration(
-              hintText: AppLocalizations.of(context).translate('searchIngredients'),
+              hintText:
+                  AppLocalizations.of(context).translate('searchIngredients'),
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -161,7 +167,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final filteredIngredients = ingredientsProvider.filteredIngredients
-            .where((ingredient) => !_selectedIngredients.value.contains(ingredient))
+            .where((ingredient) =>
+                !_selectedIngredients.value.contains(ingredient))
             .toList();
         final itemCount = filteredIngredients.length;
         final containerHeight = (itemCount > 3 ? 3 : itemCount) * 50.0;
@@ -178,17 +185,23 @@ class _UploadRecipeState extends State<UploadRecipe> {
             itemBuilder: (context, index) {
               final ingredient = filteredIngredients[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(ingredient.name, style: textStyleVilaTour(color: Colors.black)),
+                    Text(ingredient.name,
+                        style: textStyleVilaTour(color: Colors.black)),
                     IconButton(
                       icon: Icon(Icons.add),
                       onPressed: () {
-                        _selectedIngredients.value = List.from(_selectedIngredients.value)..add(ingredient);
-                        ingredientsProvider.filterIngredients(ingredientsProvider.currentFilter);
-                        ingredientsProvider.removeIngredientFromAvailable(ingredient);
+                        _selectedIngredients.value =
+                            List.from(_selectedIngredients.value)
+                              ..add(ingredient);
+                        ingredientsProvider.filterIngredients(
+                            ingredientsProvider.currentFilter);
+                        ingredientsProvider
+                            .removeIngredientFromAvailable(ingredient);
                       },
                     ),
                   ],
@@ -215,14 +228,22 @@ class _UploadRecipeState extends State<UploadRecipe> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(ingredient.name, style: textStyleVilaTour(color: const Color.fromARGB(255, 0, 0, 0))),
+                  Text(ingredient.name,
+                      style: textStyleVilaTour(
+                          color: const Color.fromARGB(255, 0, 0, 0))),
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: () {
-                      _selectedIngredients.value = List.from(_selectedIngredients.value)..remove(ingredient);
-                      Provider.of<IngredientsProvider>(context, listen: false).filterIngredients(
-                          Provider.of<IngredientsProvider>(context, listen: false).currentFilter);
-                      Provider.of<IngredientsProvider>(context, listen: false).addIngredientToAvailable(ingredient);
+                      _selectedIngredients.value =
+                          List.from(_selectedIngredients.value)
+                            ..remove(ingredient);
+                      Provider.of<IngredientsProvider>(context, listen: false)
+                          .filterIngredients(Provider.of<IngredientsProvider>(
+                                  context,
+                                  listen: false)
+                              .currentFilter);
+                      Provider.of<IngredientsProvider>(context, listen: false)
+                          .addIngredientToAvailable(ingredient);
                     },
                     child: const Icon(Icons.close, size: 16, color: Colors.red),
                   ),
@@ -252,10 +273,13 @@ class _UploadRecipeState extends State<UploadRecipe> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onChanged: (value) => recipeFormProvider.recipe!.description = value,
+          onChanged: (value) {
+            recipeFormProvider.setRecipeParams(null, value);
+          },
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppLocalizations.of(context).translate('pleaseWriteRecipe');
+              return AppLocalizations.of(context)
+                  .translate('pleaseWriteRecipe');
             }
             return null;
           },
@@ -264,7 +288,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
     );
   }
 
-  Widget _buildSubmitButton(RecipeFormProvider recipeFormProvider, RecipeService recipeService) {
+  Widget _buildSubmitButton(
+      RecipeFormProvider recipeFormProvider, RecipeService recipeService) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -272,23 +297,29 @@ class _UploadRecipeState extends State<UploadRecipe> {
         child: CustomButton(
           text: AppLocalizations.of(context).translate('send'),
           onPressed: () async {
-            if (recipeFormProvider.formLogKey.currentState!.validate()) {
+            if (recipeFormProvider.formRecipeKey.currentState!.validate()) {
               bool? confirm = await showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     backgroundColor: Colors.white,
-                    title:  Text(AppLocalizations.of(context).translate('confirmRecipe')),
-                    content: Text(AppLocalizations.of(context).translate('sendrecipeMessage')),
+                    title: Text(AppLocalizations.of(context)
+                        .translate('confirmRecipe')),
+                    content: Text(AppLocalizations.of(context)
+                        .translate('sendrecipeMessage')),
                     actions: <Widget>[
                       TextButton(
-                        child: Text(AppLocalizations.of(context).translate('cancel'), style: TextStyle(color: Colors.black)),
+                        child: Text(
+                            AppLocalizations.of(context).translate('cancel'),
+                            style: const TextStyle(color: Colors.black)),
                         onPressed: () {
                           Navigator.of(context).pop(false);
                         },
                       ),
                       TextButton(
-                        child: Text(AppLocalizations.of(context).translate('send'), style: TextStyle(color: Colors.black)),
+                        child: Text(
+                            AppLocalizations.of(context).translate('send'),
+                            style: const TextStyle(color: Colors.black)),
                         onPressed: () {
                           Navigator.of(context).pop(true);
                         },
@@ -300,19 +331,32 @@ class _UploadRecipeState extends State<UploadRecipe> {
 
               if (confirm == true) {
                 try {
-                  recipeFormProvider.recipe!.ingredients = _selectedIngredients.value;
+                  recipeFormProvider.recipe!.ingredients =
+                      _selectedIngredients.value;
+
+                  // print('RECETA FORM TO CREATE: ' + recipeFormProvider.recipe!.toString());
+
+                  Recipe createdRecipe = await recipeService
+                      .createRecipe(recipeFormProvider.recipe);
 
                   if (selectedImage != null) {
-                    String base64Image = await fileToBase64(File(selectedImage!.path));
-                    recipeFormProvider.recipe!.images.add(customImage.Image(path: base64Image));
+                    ImageService imageService = ImageService();
+
+                    String base64Image =
+                        await fileToBase64(File(selectedImage!.path));
+
+                    // customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe.id);
+                    customImage.Image image = customImage.Image(path: base64Image);
+                    print('IMAGE ID ARTICLE:' + createdRecipe.id.toString());
+
+                    await imageService.uploadImage(image);
+                    // recipeFormProvider.recipe!.images.add(customImage.Image(path: base64Image));
                   }
-
-                  await recipeService.createRecipe(recipeFormProvider.recipe!);
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(AppLocalizations.of(context).translate('recipeSended')),
-                      duration: Duration(seconds: 2),
+                      content: Text(AppLocalizations.of(context)
+                          .translate('recipeSended')),
+                      duration: const Duration(seconds: 2),
                     ),
                   );
 
@@ -321,9 +365,10 @@ class _UploadRecipeState extends State<UploadRecipe> {
                   print("RECETAERROR:" + e.toString());
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(AppLocalizations.of(context).translate('recipeError')),
+                      content: Text(AppLocalizations.of(context)
+                          .translate('recipeError')),
                       backgroundColor: Colors.red,
-                      duration: Duration(seconds: 2),
+                      duration: const Duration(seconds: 2),
                     ),
                   );
                 }
@@ -352,7 +397,8 @@ class _ProductImageStack extends StatelessWidget {
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: source, imageQuality: 50);
+      final pickedFile =
+          await picker.pickImage(source: source, imageQuality: 50);
 
       if (pickedFile != null) {
         // Cargar la imagen sin convertir a base64 inicialmente

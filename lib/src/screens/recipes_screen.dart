@@ -56,7 +56,9 @@ class _RecipesScreenState extends State<RecipesScreen> {
       case 'averageScore':
         return recipe.averageScore.toString();
       case 'ingredients':
-        return recipe.ingredients.map((ingredient) => ingredient.name).join(', ');
+        return recipe.ingredients
+            .map((ingredient) => ingredient.name)
+            .join(', ');
       default:
         return null;
     }
@@ -116,12 +118,16 @@ class _RecipesScreenState extends State<RecipesScreen> {
           ),
           Column(
             children: [
-              BarScreenArrow(labelText: AppLocalizations.of(context).translate('recipes'), arrowBack: true),
+              BarScreenArrow(
+                  labelText: AppLocalizations.of(context).translate('recipes'),
+                  arrowBack: true),
               SearchBox(
-                hintText: AppLocalizations.of(context).translate('searchRecipes'),
+                hintText:
+                    AppLocalizations.of(context).translate('searchRecipes'),
                 controller: searchController,
                 onChanged: (text) {
-                  _recipesFuture.then((recipes) => _filterRecipes(text, recipes));
+                  _recipesFuture
+                      .then((recipes) => _filterRecipes(text, recipes));
                 },
                 onFilterPressed: _showFilterOptions,
               ),
@@ -135,12 +141,19 @@ class _RecipesScreenState extends State<RecipesScreen> {
                       print(snapshot.error);
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return  Center(
-                          child: Text(AppLocalizations.of(context).translate('norecipes')));
+                      return Center(
+                          child: Text(AppLocalizations.of(context)
+                              .translate('norecipes')));
                     } else {
                       final recipes = _filteredRecipes.isEmpty
                           ? snapshot.data!
                           : _filteredRecipes;
+
+                      // Ordenar la lista por ID antes de mostrarla
+                      recipes.sort((a, b) => a.id.compareTo(b.id));
+
+                      // Elimina las recetas no aprobadas, de esta forma no se muestran
+                      recipes.removeWhere((recipe) => recipe.approved == false);
 
                       return ListView.builder(
                         padding: EdgeInsets.zero,
