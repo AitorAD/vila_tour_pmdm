@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
+import 'package:vila_tour_pmdm/src/services/config.dart';
 
 class RecipeService {
-  final String _baseUrl = 'http://10.0.2.2:8080';
+  final String _baseUrl = baseURL;
 
   /// Obtiene la lista de recetas desde el servidor
   Future<List<Recipe>> getRecipes() async {
@@ -35,7 +36,7 @@ class RecipeService {
     }
   }
 
-  /// Crea una nueva receta en el servidor
+  // Crea una nueva receta en el servidor
   Future<Recipe> createRecipe(Recipe recipe) async {
     final String? token = await UserPreferences.instance.readData('token');
     if (token == null) {
