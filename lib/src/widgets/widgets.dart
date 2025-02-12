@@ -14,6 +14,6 @@ export 'package:vila_tour_pmdm/src/widgets/paint_stars.dart';
 export 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
 export 'package:vila_tour_pmdm/src/widgets/recipe_image.dart';
 export 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
-export 'package:vila_tour_pmdm/src/widgets/routeBox.dart';
+export 'package:vila_tour_pmdm/src/widgets/route_box.dart';
 export 'package:vila_tour_pmdm/src/widgets/search_box.dart';
 export 'package:vila_tour_pmdm/src/widgets/waves.dart';
