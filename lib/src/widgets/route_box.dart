@@ -24,6 +24,7 @@ class RouteBox extends StatelessWidget {
             right: 0,
             child: Container(
               padding: const EdgeInsets.all(10),
+              decoration: routeBoxDecoration(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -68,6 +69,11 @@ class RouteBox extends StatelessWidget {
 
   BoxDecoration routeBoxDecoration() {
     return BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.black.withOpacity(0.4),
+    );
+    /*
+    return BoxDecoration(
       gradient: const LinearGradient(
         colors: [
           Color.fromARGB(255, 111, 218, 209),
@@ -85,6 +91,7 @@ class RouteBox extends StatelessWidget {
         ),
       ],
     );
+    */
   }
 }
 
@@ -132,30 +139,36 @@ class _BackgroundImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ClipPath(
-          clipper: TopDiagonalClipper(),
-          child: FadeInImage(
-            placeholder: const AssetImage('assets/logo.ico'),
-            image: (route.places.isNotEmpty &&
-                    route.places.first.images.isNotEmpty)
-                ? MemoryImage(
-                    decodeImageBase64(route.places.first.images.first.path),
-                  )
-                : AssetImage('assets/place_holder.png'),
-            fit: BoxFit.cover,
+        ClipRRect(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
+          child: ClipPath(
+            clipper: TopDiagonalClipper(),
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/logo.ico'),
+              image: (route.places.isNotEmpty &&
+                      route.places.first.images.isNotEmpty)
+                  ? MemoryImage(
+                      decodeImageBase64(route.places.first.images.first.path),
+                    )
+                  : AssetImage('assets/place_holder.png'),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-        ClipPath(
-          clipper: BottomDiagonalClipper(),
-          child: FadeInImage(
-            placeholder: const AssetImage('assets/logo.ico'),
-            image:
-                (route.places.isNotEmpty && route.places.last.images.isNotEmpty)
-                    ? MemoryImage(
-                        decodeImageBase64(route.places.last.images.first.path),
-                      )
-                    : AssetImage('assets/place_holder.png'),
-            fit: BoxFit.cover,
+        ClipRRect(
+          borderRadius: BorderRadius.only(bottomRight: Radius.circular(20)),
+          child: ClipPath(
+            clipper: BottomDiagonalClipper(),
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/logo.ico'),
+              image: (route.places.isNotEmpty &&
+                      route.places.last.images.isNotEmpty)
+                  ? MemoryImage(
+                      decodeImageBase64(route.places.last.images.first.path),
+                    )
+                  : AssetImage('assets/place_holder.png'),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ],
@@ -169,7 +182,7 @@ class TopDiagonalClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path();
     path.lineTo(size.width, 0);
-    path.lineTo(size.width * 0.7, size.height);
+    path.lineTo(size.width * 0.0, size.height);
     path.lineTo(0, size.height);
     path.close();
     return path;
@@ -184,7 +197,7 @@ class BottomDiagonalClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    path.moveTo(size.width * 0.7, 0);
+    path.moveTo(size.width * 1, 0);
     path.lineTo(size.width, 0);
     path.lineTo(size.width, size.height);
     path.lineTo(0, size.height);
