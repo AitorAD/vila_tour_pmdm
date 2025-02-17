@@ -328,7 +328,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
 
               if (confirm == true) {
                 try {
-                  recipeFormProvider.recipe!.ingredients =
+                  recipeFormProvider.recipe.ingredients =
                       _selectedIngredients.value;
 
                   // print('RECETA FORM TO CREATE: ' + recipeFormProvider.recipe!.toString());
@@ -342,9 +342,9 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     String base64Image =
                         await fileToBase64(File(selectedImage!.path));
 
+
                     // customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe.id);
-                    customImage.Image image = customImage.Image(path: base64Image);
-                    print('IMAGE ID ARTICLE:' + createdRecipe.id.toString());
+                    customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe);
 
                     await imageService.uploadImage(image);
                     // recipeFormProvider.recipe!.images.add(customImage.Image(path: base64Image));

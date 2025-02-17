@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/ui/input_decorations.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 
 Widget buildTextField({
+  required BuildContext context, 
   String? initialValue,
   required String label,
   required String hintText,
@@ -13,10 +15,18 @@ Widget buildTextField({
   required bool enabled,
   bool obscureText = false,
 }) {
+  final textStyle = Theme.of(context).textTheme.titleLarge;
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(label, style: textStyleVilaTourTitle(color: Colors.black)),
+      Builder(
+        builder: (context) {
+          return Text(
+            label,
+            style: textStyle,
+              );
+        },
+      ),
       TextFormField(
         initialValue: initialValue,
         validator: validator,
@@ -24,9 +34,7 @@ Widget buildTextField({
         obscureText: obscureText,
         decoration: InputDecorations.authInputDecoration(hintText: hintText),
         enabled: enabled,
-        style: const TextStyle(
-          color: Colors.black, // Asegura que el texto siempre sea negro
-        ),
+        style: textStyle,
       ),
     ],
   );

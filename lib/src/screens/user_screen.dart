@@ -211,7 +211,7 @@ class _UserScreenState extends State<UserScreen>
             leading: const Icon(Icons.language, color: Colors.blue),
             title: Text(
               AppLocalizations.of(context).translate('language'),
-              style: const TextStyle(fontSize: 16),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             onTap: () {
               Navigator.pushNamed(context, LanguagesScreen.routeName);
@@ -222,7 +222,7 @@ class _UserScreenState extends State<UserScreen>
             leading: const Icon(Icons.logout, color: Colors.red),
             title: Text(
               AppLocalizations.of(context).translate('logout'),
-              style: const TextStyle(fontSize: 16, color: Colors.red),
+               style: Theme.of(context).textTheme.bodyMedium,
             ),
             onTap: () => logout(context),
           ),
