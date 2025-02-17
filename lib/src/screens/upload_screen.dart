@@ -14,7 +14,7 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class UploadRecipe extends StatefulWidget {
   static const routeName = 'upload_recipe';
-  UploadRecipe({super.key});
+  const UploadRecipe({super.key});
 
   @override
   State<UploadRecipe> createState() => _UploadRecipeState();
@@ -327,7 +327,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
 
               if (confirm == true) {
                 try {
-                  recipeFormProvider.recipe!.ingredients =
+                  recipeFormProvider.recipe.ingredients =
                       _selectedIngredients.value;
 
                   // print('RECETA FORM TO CREATE: ' + recipeFormProvider.recipe!.toString());
@@ -341,9 +341,9 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     String base64Image =
                         await fileToBase64(File(selectedImage!.path));
 
+
                     // customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe.id);
-                    customImage.Image image = customImage.Image(path: base64Image);
-                    print('IMAGE ID ARTICLE:' + createdRecipe.id.toString());
+                    customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe);
 
                     await imageService.uploadImage(image);
                     // recipeFormProvider.recipe!.images.add(customImage.Image(path: base64Image));
@@ -397,10 +397,8 @@ class _ProductImageStack extends StatelessWidget {
           await picker.pickImage(source: source, imageQuality: 50);
 
       if (pickedFile != null) {
-        // Cargar la imagen sin convertir a base64 inicialmente
         final image = customImage.Image(path: pickedFile.path);
-
-        onImageSelected(image); // Pasar la imagen no codificada
+        onImageSelected(image);
       } else {
         print(AppLocalizations.of(context).translate('noImageSelected'));
       }
@@ -413,7 +411,17 @@ class _ProductImageStack extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        RecipeImage(url: selectedImage),
+        if (selectedImage != null) ...[
+          RecipeImage(url: selectedImage),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: IconButton(
+              icon: const Icon(Icons.close, color: Colors.red),
+              onPressed: () => onImageSelected(null),
+            ),
+          ),
+        ],
         _IconPositionedButton(
           icon: Icons.photo_library_outlined,
           onPressed: () => _pickImage(context, ImageSource.gallery),
@@ -428,6 +436,7 @@ class _ProductImageStack extends StatelessWidget {
     );
   }
 }
+
 
 class _IconPositionedButton extends StatelessWidget {
   final IconData icon;

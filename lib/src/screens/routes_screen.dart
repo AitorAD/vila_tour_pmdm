@@ -101,7 +101,7 @@ class _RoutesScreenState extends State<RoutesScreen> {
           ),
           Column(
             children: [
-              const BarScreenArrow(labelText: 'Rutas', arrowBack: true),
+              BarScreenArrow(labelText: 'Rutas', arrowBack: true),
               SearchBox(
                 hintText:  AppLocalizations.of(context).translate('searchRoutes'),
                 controller: searchController,

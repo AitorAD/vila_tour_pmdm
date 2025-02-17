@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
+import 'package:vila_tour_pmdm/src/services/config.dart';
 
 class RecipeService {
-  final String _baseUrl = 'http://10.0.2.2:8080';
+  final String _baseUrl = baseURL;
 
   /// Obtiene la lista de recetas desde el servidor
   Future<List<Recipe>> getRecipes() async {
@@ -35,7 +36,7 @@ class RecipeService {
     }
   }
 
-  /// Crea una nueva receta en el servidor
+  // Crea una nueva receta en el servidor
   Future<Recipe> createRecipe(Recipe recipe) async {
     final String? token = await UserPreferences.instance.readData('token');
     if (token == null) {
@@ -63,6 +64,34 @@ class RecipeService {
       } else {
         throw HttpException(
             'Failed to create recipe: ${response.statusCode} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Obtiene las recetas de un usuario
+  Future<List<Recipe>> getUserRecipes(int idUser) async {
+    final String? token = await UserPreferences.instance.readData('token');
+    if (token == null) {
+      throw Exception('Token is null');
+    }
+
+    try {
+      final url = Uri.parse('$_baseUrl/recipes/search/creatorId?creatorId=$idUser');
+      final response = await http.get(
+        url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        return responseData.map((json) => Recipe.fromMap(json)).toList();
+      } else {
+        throw HttpException('Failed to fetch user recipes: ${response.statusCode}');
       }
     } catch (e) {
       rethrow;
