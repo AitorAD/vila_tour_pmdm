@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
+import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/services/services.dart';
@@ -22,17 +23,28 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool isEditing = false;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, initialIndex: 1, vsync: this);
+    _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
+    _tabController.addListener(_handleTabSelection);
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabSelection);
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _handleTabSelection() {
+    setState(() {
+      if (_tabController.index != 0) {
+        isEditing = false;
+      }
+    });
   }
 
   @override
@@ -66,7 +78,7 @@ class _UserScreenState extends State<UserScreen>
               controller: _tabController,
               tabs: [
                 Tab(text: AppLocalizations.of(context).translate('details')),
-                Tab(text: AppLocalizations.of(context).translate('myRecipes')),
+                Tab(text: AppLocalizations.of(context).translate('recipes')),
                 Tab(text: AppLocalizations.of(context).translate('favorites')),
               ],
             ),
@@ -74,37 +86,32 @@ class _UserScreenState extends State<UserScreen>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  // Pestaña de Detalles
                   _ProfileForm(userFormProvider: userFormProvider),
-                  // Pestaña de Mis Recetas (vacía por ahora)
-                  Center(
-                      child: Text(
-                          AppLocalizations.of(context).translate('myRecipes'))),
-                  // Pestaña de Favoritos (vacía por ahora)
-                  Center(
-                      child: Text(
-                          AppLocalizations.of(context).translate('favorites'))),
+                  _RecipesList(),
+                  _FavoritesList(),
                 ],
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: _tabController.index == 1
-          ? (userFormProvider.isEditing
+      floatingActionButton: _tabController.index == 0
+          ? isEditing
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     FloatingActionButton(
                       heroTag: 'cancelButton',
                       onPressed: () {
+                        setState(() {
+                          isEditing = false;
+                        });
                         userFormProvider.isEditing = false;
                         userFormProvider.resetForm();
                       },
-                      backgroundColor: Colors.red,
                       child: const Icon(Icons.cancel),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 20),
                     FloatingActionButton(
                       heroTag: 'saveButton',
                       onPressed: () async {
@@ -115,6 +122,9 @@ class _UserScreenState extends State<UserScreen>
                           if (isModified) {
                             message = AppLocalizations.of(context)
                                 .translate('userModSuccesful');
+                            setState(() {
+                              isEditing = false;
+                            });
                             userFormProvider.isEditing = false;
                           } else {
                             message = AppLocalizations.of(context)
@@ -134,10 +144,13 @@ class _UserScreenState extends State<UserScreen>
               : FloatingActionButton(
                   heroTag: 'editButton',
                   onPressed: () {
+                    setState(() {
+                      isEditing = true;
+                    });
                     userFormProvider.isEditing = true;
                   },
                   child: const Icon(Icons.edit),
-                ))
+                )
           : null,
     );
   }
@@ -158,23 +171,30 @@ class _UserScreenState extends State<UserScreen>
       child: Column(
         children: [
           UserAccountsDrawerHeader(
-              accountName: Text(
-                currentUser.username,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              accountEmail: Text(
-                currentUser.email,
-                style: const TextStyle(fontSize: 14),
-              ),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Text(
-                  currentUser.username[0].toUpperCase(),
-                  style: const TextStyle(fontSize: 30, color: Colors.white),
-                ),
-              ),
-              decoration: defaultDecoration(0)),
+            accountName: Text(
+              currentUser.username,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            accountEmail: Text(
+              currentUser.email,
+              style: const TextStyle(fontSize: 14),
+            ),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.blue,
+              backgroundImage: currentUser.profilePicture != null &&
+                      currentUser.profilePicture!.isNotEmpty
+                  ? MemoryImage(decodeImageBase64(currentUser.profilePicture!))
+                  : null,
+              child: currentUser.profilePicture != null &&
+                      currentUser.profilePicture!.isNotEmpty
+                  ? null
+                  : Text(
+                      currentUser.username[0].toUpperCase(),
+                      style: const TextStyle(fontSize: 30, color: Colors.white),
+                    ),
+            ),
+            decoration: defaultDecoration(0),
+          ),
           ListTile(
             leading: themeProvider.themeData == lightMode
                 ? const Icon(Icons.sunny, color: Colors.orange)
@@ -217,6 +237,71 @@ class _UserScreenState extends State<UserScreen>
 
     final uiProvider = Provider.of<UiProvider>(context, listen: false);
     uiProvider.selectedMenuOpt = 0;
+  }
+}
+
+class _RecipesList extends StatelessWidget {
+  RecipeService recipeService = RecipeService();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: recipeService.getUserRecipes(currentUser.id),
+      builder: (BuildContext context, AsyncSnapshot<List<Article>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          final List<Article> recipes = snapshot.data!;
+          recipes.sort((a, b) => a.name.compareTo(b.name));
+
+          return ListView.builder(
+            padding: const EdgeInsets.only(top: 5),
+            itemCount: recipes.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ArticleBox(article: recipes[index]);
+            },
+          );
+        } else {
+          return Center(
+            child: Text(AppLocalizations.of(context).translate('myRecipes'),
+                style: const TextStyle(fontSize: 16, color: Colors.grey)),
+          );
+        }
+      },
+    );
+  }
+}
+
+class _FavoritesList extends StatelessWidget {
+  late UserService userService;
+
+  @override
+  Widget build(BuildContext context) {
+    userService = Provider.of<UserService>(context);
+    return FutureBuilder(
+      future: userService.getFavorites(currentUser.id),
+      builder: (BuildContext context, AsyncSnapshot<List<Article>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          final List<Article> favorites = snapshot.data!;
+          favorites.sort((a, b) => a.name.compareTo(b.name));
+
+          return ListView.builder(
+            padding: const EdgeInsets.only(top: 5),
+            itemCount: favorites.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ArticleBox(article: favorites[index]);
+            },
+          );
+        } else {
+          return Center(
+            child: Text(AppLocalizations.of(context).translate('noFavorites'),
+                style: const TextStyle(fontSize: 16, color: Colors.grey)),
+          );
+        }
+      },
+    );
   }
 }
 
@@ -323,12 +408,27 @@ class _Header extends StatelessWidget {
               alignment: Alignment.topCenter,
               child: CircleAvatar(
                 radius: 50,
+                backgroundColor: Colors.blue,
                 backgroundImage:
-                    getImage(userFormProvider.user?.profilePicture),
+                    userFormProvider.user?.profilePicture != null &&
+                            userFormProvider.user!.profilePicture!.isNotEmpty
+                        ? getImage(userFormProvider.user?.profilePicture)
+                        : null,
+                child: userFormProvider.user?.profilePicture != null &&
+                        userFormProvider.user!.profilePicture!.isNotEmpty
+                    ? null
+                    : Text(
+                        userFormProvider.user?.username
+                                .substring(0, 1)
+                                .toUpperCase() ??
+                            '',
+                        style:
+                            const TextStyle(fontSize: 30, color: Colors.white),
+                      ),
               ),
             ),
             Align(
-              alignment: Alignment(0.35, 0.20),
+              alignment: const Alignment(0.35, 0.20),
               child: GestureDetector(
                 onTap: () {
                   _processImage(

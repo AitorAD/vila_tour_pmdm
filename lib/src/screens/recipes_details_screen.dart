@@ -53,9 +53,9 @@ class _RecipeDetailsState extends State<RecipeDetails>
 
     return Scaffold(
       bottomNavigationBar: const CustomNavigationBar(),
-      floatingActionButtonLocation: showFab ?
-      FloatingActionButtonLocation.centerFloat :
-      FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: showFab
+          ? FloatingActionButtonLocation.centerFloat
+          : FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
               text: AppLocalizations.of(context).translate('addReview'),
@@ -76,7 +76,9 @@ class _RecipeDetailsState extends State<RecipeDetails>
               indicatorColor: const Color.fromARGB(255, 54, 71, 71),
               tabs: [
                 Tab(text: AppLocalizations.of(context).translate('recipe')),
-                Tab(text: AppLocalizations.of(context).translate('generalVision')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('generalVision')),
                 Tab(text: AppLocalizations.of(context).translate('reviews')),
               ],
             ),
@@ -101,7 +103,8 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            AppLocalizations.of(context).translate('preparation'),
+                            '${AppLocalizations.of(context)
+                                .translate('preparation')}:',
                             style: textStyleVilaTourTitle(color: Colors.black),
                           ),
                           const SizedBox(height: 8),
@@ -134,7 +137,8 @@ class _RecipeDetailsState extends State<RecipeDetails>
                               image: recipe.images.isNotEmpty
                                   ? MemoryImage(decodeImageBase64(
                                       recipe.images.first.path))
-                                  : const AssetImage('assets/logo_foreground.png')
+                                  : const AssetImage(
+                                          'assets/logo_foreground.png')
                                       as ImageProvider,
                               width: double.infinity,
                               height: 200,
@@ -149,6 +153,15 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           averageScore: averageScore,
                           reviewCount: filteredReviews.length,
                         ),
+
+                        const SizedBox(height: 10),
+                        // Label for creator's name
+                        Text(
+                          '${AppLocalizations.of(context).translate('created_by')} ${recipe.creator.username}',
+                          style: const TextStyle(
+                              fontSize: 14, fontStyle: FontStyle.italic),
+                        ),
+
                         const Divider(height: 20),
 
                         IngredientsWrap(ingredients: recipe.ingredients),
@@ -179,7 +192,7 @@ class IngredientsWrap extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context).translate('ingredients'),
+          '${AppLocalizations.of(context).translate('ingredients')}:',
           style: textStyleVilaTourTitle(color: Colors.black),
         ),
         const SizedBox(height: 8),
@@ -188,12 +201,12 @@ class IngredientsWrap extends StatelessWidget {
           runSpacing: 4,
           children: ingredients.map((ingredient) {
             return Container(
-              decoration: defaultDecoration(18),
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                ingredient.name,
-                style: textStyleVilaTour(color: Colors.black),
-              ),
+                decoration: defaultDecoration(18),
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  ingredient.name,
+                  style: textStyleVilaTour(color: Colors.black),
+                ),
             );
           }).toList(),
         ),

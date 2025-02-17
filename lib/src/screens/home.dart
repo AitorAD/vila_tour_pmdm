@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           SingleChildScrollView(
             child: Column(
               children: [
-                const BarScreenArrow(labelText: 'VILATOUR', arrowBack: false),
+                BarScreenArrow(labelText: 'VILATOUR', arrowBack: false),
                 SizedBox(
                   height: 320,
                   child: FutureBuilder(

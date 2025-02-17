@@ -47,7 +47,7 @@
     "noFestivals": "No se encontraron festivales.",
     "noRecipes": "No se encontraron recetas",
     "noRoutes" : "No se encontraron rutas",
-    "noRevews" : "No se encontraron reviews",
+    "noReviews" : "No se encontraron reviews",
     "place404": "Lugar no encontrado",
     "noPlaces": "Lugares no encontrados",
     "email404": "Correo electrónico no encontrado",
@@ -113,6 +113,8 @@
     "expiredSessionTitle": "Sesión expirada",
     "noArticles": "No se encontraron artículos",
     "details": "Detalles",
-    "myRecipes": "Mis recetas",
-    "favorites": "Favoritos"
+    "myRecipes": "Aquí verás las recetas que has subido",
+    "favorites": "Favoritos",
+    "created_by": "Creado por",
+    "noFavorites": "Aquí verás tus artículos favoritos"
 }
