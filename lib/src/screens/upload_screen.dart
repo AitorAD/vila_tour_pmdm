@@ -129,7 +129,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
       children: [
         Text(
           AppLocalizations.of(context).translate('ingredients'),
-          style: textStyleVilaTourTitle(color: Colors.black, fontSize: 20),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 10),
         FocusScope(
@@ -188,7 +188,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(ingredient.name,
-                        style: textStyleVilaTour(color: Colors.black)),
+                        style: Theme.of(context).textTheme.bodyLarge),
                     IconButton(
                       icon: Icon(Icons.add),
                       onPressed: () {
@@ -226,8 +226,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(ingredient.name,
-                      style: textStyleVilaTour(
-                          color: const Color.fromARGB(255, 0, 0, 0))),
+                      style: Theme.of(context).textTheme.bodyMedium),
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: () {
@@ -259,7 +258,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
       children: [
         Text(
           AppLocalizations.of(context).translate('elaboration'),
-          style: textStyleVilaTourTitle(color: Colors.black, fontSize: 20),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 10),
         TextFormField(

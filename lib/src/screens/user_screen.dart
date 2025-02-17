@@ -322,6 +322,7 @@ class _ProfileForm extends StatelessWidget {
         child: Column(
           children: [
             buildTextField(
+              context: context,
               initialValue: currentUser.username,
               label: ("${AppLocalizations.of(context).translate('username')}:"),
               hintText: currentUser.username,
@@ -334,6 +335,7 @@ class _ProfileForm extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             buildTextField(
+              context: context,
               initialValue: currentUser.email,
               label: AppLocalizations.of(context).translate('email'),
               hintText: 'ejemplo@ejemplo.com',
@@ -346,6 +348,7 @@ class _ProfileForm extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             buildTextField(
+              context: context,
               initialValue: currentUser.name,
               label: AppLocalizations.of(context).translate('name'),
               hintText: currentUser.name ??
@@ -363,6 +366,7 @@ class _ProfileForm extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             buildTextField(
+              context: context,
               initialValue: currentUser.surname,
               label: AppLocalizations.of(context).translate('surname'),
               hintText: currentUser.surname ??

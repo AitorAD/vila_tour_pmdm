@@ -130,7 +130,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Center(
-                          child: Text(AppLocalizations.of(context).translate('noPlaces')));
+                          child: Text(AppLocalizations.of(context).translate('noPlaces'), style: Theme.of(context).textTheme.bodyMedium));
                     } else {
                       final places = _filteredPlaces.isEmpty
                           ? snapshot.data!

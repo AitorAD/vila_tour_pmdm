@@ -72,10 +72,7 @@ class _ReviewForm extends StatelessWidget {
             children: [
               Text(
                 AppLocalizations.of(context).translate('writeReview'),
-                style: textStyleVilaTourTitle(
-                  color: Colors.black,
-                  fontSize: 20,
-                ),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 10),
               TextFormField(

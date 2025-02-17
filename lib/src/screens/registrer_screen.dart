@@ -93,6 +93,7 @@ class _RegisterScreenBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           buildTextField(
+            context: context,
               label: AppLocalizations.of(context).translate('User'),
               hintText: AppLocalizations.of(context).translate('Username'),
               onChanged: (value) => registerForm.username = value,
@@ -100,6 +101,7 @@ class _RegisterScreenBody extends StatelessWidget {
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
+            context: context,
               label: AppLocalizations.of(context).translate('email'),
               hintText: 'ejemplo@ejemplo.com',
               onChanged: (value) => registerForm.email = value,
@@ -107,6 +109,7 @@ class _RegisterScreenBody extends StatelessWidget {
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
+            context:  context,
               label: AppLocalizations.of(context).translate('password'),
               hintText: '**********',
               obscureText: true,
@@ -115,6 +118,7 @@ class _RegisterScreenBody extends StatelessWidget {
               enabled: true),
           const SizedBox(height: 20),
           buildTextField(
+            context: context,
               label: AppLocalizations.of(context).translate('repeatPassword'),
               hintText: '**********',
               obscureText: true,
