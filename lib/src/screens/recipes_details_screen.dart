@@ -102,12 +102,12 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           const SizedBox(height: 10),
                           Text(
                             AppLocalizations.of(context).translate('preparation'),
-                            style: textStyleVilaTourTitle(color: Colors.black),
+                            style: Theme.of(context).textTheme.titleLarge
                           ),
                           const SizedBox(height: 8),
                           Text(
                             recipe.description,
-                            style: const TextStyle(fontSize: 16),
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ],
                       ),
@@ -122,7 +122,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
                       children: [
                         Text(
                           recipe.name,
-                          style: textStyleVilaTourTitle(color: Colors.black),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const SizedBox(height: 20),
                         Hero(
@@ -180,7 +180,7 @@ class IngredientsWrap extends StatelessWidget {
       children: [
         Text(
           AppLocalizations.of(context).translate('ingredients'),
-          style: textStyleVilaTourTitle(color: Colors.black),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
         Wrap(
@@ -192,7 +192,7 @@ class IngredientsWrap extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Text(
                 ingredient.name,
-                style: textStyleVilaTour(color: Colors.black),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             );
           }).toList(),

@@ -22,7 +22,8 @@ class _DetailsFestivalState extends State<DetailsFestival>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this); // 2 pestañas: General y Reviews
+    _tabController =
+        TabController(length: 2, vsync: this); // 2 pestañas: General y Reviews
     _tabController.addListener(_handleTabChange);
   }
 
@@ -35,30 +36,37 @@ class _DetailsFestivalState extends State<DetailsFestival>
 
   void _handleTabChange() {
     setState(() {
-      showFab = _tabController.index == 1; // Muestra el botón solo en la pestaña de reseñas
+      showFab = _tabController.index ==
+          1; // Muestra el botón solo en la pestaña de reseñas
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final Festival festival = ModalRoute.of(context)!.settings.arguments as Festival;
+    final Festival festival =
+        ModalRoute.of(context)!.settings.arguments as Festival;
 
-    final filteredReviews = festival.reviews.where((review) => review.rating > 0).toList();
+    final filteredReviews =
+        festival.reviews.where((review) => review.rating > 0).toList();
     final double averageScore = filteredReviews.isNotEmpty
-        ? filteredReviews.map((review) => review.rating).reduce((a, b) => a + b) / filteredReviews.length
+        ? filteredReviews
+                .map((review) => review.rating)
+                .reduce((a, b) => a + b) /
+            filteredReviews.length
         : 0;
 
     return Scaffold(
       bottomNavigationBar: const CustomNavigationBar(),
-      floatingActionButtonLocation: showFab ?
-      FloatingActionButtonLocation.centerFloat :
-      FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: showFab
+          ? FloatingActionButtonLocation.centerFloat
+          : FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
               text: AppLocalizations.of(context).translate('addReview'),
               radius: 20,
               onPressed: () {
-                Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: festival);
+                Navigator.pushNamed(context, AddReviewScreen.routeName,
+                    arguments: festival);
               },
             )
           : FavoriteFloatingActionButton(article: festival),
@@ -103,7 +111,8 @@ class _DetailsFestivalState extends State<DetailsFestival>
                                 return ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: FadeInImage(
-                                    placeholder: const AssetImage('assets/logo.ico'),
+                                    placeholder:
+                                        const AssetImage('assets/logo.ico'),
                                     image: image.path.startsWith('assets/')
                                         ? AssetImage(image.path)
                                             as ImageProvider
@@ -126,11 +135,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
                             festival.name,
-                            style: const TextStyle(
-                              fontFamily: 'PontanoSans',
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.titleLarge,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -148,14 +153,8 @@ class _DetailsFestivalState extends State<DetailsFestival>
                         // Festival description
                         Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            festival.description,
-                            style: const TextStyle(
-                              fontFamily: 'PontanoSans',
-                              fontSize: 16,
-                              height: 1.5,
-                            ),
-                          ),
+                          child: Text(festival.description,
+                              style: Theme.of(context).textTheme.bodyLarge),
                         ),
 
                         const Divider(),
@@ -172,10 +171,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                               const SizedBox(width: 4),
                               Text(
                                 festival.coordinate.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'PontanoSans',
-                                ),
+                                style: Theme.of(context).textTheme.titleLarge
                               ),
                             ],
                           ),

@@ -59,7 +59,7 @@ class _PlacesDetailsState extends State<PlacesDetails>
       FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
-              text: AppLocalizations.of(context).translate('addReviewints'),
+              text: AppLocalizations.of(context).translate('addReviews'),
               radius: 20,
               onPressed: () {
                 Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: place);

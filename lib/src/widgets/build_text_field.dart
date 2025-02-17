@@ -6,7 +6,7 @@ import 'package:vila_tour_pmdm/src/utils/utils.dart';
 
 
 Widget buildTextField({
-  required BuildContext context, 
+  required BuildContext context,
   String? initialValue,
   required String label,
   required String hintText,
@@ -19,13 +19,9 @@ Widget buildTextField({
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Builder(
-        builder: (context) {
-          return Text(
-            label,
-            style: textStyle,
-              );
-        },
+      Text(
+        label,
+        style: textStyle
       ),
       TextFormField(
         initialValue: initialValue,
@@ -34,7 +30,7 @@ Widget buildTextField({
         obscureText: obscureText,
         decoration: InputDecorations.authInputDecoration(hintText: hintText),
         enabled: enabled,
-        style: textStyle,
+        style: textStyle
       ),
     ],
   );
