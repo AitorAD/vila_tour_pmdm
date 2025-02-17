@@ -5,6 +5,7 @@ import 'package:vila_tour_pmdm/src/models/article.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
+import 'dart:developer';
 
 class ImageService {
   Future<List<customImage.Image>> getImagesByArticle(Article article) async {
@@ -43,17 +44,19 @@ class ImageService {
   }
 
   Future<customImage.Image> uploadImage(customImage.Image image) async {
-    final url = Uri.parse('$baseURL/images');
+    final url;
+    if (image.article != null) {
+      url = Uri.parse('$baseURL/images/withArticle?id_article=${image.article!.id}');
+    } else {
+       url = Uri.parse('$baseURL/images');
+    }
     String? token = await UserPreferences.instance.readData('token');
-
     if (token == null) {
       throw Exception('Token is null');
     }
 
     try {
       final String jsonBody = jsonEncode(image.toMap());
-
-      print('IMAGE JSON BODY' + jsonBody);
 
       final response = await http.post(
         url,
@@ -64,7 +67,7 @@ class ImageService {
         body: jsonBody,
       );
 
-      print('IMAGE RESPONSE BODY' + response.body);
+      log("PRINT DE CONTROL TOTAL: " + jsonBody);
 
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -78,3 +81,5 @@ class ImageService {
     }
   }
 }
+
+// localhost:8080/images?id_article=21321

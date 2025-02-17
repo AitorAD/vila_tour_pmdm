@@ -47,7 +47,7 @@
     "noFestivals": "No s'han trobat festes.",
     "noRecipes": "No s'han trobat receptes",
     "noRoutes": "No s'han trobat rutes",
-    "noRevews": "No s'han trobat ressenyes",
+    "noReviews": "No s'han trobat ressenyes",
     "place404": "Lloc no trobat",
     "noPlaces": "No s'han trobat llocs",
     "email404": "Correu electrònic no trobat",
@@ -113,6 +113,8 @@
     "expiredSessionTitle": "Sessió expirada",
     "noArticles": "No s'han trobat articles",
     "details": "Detalls",
-    "myRecipes": "Les meues receptes",
-    "favorites": "Favorits"
+    "myRecipes": "Ací veuràs les receptes que has pujat",
+    "favorites": "Favorits",
+    "created_by": "Creat per",
+    "noFavorites": "Ací veuràs els teus articles favorits"
 }

@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
+import 'package:vila_tour_pmdm/src/services/article_service.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
+import 'package:vila_tour_pmdm/src/services/review_service.dart';
 
 import '../models/models.dart';
 
@@ -103,5 +105,22 @@ class UserService extends ChangeNotifier {
       print("Error al enviar el correo. Código HTTP ${response.statusCode}");
       return false; // Fallo al enviar el correo
     }
+  }
+
+  Future<List<Article>> getFavorites (int id) async {
+
+    ReviewService reviewService = ReviewService();
+    List<Review> reviews = await reviewService.getReviewsUser(id);
+    List<Article> favorites = [];
+    ArticleService articleService = ArticleService();
+
+    for (Review review in reviews) {
+      if (review.favorite) {
+        favorites.add(await articleService.getArticleById(review.id.articleId));
+      }
+    }
+
+    print(favorites);
+    return favorites;
   }
 }
