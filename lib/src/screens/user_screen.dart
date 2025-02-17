@@ -211,7 +211,7 @@ class _UserScreenState extends State<UserScreen>
             leading: const Icon(Icons.language, color: Colors.blue),
             title: Text(
               AppLocalizations.of(context).translate('language'),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: const TextStyle(fontSize: 16),
             ),
             onTap: () {
               Navigator.pushNamed(context, LanguagesScreen.routeName);
@@ -222,7 +222,7 @@ class _UserScreenState extends State<UserScreen>
             leading: const Icon(Icons.logout, color: Colors.red),
             title: Text(
               AppLocalizations.of(context).translate('logout'),
-               style: Theme.of(context).textTheme.bodyMedium,
+              style: const TextStyle(fontSize: 16, color: Colors.red),
             ),
             onTap: () => logout(context),
           ),
@@ -331,7 +331,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: (value) => validateRequiredField(context, value),
-              enabled: userFormProvider.isEditing,
+              enabled: userFormProvider.isEditing, context: context,
             ),
             const SizedBox(height: 20),
             buildTextField(
@@ -344,7 +344,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: (value) => validateEmail(context, value),
-              enabled: userFormProvider.isEditing,
+              enabled: userFormProvider.isEditing, context: context
             ),
             const SizedBox(height: 20),
             buildTextField(
@@ -362,7 +362,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: (value) => validateName(context, value),
-              enabled: userFormProvider.isEditing,
+              enabled: userFormProvider.isEditing, context: context
             ),
             const SizedBox(height: 20),
             buildTextField(
@@ -380,7 +380,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: (value) => validateSurname(context, value),
-              enabled: userFormProvider.isEditing,
+              enabled: userFormProvider.isEditing, context: context
             ),
           ],
         ),

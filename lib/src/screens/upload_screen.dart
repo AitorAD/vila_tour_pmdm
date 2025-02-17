@@ -21,8 +21,7 @@ class UploadRecipe extends StatefulWidget {
 }
 
 class _UploadRecipeState extends State<UploadRecipe> {
-  final ValueNotifier<List<Ingredient>> _selectedIngredients =
-      ValueNotifier([]);
+  final ValueNotifier<List<Ingredient>> _selectedIngredients = ValueNotifier([]);
   customImage.Image? selectedImage;
   bool _isSearchFocused = false;
 
@@ -30,24 +29,23 @@ class _UploadRecipeState extends State<UploadRecipe> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<IngredientsProvider>(context, listen: false)
-          .loadIngredients();
+      Provider.of<IngredientsProvider>(context, listen: false).loadIngredients();
+      Provider.of<RecipeFormProvider>(context, listen: false).recipe = Recipe(
+        type: "recipe",
+        id: 0,
+        creationDate: DateTime.now(),
+        lastModificationDate: DateTime.now(),
+        name: 'PRUEBA NOMBRE',
+        description: 'PRUEBA DESCRIPCIÓN',
+        ingredients: _selectedIngredients.value,
+        averageScore: 0.0,
+        reviews: [],
+        approved: false,
+        recent: true,
+        creator: currentUser,
+        images: [],
+      );
     });
-    Provider.of<RecipeFormProvider>(context, listen: false).recipe = Recipe(
-      type: "recipe",
-      id: 0,
-      creationDate: DateTime.now(),
-      lastModificationDate: DateTime.now(),
-      name: 'PRUEBA NOMBRE',
-      description: 'PRUEBA DESCRIPCIÓN',
-      ingredients: _selectedIngredients.value,
-      averageScore: 0.0,
-      reviews: [],
-      approved: false,
-      recent: true,
-      creator: currentUser,
-      images: [],
-    );
   }
 
   @override
@@ -61,29 +59,35 @@ class _UploadRecipeState extends State<UploadRecipe> {
           title: AppLocalizations.of(context).translate('uploadRecipe')),
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: const CustomNavigationBar(),
-      body: Stack(
+      body: Column(
         children: [
-          const WavesWidget(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Form(
-                key: recipeFormProvider.formRecipeKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildImageSection(recipeFormProvider),
-                    const SizedBox(height: 15),
-                    _buildNameField(recipeFormProvider),
-                    const SizedBox(height: 15),
-                    _buildIngredientsSection(ingredientsProvider),
-                    const SizedBox(height: 20),
-                    _buildDescriptionSection(recipeFormProvider),
-                    const SizedBox(height: 15),
-                    _buildSubmitButton(recipeFormProvider, recipeService),
-                  ],
+          Expanded(
+            child: Stack(
+              children: [
+                const WavesWidget(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: recipeFormProvider.formRecipeKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildImageSection(recipeFormProvider),
+                          const SizedBox(height: 15),
+                          _buildNameField(recipeFormProvider),
+                          const SizedBox(height: 15),
+                          _buildIngredientsSection(ingredientsProvider),
+                          const SizedBox(height: 20),
+                          _buildDescriptionSection(recipeFormProvider),
+                          const SizedBox(height: 15),
+                          _buildSubmitButton(recipeFormProvider, recipeService),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ],
@@ -341,9 +345,9 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     String base64Image =
                         await fileToBase64(File(selectedImage!.path));
 
-
                     // customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe.id);
-                    customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe);
+                    customImage.Image image = customImage.Image(
+                        path: base64Image, article: createdRecipe);
 
                     await imageService.uploadImage(image);
                     // recipeFormProvider.recipe!.images.add(customImage.Image(path: base64Image));
@@ -352,7 +356,6 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     SnackBar(
                       content: Text(AppLocalizations.of(context)
                           .translate('recipeSended')),
-
                       duration: const Duration(seconds: 2),
                     ),
                   );
@@ -436,7 +439,6 @@ class _ProductImageStack extends StatelessWidget {
     );
   }
 }
-
 
 class _IconPositionedButton extends StatelessWidget {
   final IconData icon;
