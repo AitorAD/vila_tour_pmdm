@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
 
 class LanguageProvider extends ChangeNotifier {
-  Locale _locale = Locale('en'); // Idioma por defecto.
+  Locale _locale = const Locale('es'); // Idioma por defecto.
 
   Locale get locale => _locale;
 
@@ -11,7 +11,7 @@ class LanguageProvider extends ChangeNotifier {
   }
 
   void loadLanguage() async {
-    String languageCode = await UserPreferences.instance.getLanguage() ?? 'en';
+    String languageCode = await UserPreferences.instance.getLanguage() ?? 'es';
     _locale = Locale(languageCode);
     notifyListeners();
   }

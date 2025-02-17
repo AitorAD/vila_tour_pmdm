@@ -68,4 +68,32 @@ class RecipeService {
       rethrow;
     }
   }
+
+  /// Obtiene las recetas de un usuario
+  Future<List<Recipe>> getUserRecipes(int idUser) async {
+    final String? token = await UserPreferences.instance.readData('token');
+    if (token == null) {
+      throw Exception('Token is null');
+    }
+
+    try {
+      final url = Uri.parse('$_baseUrl/recipes/search/creatorId?creatorId=$idUser');
+      final response = await http.get(
+        url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        return responseData.map((json) => Recipe.fromMap(json)).toList();
+      } else {
+        throw HttpException('Failed to fetch user recipes: ${response.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

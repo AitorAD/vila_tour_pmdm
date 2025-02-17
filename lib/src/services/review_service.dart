@@ -26,7 +26,7 @@ class ReviewService {
 
   Future<List<Review>> getReviewsUser(int id) async {
     final url = Uri.parse(
-        '$baseURL/reviews/byUser/byUser?idUser=$id');
+        '$baseURL/reviews/byUser?idUser=$id');
 
     String? token = await UserPreferences.instance.readData('token');
 
