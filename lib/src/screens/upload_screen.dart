@@ -146,7 +146,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
             decoration: InputDecoration(
               hintText:
                   AppLocalizations.of(context).translate('searchIngredients'),
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -194,7 +194,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                     Text(ingredient.name,
                         style: Theme.of(context).textTheme.bodyLarge),
                     IconButton(
-                      icon: Icon(Icons.add),
+                      icon: const Icon(Icons.add),
                       onPressed: () {
                         _selectedIngredients.value =
                             List.from(_selectedIngredients.value)

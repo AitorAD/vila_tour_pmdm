@@ -331,7 +331,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: (value) => validateRequiredField(context, value),
-              enabled: userFormProvider.isEditing, context: context,
+              enabled: userFormProvider.isEditing
             ),
             const SizedBox(height: 20),
             buildTextField(
@@ -344,7 +344,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: (value) => validateEmail(context, value),
-              enabled: userFormProvider.isEditing, context: context
+              enabled: userFormProvider.isEditing
             ),
             const SizedBox(height: 20),
             buildTextField(
@@ -362,7 +362,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: (value) => validateName(context, value),
-              enabled: userFormProvider.isEditing, context: context
+              enabled: userFormProvider.isEditing
             ),
             const SizedBox(height: 20),
             buildTextField(
@@ -380,7 +380,7 @@ class _ProfileForm extends StatelessWidget {
                 userFormProvider.checkForChanges();
               },
               validator: (value) => validateSurname(context, value),
-              enabled: userFormProvider.isEditing, context: context
+              enabled: userFormProvider.isEditing
             ),
           ],
         ),
