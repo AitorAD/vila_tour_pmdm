@@ -38,7 +38,9 @@ class RouteBox extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
+
                   const SizedBox(height: 8),
+
                   // Origen y destino
                   Text(
                     "${AppLocalizations.of(context).translate('origin')}: ${route.places.first.name}",
@@ -54,6 +56,7 @@ class RouteBox extends StatelessWidget {
                       color: Colors.white70,
                     ),
                   ),
+
                   const Spacer(),
 
                   // Botón para ver más detalles
@@ -72,26 +75,6 @@ class RouteBox extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       color: Colors.black.withOpacity(0.4),
     );
-    /*
-    return BoxDecoration(
-      gradient: const LinearGradient(
-        colors: [
-          Color.fromARGB(255, 111, 218, 209),
-          Color.fromARGB(255, 172, 207, 228),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-      borderRadius: BorderRadius.circular(20),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.2),
-          blurRadius: 5,
-          offset: const Offset(2, 4),
-        ),
-      ],
-    );
-    */
   }
 }
 
@@ -137,10 +120,14 @@ class _BackgroundImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20),
+          ),
           child: ClipPath(
             clipper: TopDiagonalClipper(),
             child: FadeInImage(
@@ -150,13 +137,19 @@ class _BackgroundImage extends StatelessWidget {
                   ? MemoryImage(
                       decodeImageBase64(route.places.first.images.first.path),
                     )
-                  : AssetImage('assets/place_holder.png'),
+                  : const AssetImage('assets/place_holder.png'),
               fit: BoxFit.cover,
+              height: 200,
+              width: double.infinity,
             ),
           ),
         ),
         ClipRRect(
-          borderRadius: BorderRadius.only(bottomRight: Radius.circular(20)),
+          borderRadius: const BorderRadius.only(
+            bottomRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
           child: ClipPath(
             clipper: BottomDiagonalClipper(),
             child: FadeInImage(
@@ -166,8 +159,10 @@ class _BackgroundImage extends StatelessWidget {
                   ? MemoryImage(
                       decodeImageBase64(route.places.last.images.first.path),
                     )
-                  : AssetImage('assets/place_holder.png'),
+                  : const AssetImage('assets/place_holder.png'),
               fit: BoxFit.cover,
+              height: 200,
+              width: double.infinity,
             ),
           ),
         ),
