@@ -60,6 +60,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/placeholder_camera.png
     - data/
     - languages/
 

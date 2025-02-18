@@ -14,7 +14,9 @@ import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class UploadRecipe extends StatefulWidget {
   static const routeName = 'upload_recipe';
-  const UploadRecipe({super.key});
+  final Recipe? recipe;
+
+  const UploadRecipe({super.key, this.recipe});
 
   @override
   State<UploadRecipe> createState() => _UploadRecipeState();
@@ -24,19 +26,34 @@ class _UploadRecipeState extends State<UploadRecipe> {
   final ValueNotifier<List<Ingredient>> _selectedIngredients = ValueNotifier([]);
   customImage.Image? selectedImage;
   bool _isSearchFocused = false;
+  Recipe? recipe;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<IngredientsProvider>(context, listen: false).loadIngredients();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    recipe = ModalRoute.of(context)!.settings.arguments as Recipe?;
+    if (recipe != null) {
+      Provider.of<RecipeFormProvider>(context, listen: false).recipe = recipe!;
+      _selectedIngredients.value = recipe!.ingredients;
+      if (recipe!.images.isNotEmpty) {
+        selectedImage = customImage.Image(path: recipe!.images.first.path);
+      }
+    } else {
       Provider.of<RecipeFormProvider>(context, listen: false).recipe = Recipe(
         type: "recipe",
         id: 0,
         creationDate: DateTime.now(),
         lastModificationDate: DateTime.now(),
-        name: 'PRUEBA NOMBRE',
-        description: 'PRUEBA DESCRIPCIÓN',
+        name: '',
+        description: '',
         ingredients: _selectedIngredients.value,
         averageScore: 0.0,
         reviews: [],
@@ -45,7 +62,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
         creator: currentUser,
         images: [],
       );
-    });
+    }
   }
 
   @override
@@ -55,12 +72,11 @@ class _UploadRecipeState extends State<UploadRecipe> {
     final ingredientsProvider = Provider.of<IngredientsProvider>(context);
 
     return Scaffold(
-      appBar: CustomAppBar(
-          title: AppLocalizations.of(context).translate('uploadRecipe')),
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: const CustomNavigationBar(),
       body: Column(
         children: [
+          BarScreenArrow(labelText: AppLocalizations.of(context).translate(widget.recipe != null ? 'editRecipe' : 'uploadRecipe'), arrowBack: false,),
           Expanded(
             child: Stack(
               children: [
@@ -98,17 +114,18 @@ class _UploadRecipeState extends State<UploadRecipe> {
   Widget _buildImageSection(RecipeFormProvider recipeFormProvider) {
     return _ProductImageStack(
       selectedImage: selectedImage?.path,
-      recipeFormProvider: recipeFormProvider,
       onImageSelected: (customImage.Image? image) {
         setState(() {
           selectedImage = image;
         });
       },
+      recipeFormProvider: recipeFormProvider,
     );
   }
 
   Widget _buildNameField(RecipeFormProvider recipeFormProvider) {
     return TextFormField(
+      initialValue: recipeFormProvider.recipe.name,
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context).translate('name'),
         border: OutlineInputBorder(
@@ -266,6 +283,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
         ),
         const SizedBox(height: 10),
         TextFormField(
+          initialValue: recipeFormProvider.recipe.description,
           maxLines: 6,
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context).translate('writeRecipeDesc'),
@@ -334,33 +352,33 @@ class _UploadRecipeState extends State<UploadRecipe> {
                   recipeFormProvider.recipe.ingredients =
                       _selectedIngredients.value;
 
-                  // print('RECETA FORM TO CREATE: ' + recipeFormProvider.recipe!.toString());
+                  if (widget.recipe != null) {
+                    // Lógica para actualizar la receta
+                  } else {
+                    Recipe createdRecipe = await recipeService
+                        .createRecipe(recipeFormProvider.recipe);
 
-                  Recipe createdRecipe = await recipeService
-                      .createRecipe(recipeFormProvider.recipe);
+                    if (selectedImage != null) {
+                      ImageService imageService = ImageService();
 
-                  if (selectedImage != null) {
-                    ImageService imageService = ImageService();
+                      String base64Image =
+                          await fileToBase64(File(selectedImage!.path));
 
-                    String base64Image =
-                        await fileToBase64(File(selectedImage!.path));
+                      customImage.Image image = customImage.Image(
+                          path: base64Image, article: createdRecipe);
 
-                    // customImage.Image image = customImage.Image(path: base64Image, article: createdRecipe.id);
-                    customImage.Image image = customImage.Image(
-                        path: base64Image, article: createdRecipe);
+                      await imageService.uploadImage(image);
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('recipeSended')),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
 
-                    await imageService.uploadImage(image);
-                    // recipeFormProvider.recipe!.images.add(customImage.Image(path: base64Image));
+                    Navigator.pushReplacementNamed(context, HomePage.routeName);
                   }
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context)
-                          .translate('recipeSended')),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-
-                  Navigator.pushReplacementNamed(context, HomePage.routeName);
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -414,17 +432,22 @@ class _ProductImageStack extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (selectedImage != null) ...[
-          RecipeImage(url: selectedImage),
+        Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.4,
+            maxWidth: MediaQuery.of(context).size.width,
+          ),
+          child: RecipeImage(url: selectedImage),
+        ),
+        if (selectedImage != null)
           Positioned(
-            top: 8,
-            right: 8,
+            top: 10,
+            left: 10,
             child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.red),
+              icon: const Icon(Icons.delete, color: Colors.red, size: 40),
               onPressed: () => onImageSelected(null),
             ),
           ),
-        ],
         _IconPositionedButton(
           icon: Icons.photo_library_outlined,
           onPressed: () => _pickImage(context, ImageSource.gallery),
