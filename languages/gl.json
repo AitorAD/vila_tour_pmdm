@@ -116,5 +116,7 @@
     "myRecipes": "Aquí verás as receitas que subiches",
     "favorites": "Favoritos",
     "created_by": "Creado por",
-    "noFavorites": "Aquí verás os teus artigos favoritos"
+    "noFavorites": "Aquí verás os teus artigos favoritos",
+    "editRecipe": "Editar receita",
+    "disapproved": "Non aprobada"
 }

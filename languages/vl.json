@@ -116,5 +116,7 @@
     "myRecipes": "Ací veuràs les receptes que has pujat",
     "favorites": "Favorits",
     "created_by": "Creat per",
-    "noFavorites": "Ací veuràs els teus articles favorits"
+    "noFavorites": "Ací veuràs els teus articles favorits",
+    "editRecipe": "Editar recepta",
+    "disapproved": "No aprovada"
 }

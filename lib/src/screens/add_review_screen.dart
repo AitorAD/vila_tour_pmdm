@@ -3,7 +3,6 @@ import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/services/services.dart';
-import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class AddReviewScreen extends StatelessWidget {
@@ -52,7 +51,6 @@ class _ReviewForm extends StatelessWidget {
   Article article;
 
   _ReviewForm({
-    super.key,
     required this.reviewFormProvider,
     required this.reviewService,
     required this.article,

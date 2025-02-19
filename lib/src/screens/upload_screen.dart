@@ -39,29 +39,35 @@ class _UploadRecipeState extends State<UploadRecipe> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    recipe = ModalRoute.of(context)!.settings.arguments as Recipe?;
-    if (recipe != null) {
-      Provider.of<RecipeFormProvider>(context, listen: false).recipe = recipe!;
-      _selectedIngredients.value = recipe!.ingredients;
-      if (recipe!.images.isNotEmpty) {
-        selectedImage = customImage.Image(path: recipe!.images.first.path);
+    if (recipe == null) {
+      recipe = ModalRoute.of(context)!.settings.arguments as Recipe?;
+      if (recipe != null) {
+        Provider.of<RecipeFormProvider>(context, listen: false).recipe = recipe!;
+        _selectedIngredients.value = recipe!.ingredients;
+        if (recipe!.images.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              selectedImage = decodeImageBase64(recipe!.images.first.path) as customImage.Image?;
+            });
+          });
+        }
+      } else {
+        Provider.of<RecipeFormProvider>(context, listen: false).recipe = Recipe(
+          type: "recipe",
+          id: 0,
+          creationDate: DateTime.now(),
+          lastModificationDate: DateTime.now(),
+          name: '',
+          description: '',
+          ingredients: _selectedIngredients.value,
+          averageScore: 0.0,
+          reviews: [],
+          approved: false,
+          recent: true,
+          creator: currentUser,
+          images: [],
+        );
       }
-    } else {
-      Provider.of<RecipeFormProvider>(context, listen: false).recipe = Recipe(
-        type: "recipe",
-        id: 0,
-        creationDate: DateTime.now(),
-        lastModificationDate: DateTime.now(),
-        name: '',
-        description: '',
-        ingredients: _selectedIngredients.value,
-        averageScore: 0.0,
-        reviews: [],
-        approved: false,
-        recent: true,
-        creator: currentUser,
-        images: [],
-      );
     }
   }
 
@@ -76,7 +82,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
       bottomNavigationBar: const CustomNavigationBar(),
       body: Column(
         children: [
-          BarScreenArrow(labelText: AppLocalizations.of(context).translate(widget.recipe != null ? 'editRecipe' : 'uploadRecipe'), arrowBack: false,),
+          BarScreenArrow(labelText: AppLocalizations.of(context).translate(recipeFormProvider.recipe.name != '' ? 'editRecipe' : 'uploadRecipe'), arrowBack: false,),
           Expanded(
             child: Stack(
               children: [
@@ -353,7 +359,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
                       _selectedIngredients.value;
 
                   if (widget.recipe != null) {
-                    // Lógica para actualizar la receta
+                    // TODO Lógica para actualizar la receta
                   } else {
                     Recipe createdRecipe = await recipeService
                         .createRecipe(recipeFormProvider.recipe);
