@@ -24,25 +24,11 @@ class MapScreen extends StatefulWidget {
     'Parque': Icons.park_rounded,
     'Centro histórico': Icons.history_edu_rounded,
     'Monumento': Icons.account_balance_rounded,
-    'Jardin': Icons.nature_rounded,
     'Iglesia': Icons.church_rounded,
-    'Castillo': Icons.castle_rounded,
-    'Centro cultrular': Icons.celebration_rounded,
-    'Zona arqueologica': Icons.pages_outlined,
     'Teatro': Icons.theater_comedy_rounded,
     'Mercado': Icons.shopping_basket_rounded,
-    'Paseo Marítimo': Icons.anchor_rounded,
-    'Reserva Natural': Icons.nature_people_rounded,
     'Mirador': Icons.camera_alt_rounded,
-    'Cueva': Icons.landscape_rounded,
-    'Lago': Icons.water_rounded,
     'Puente': Icons.linear_scale_outlined,
-    'Faro': Icons.lightbulb_circle_rounded,
-    'Restaurante': Icons.restaurant_outlined,
-    'Hotel': Icons.hotel_rounded,
-    'Bar': Icons.restaurant_menu_outlined,
-    'Cafeteria': Icons.coffee_rounded,
-    'Spa': Icons.spa_rounded
   };
 
   static final Map<String, Color> categoryColors = {
@@ -52,25 +38,11 @@ class MapScreen extends StatefulWidget {
     'Parque': const Color.fromARGB(255, 5, 138, 44),
     'Centro histórico': const Color.fromARGB(255, 243, 152, 33),
     'Monumento': const Color.fromARGB(255, 243, 152, 33),
-    'Jardin': const Color.fromARGB(255, 243, 152, 33),
     'Iglesia': const Color.fromARGB(255, 243, 152, 33),
-    'Castillo': const Color.fromARGB(255, 243, 152, 33),
-    'Centro cultrular': const Color.fromARGB(255, 243, 152, 33),
-    'Zona arqueologica': const Color.fromARGB(255, 243, 152, 33),
     'Teatro': const Color.fromARGB(255, 180, 9, 180),
     'Mercado': const Color.fromARGB(255, 243, 152, 33),
-    'Paseo Marítimo': const Color.fromARGB(255, 243, 152, 33),
-    'Reserva Natural': const Color.fromARGB(255, 243, 152, 33),
     'Mirador': const Color.fromARGB(255, 243, 152, 33),
-    'Cueva': const Color.fromARGB(255, 243, 152, 33),
-    'Lago': const Color.fromARGB(255, 243, 152, 33),
     'Puente': const Color.fromARGB(255, 243, 152, 33),
-    'Faro': const Color.fromARGB(255, 243, 152, 33),
-    'Restaurante': const Color.fromARGB(255, 243, 152, 33),
-    'Hotel': const Color.fromARGB(255, 243, 152, 33),
-    'Bar': const Color.fromARGB(255, 243, 152, 33),
-    'Cafeteria': const Color.fromARGB(255, 243, 152, 33),
-    'Spa': const Color.fromARGB(255, 243, 152, 33)
   };
 
   static final List<Map<String, dynamic>> profiles = [
@@ -115,7 +87,7 @@ class MapScreen extends StatefulWidget {
 
   static List<String> selectedCategories = List.from(categoryIcons.keys);
   static List<vilaModels.Place> places = [];
-  MapScreen({this.route});
+  MapScreen({super.key, this.route});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -139,14 +111,6 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     _loadMarkers();
     _loadRouteResponse();
-  }
-
-  void _listenToCompass() {
-    FlutterCompass.events?.listen((event) {
-      setState(() {
-        _heading = event.heading;
-      });
-    });
   }
 
   void _loadMarkers() async {
@@ -185,7 +149,6 @@ class _MapScreenState extends State<MapScreen> {
       Position currentPosition = await Geolocator.getCurrentPosition();
 
       String profile = MapScreen.profiles[_selectedProfileIndex]['ors_profile'];
-      print('PROFILE SELECTED: ' + profile);
 
       routeResponse = await openRouteService.getOpenRouteWithPositionByRoute(
           widget.route!, profile, currentPosition);
@@ -231,7 +194,7 @@ class _MapScreenState extends State<MapScreen> {
   Future<List<LatLng>> _decodeGeometry(String geometry) async {
     PolylinePoints polylinePoints = PolylinePoints();
     List<PointLatLng> decodedPoints =
-        await polylinePoints.decodePolyline(geometry);
+        polylinePoints.decodePolyline(geometry);
 
     // Convertir los puntos decodificados a una lista de LatLng
     List<LatLng> latLngPoints = decodedPoints
@@ -251,7 +214,7 @@ class _MapScreenState extends State<MapScreen> {
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              initialCenter: LatLng(38.509430, -0.230211),
+              initialCenter: const LatLng(38.509430, -0.230211),
               initialZoom: 13.0,
               maxZoom: 18.0,
               onTap: (tapPosition, point) => _popupController.hideAllPopups(),
@@ -292,14 +255,14 @@ class _MapScreenState extends State<MapScreen> {
                                 orElse: () => vilaModels.Place.nullPlace(),
                               );
 
-                      return Container(
+                      return SizedBox(
                         width: 300,
                         height: 170,
                         child: place.id == -1
                             ? Card(
                                 color: Colors.white,
                                 child: Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Text(AppLocalizations.of(context)
                                       .translate('place404')),
                                 ),
@@ -314,7 +277,7 @@ class _MapScreenState extends State<MapScreen> {
           ),
           SafeArea(
             top: false,
-            minimum: EdgeInsets.only(top: 15),
+            minimum: const EdgeInsets.only(top: 15),
             child: Column(
               children: [
                 SearchBoxFiltered(
@@ -337,7 +300,7 @@ class _MapScreenState extends State<MapScreen> {
                       itemCount: MapScreen.profiles.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: GestureDetector(
                             onTap: () {
                               setState(() {
@@ -356,12 +319,12 @@ class _MapScreenState extends State<MapScreen> {
                                       : const Color.fromARGB(0, 0, 0, 0),
                                 ),
                               ),
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
                                 children: [
                                   Icon(MapScreen.profiles[index]['icon'],
                                       color: Colors.black),
-                                  SizedBox(width: 5),
+                                  const SizedBox(width: 5),
                                   Text(MapScreen.profiles[index]['name']),
                                 ],
                               ),
@@ -377,7 +340,7 @@ class _MapScreenState extends State<MapScreen> {
 
           // Botones
           Padding(
-            padding: EdgeInsets.only(bottom: 10, right: 10),
+            padding: const EdgeInsets.only(bottom: 10, right: 10),
             child: Align(
               alignment: Alignment.bottomRight,
               child: Column(
@@ -394,12 +357,12 @@ class _MapScreenState extends State<MapScreen> {
                     focusColor: Colors.white,
                     child: const Icon(Icons.layers_outlined, color: Colors.white),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   FloatingActionButton(
                     backgroundColor: vilaBlueColor(),
                     focusColor: Colors.white,
                     onPressed: _centerMapOnUser,
-                    child: Icon(Icons.my_location, color: Colors.white),
+                    child: const Icon(Icons.my_location, color: Colors.white),
                   )
                 ],
               ),
@@ -407,7 +370,7 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
     );
   }
 }
@@ -431,7 +394,7 @@ class SearchBoxFiltered extends StatefulWidget {
 
 class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
   PlaceService placeService = PlaceService();
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
   List<vilaModels.Place> _places = []; // Datos iniciales
   List<vilaModels.Place> _filteredPlaces = [];
   bool _showList = false;
@@ -442,7 +405,6 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
     super.initState();
     _loadPlaces();
     _controller.addListener(_filterPlaces);
-    print(_places);
   }
 
   void _loadPlaces() async {
@@ -510,7 +472,7 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
         ),
         if (_showList)
           Container(
-            margin: EdgeInsets.only(top: 0),
+            margin: const EdgeInsets.only(top: 0),
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height *
                   0.4, // Ajusta la altura según sea necesario
@@ -523,7 +485,7 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
                     MapScreen.categoryIcons[place.categoryPlace.name] ??
                         Icons.location_on;
                 return Card(
-                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+                  margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
                   elevation: 5,
                   child: ListTile(
                       leading: Container(
@@ -567,7 +529,7 @@ class _SearchBoxFilteredState extends State<SearchBoxFiltered> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
                   blurRadius: 8,

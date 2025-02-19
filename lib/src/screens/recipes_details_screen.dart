@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
+import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
@@ -65,7 +66,24 @@ class _RecipeDetailsState extends State<RecipeDetails>
                     arguments: recipe);
               },
             )
-          : FavoriteFloatingActionButton(article: recipe),
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (recipe.creator.id == currentUser.id)
+                FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      UploadRecipe.routeName,
+                      arguments: recipe,
+                    );
+                  },
+                  child: const Icon(Icons.edit),
+                ),
+                const SizedBox(width: 10),
+                FavoriteFloatingActionButton(article: recipe),
+              ],
+            ),
       body: Stack(children: [
         const WavesWidget(),
         Column(
@@ -103,9 +121,9 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            AppLocalizations.of(context).translate('preparation'),
-                            style: Theme.of(context).textTheme.titleLarge
-                          ),
+                              AppLocalizations.of(context)
+                                  .translate('preparation'),
+                              style: Theme.of(context).textTheme.titleLarge),
                           const SizedBox(height: 8),
                           Text(
                             recipe.description,

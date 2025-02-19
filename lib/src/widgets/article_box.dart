@@ -302,44 +302,70 @@ class _RecipeInfo extends StatelessWidget {
       bottom: 0,
       left: 0,
       right: 0,
-      child: Container(
-        margin: const EdgeInsets.only(left: 135),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
-          color: Colors.black.withOpacity(0.4),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              widget.article.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 135),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+              color: Colors.black.withOpacity(0.4),
             ),
-            const SizedBox(height: 5),
-            Row(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                PaintStars(
-                    rating: (widget.article as Recipe).averageScore,
-                    color: Colors.yellow),
-                const SizedBox(width: 10),
                 Text(
-                  (widget.article as Recipe).averageScore.toStringAsFixed(1),
+                  widget.article.name,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    PaintStars(
+                        rating: (widget.article as Recipe).averageScore,
+                        color: Colors.yellow),
+                    const SizedBox(width: 10),
+                    Text(
+                      (widget.article as Recipe).averageScore.toStringAsFixed(1),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          if ((widget.article as Recipe).approved != null && !(widget.article as Recipe).approved!)
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                ),
+                child: Text(
+                  AppLocalizations.of(context).translate('disapproved'),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

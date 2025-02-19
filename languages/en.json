@@ -116,5 +116,7 @@
     "myRecipes": "Here you will see the recipes you have uploaded",
     "favorites": "Favorites",
     "created_by": "Created by",
-    "noFavorites": "Here you will see your favorite articles"
+    "noFavorites": "Here you will see your favorite articles",
+    "editRecipe": "Edit recipe",
+    "disapproved": "Not approved"
 }
