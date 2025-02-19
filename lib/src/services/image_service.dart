@@ -21,8 +21,11 @@ class ImageService {
       },
     );
 
+    final jsonResponse =
+        jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+
     List<customImage.Image> images =
-        customImage.Image.fromJsonList(jsonDecode(response.body));
+        customImage.Image.fromJsonList(jsonResponse);
     return images;
   }
 
@@ -46,9 +49,10 @@ class ImageService {
   Future<customImage.Image> uploadImage(customImage.Image image) async {
     final url;
     if (image.article != null) {
-      url = Uri.parse('$baseURL/images/withArticle?id_article=${image.article!.id}');
+      url = Uri.parse(
+          '$baseURL/images/withArticle?id_article=${image.article!.id}');
     } else {
-       url = Uri.parse('$baseURL/images');
+      url = Uri.parse('$baseURL/images');
     }
     String? token = await UserPreferences.instance.readData('token');
     if (token == null) {

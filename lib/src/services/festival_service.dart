@@ -18,9 +18,11 @@ class FestivalService {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
     );
+
+    final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     
     List<Festival> festivals =
-        Festival.fromJsonList(json.decode(response.body));
+        Festival.fromJsonList(jsonResponse);
 
     return festivals;
   }
