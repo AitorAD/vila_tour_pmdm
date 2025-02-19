@@ -25,7 +25,8 @@ class LoginService extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
+        final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+        final Map<String, dynamic> responseData = jsonResponse;
         print(responseData);
         
         // Guardar el token de acceso

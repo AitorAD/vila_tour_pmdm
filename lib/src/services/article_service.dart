@@ -18,9 +18,10 @@ class ArticleService {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
     );
-    
-    List<Article> articles =
-        Article.fromJsonList(json.decode(response.body));
+
+    final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+
+    List<Article> articles = Article.fromJsonList(jsonResponse);
 
     return articles;
   }
@@ -38,7 +39,9 @@ class ArticleService {
       },
     );
 
-    Article article = Article.fromJson(json.decode(response.body));
+    final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+
+    Article article = Article.fromJson(jsonResponse);
 
     return article;
   }

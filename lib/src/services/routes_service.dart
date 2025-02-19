@@ -18,9 +18,11 @@ class RouteService {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
     );
+
+    final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
     
     List<Route> routes =
-        Route.fromJsonList(json.decode(response.body));
+        Route.fromJsonList(jsonResponse);
 
     return routes;
   }

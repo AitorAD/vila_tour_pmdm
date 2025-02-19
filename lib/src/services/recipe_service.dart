@@ -26,7 +26,8 @@ class RecipeService {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
+        final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+        final List<dynamic> responseData = jsonResponse;
         return responseData.map((json) => Recipe.fromMap(json)).toList();
       } else {
         throw HttpException('Failed to fetch recipes: ${response.statusCode}');
@@ -59,7 +60,8 @@ class RecipeService {
       );
 
       if (response.statusCode == 201) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
+        final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+        final Map<String, dynamic> responseData = jsonResponse;
         return Recipe.fromMap(responseData);
       } else {
         throw HttpException(
@@ -88,7 +90,8 @@ class RecipeService {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
+        final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+        final List<dynamic> responseData = jsonResponse;
         return responseData.map((json) => Recipe.fromMap(json)).toList();
       } else {
         throw HttpException('Failed to fetch user recipes: ${response.statusCode}');

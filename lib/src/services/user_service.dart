@@ -24,7 +24,7 @@ class UserService extends ChangeNotifier {
         HttpHeaders.authorizationHeader: 'Bearer $token',
       },
     );
-
+        
     User currentUser = User.fromJson(response.body);
     return currentUser;
   }
@@ -107,8 +107,7 @@ class UserService extends ChangeNotifier {
     }
   }
 
-  Future<List<Article>> getFavorites (int id) async {
-
+  Future<List<Article>> getFavorites(int id) async {
     ReviewService reviewService = ReviewService();
     List<Review> reviews = await reviewService.getReviewsUser(id);
     List<Article> favorites = [];
