@@ -104,7 +104,10 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen>
             },
           ),
           const Divider(),
-          Text(route.description),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(route.description),
+          ),
           const Divider(),
         ],
       ),

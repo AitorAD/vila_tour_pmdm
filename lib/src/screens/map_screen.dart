@@ -24,25 +24,11 @@ class MapScreen extends StatefulWidget {
     'Parque': Icons.park_rounded,
     'Centro histórico': Icons.history_edu_rounded,
     'Monumento': Icons.account_balance_rounded,
-    'Jardin': Icons.nature_rounded,
     'Iglesia': Icons.church_rounded,
-    'Castillo': Icons.castle_rounded,
-    'Centro cultrular': Icons.celebration_rounded,
-    'Zona arqueologica': Icons.pages_outlined,
     'Teatro': Icons.theater_comedy_rounded,
     'Mercado': Icons.shopping_basket_rounded,
-    'Paseo Marítimo': Icons.anchor_rounded,
-    'Reserva Natural': Icons.nature_people_rounded,
     'Mirador': Icons.camera_alt_rounded,
-    'Cueva': Icons.landscape_rounded,
-    'Lago': Icons.water_rounded,
     'Puente': Icons.linear_scale_outlined,
-    'Faro': Icons.lightbulb_circle_rounded,
-    'Restaurante': Icons.restaurant_outlined,
-    'Hotel': Icons.hotel_rounded,
-    'Bar': Icons.restaurant_menu_outlined,
-    'Cafeteria': Icons.coffee_rounded,
-    'Spa': Icons.spa_rounded
   };
 
   static final Map<String, Color> categoryColors = {
@@ -52,25 +38,11 @@ class MapScreen extends StatefulWidget {
     'Parque': const Color.fromARGB(255, 5, 138, 44),
     'Centro histórico': const Color.fromARGB(255, 243, 152, 33),
     'Monumento': const Color.fromARGB(255, 243, 152, 33),
-    'Jardin': const Color.fromARGB(255, 243, 152, 33),
     'Iglesia': const Color.fromARGB(255, 243, 152, 33),
-    'Castillo': const Color.fromARGB(255, 243, 152, 33),
-    'Centro cultrular': const Color.fromARGB(255, 243, 152, 33),
-    'Zona arqueologica': const Color.fromARGB(255, 243, 152, 33),
     'Teatro': const Color.fromARGB(255, 180, 9, 180),
     'Mercado': const Color.fromARGB(255, 243, 152, 33),
-    'Paseo Marítimo': const Color.fromARGB(255, 243, 152, 33),
-    'Reserva Natural': const Color.fromARGB(255, 243, 152, 33),
     'Mirador': const Color.fromARGB(255, 243, 152, 33),
-    'Cueva': const Color.fromARGB(255, 243, 152, 33),
-    'Lago': const Color.fromARGB(255, 243, 152, 33),
     'Puente': const Color.fromARGB(255, 243, 152, 33),
-    'Faro': const Color.fromARGB(255, 243, 152, 33),
-    'Restaurante': const Color.fromARGB(255, 243, 152, 33),
-    'Hotel': const Color.fromARGB(255, 243, 152, 33),
-    'Bar': const Color.fromARGB(255, 243, 152, 33),
-    'Cafeteria': const Color.fromARGB(255, 243, 152, 33),
-    'Spa': const Color.fromARGB(255, 243, 152, 33)
   };
 
   static final List<Map<String, dynamic>> profiles = [
