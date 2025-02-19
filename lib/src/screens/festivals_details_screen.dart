@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
-import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
-import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
 
 class DetailsFestival extends StatefulWidget {
-  static final routeName = 'general_festival';
+  static const routeName = 'general_festival';
   const DetailsFestival({super.key});
 
   @override
@@ -25,7 +22,8 @@ class _DetailsFestivalState extends State<DetailsFestival>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this); // 2 pestañas: General y Reviews
+    _tabController =
+        TabController(length: 2, vsync: this); // 2 pestañas: General y Reviews
     _tabController.addListener(_handleTabChange);
   }
 
@@ -38,35 +36,42 @@ class _DetailsFestivalState extends State<DetailsFestival>
 
   void _handleTabChange() {
     setState(() {
-      showFab = _tabController.index == 1; // Muestra el botón solo en la pestaña de reseñas
+      showFab = _tabController.index ==
+          1; // Muestra el botón solo en la pestaña de reseñas
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final Festival festival = ModalRoute.of(context)!.settings.arguments as Festival;
+    final Festival festival =
+        ModalRoute.of(context)!.settings.arguments as Festival;
 
-    final filteredReviews = festival.reviews.where((review) => review.rating > 0).toList();
+    final filteredReviews =
+        festival.reviews.where((review) => review.rating > 0).toList();
     final double averageScore = filteredReviews.isNotEmpty
-        ? filteredReviews.map((review) => review.rating).reduce((a, b) => a + b) / filteredReviews.length
+        ? filteredReviews
+                .map((review) => review.rating)
+                .reduce((a, b) => a + b) /
+            filteredReviews.length
         : 0;
 
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
-      floatingActionButtonLocation: showFab ?
-      FloatingActionButtonLocation.centerFloat :
-      FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: const CustomNavigationBar(),
+      floatingActionButtonLocation: showFab
+          ? FloatingActionButtonLocation.centerFloat
+          : FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
-              text: 'Añadir reseña',
+              text: AppLocalizations.of(context).translate('addReview'),
               radius: 20,
               onPressed: () {
-                Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: festival);
+                Navigator.pushNamed(context, AddReviewScreen.routeName,
+                    arguments: festival);
               },
             )
           : FavoriteFloatingActionButton(article: festival),
       body: Stack(children: [
-        WavesWidget(),
+        const WavesWidget(),
         Column(
           children: [
             BarScreenArrow(labelText: festival.name, arrowBack: true),
@@ -74,9 +79,9 @@ class _DetailsFestivalState extends State<DetailsFestival>
               controller: _tabController,
               labelColor: const Color.fromARGB(255, 2, 110, 96),
               indicatorColor: const Color(0xFF01C2A9),
-              tabs: const [
-                Tab(text: 'General'),
-                Tab(text: 'Reseñas'),
+              tabs: [
+                Tab(text: AppLocalizations.of(context).translate('general')),
+                Tab(text: AppLocalizations.of(context).translate('reviews')),
               ],
             ),
             Expanded(
@@ -98,7 +103,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                                 height: 350,
                                 enableInfiniteScroll: true,
                                 autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 5),
+                                autoPlayInterval: const Duration(seconds: 5),
                                 enlargeCenterPage: true,
                                 viewportFraction: 0.85,
                               ),
@@ -106,7 +111,8 @@ class _DetailsFestivalState extends State<DetailsFestival>
                                 return ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: FadeInImage(
-                                    placeholder: AssetImage('assets/logo.ico'),
+                                    placeholder:
+                                        const AssetImage('assets/logo.ico'),
                                     image: image.path.startsWith('assets/')
                                         ? AssetImage(image.path)
                                             as ImageProvider
@@ -129,11 +135,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
                             festival.name,
-                            style: const TextStyle(
-                              fontFamily: 'PontanoSans',
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.titleLarge,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -151,14 +153,8 @@ class _DetailsFestivalState extends State<DetailsFestival>
                         // Festival description
                         Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            festival.description,
-                            style: const TextStyle(
-                              fontFamily: 'PontanoSans',
-                              fontSize: 16,
-                              height: 1.5,
-                            ),
-                          ),
+                          child: Text(festival.description,
+                              style: Theme.of(context).textTheme.bodyLarge),
                         ),
 
                         const Divider(),
@@ -175,10 +171,7 @@ class _DetailsFestivalState extends State<DetailsFestival>
                               const SizedBox(width: 4),
                               Text(
                                 festival.coordinate.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'PontanoSans',
-                                ),
+                                style: Theme.of(context).textTheme.titleLarge
                               ),
                             ],
                           ),
@@ -200,30 +193,3 @@ class _DetailsFestivalState extends State<DetailsFestival>
     );
   }
 }
-
-
-/*
-
-      // Floating action button for "favorite"
-
-      // El widget consumer reconstruye automaticamente el floatingActionButton
-      // cuando es estado de FestivalsProvider cambia
-      floatingActionButton: Consumer<FestivalsProvider>(
-        builder: (context, festivalsProvider, child) {
-          // Verifica si el festival actual es favorito
-          final isFavourite = festivalsProvider.festivals
-              .any((f) => f.name == festival.name && f.favourite);
-
-          return FloatingActionButton(
-            onPressed: () {
-              festivalsProvider.toggleFavorite(festival);
-            },
-            backgroundColor: isFavourite ? Colors.white : Colors.redAccent,
-            child: isFavourite
-                ? Icon(Icons.favorite, color: Colors.redAccent)
-                : Icon(Icons.favorite_border),
-          );
-        },
-      ),
-
-      */

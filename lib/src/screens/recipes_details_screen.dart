@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
+import 'package:vila_tour_pmdm/src/services/config.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
-import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
-import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RecipeDetails extends StatefulWidget {
-  static final routeName = 'general_recipe';
+  static const routeName = 'general_recipe';
   const RecipeDetails({super.key});
 
   @override
@@ -54,32 +53,51 @@ class _RecipeDetailsState extends State<RecipeDetails>
         : 0;
 
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
-      floatingActionButtonLocation: showFab ?
-      FloatingActionButtonLocation.centerFloat :
-      FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: const CustomNavigationBar(),
+      floatingActionButtonLocation: showFab
+          ? FloatingActionButtonLocation.centerFloat
+          : FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
-              text: 'Añadir reseña',
+              text: AppLocalizations.of(context).translate('addReview'),
               radius: 20,
               onPressed: () {
                 Navigator.pushNamed(context, AddReviewScreen.routeName,
                     arguments: recipe);
               },
             )
-          : FavoriteFloatingActionButton(article: recipe),
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (recipe.creator.id == currentUser.id)
+                FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      UploadRecipe.routeName,
+                      arguments: recipe,
+                    );
+                  },
+                  child: const Icon(Icons.edit),
+                ),
+                const SizedBox(width: 10),
+                FavoriteFloatingActionButton(article: recipe),
+              ],
+            ),
       body: Stack(children: [
-        WavesWidget(),
+        const WavesWidget(),
         Column(
           children: [
             BarScreenArrow(labelText: recipe.name, arrowBack: true),
             TabBar(
               controller: _tabController,
               indicatorColor: const Color.fromARGB(255, 54, 71, 71),
-              tabs: const [
-                Tab(text: 'Receta'),
-                Tab(text: 'Visión General'),
-                Tab(text: 'Reseñas'),
+              tabs: [
+                Tab(text: AppLocalizations.of(context).translate('recipe')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('generalVision')),
+                Tab(text: AppLocalizations.of(context).translate('reviews')),
               ],
             ),
             Expanded(
@@ -103,13 +121,13 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'Preparación',
-                            style: textStyleVilaTourTitle(color: Colors.black),
-                          ),
+                              AppLocalizations.of(context)
+                                  .translate('preparation'),
+                              style: Theme.of(context).textTheme.titleLarge),
                           const SizedBox(height: 8),
                           Text(
                             recipe.description,
-                            style: const TextStyle(fontSize: 16),
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ],
                       ),
@@ -124,19 +142,20 @@ class _RecipeDetailsState extends State<RecipeDetails>
                       children: [
                         Text(
                           recipe.name,
-                          style: textStyleVilaTourTitle(color: Colors.black),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Hero(
                           tag: recipe.id, // Mismo tag que en ArticleBox
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: FadeInImage(
-                              placeholder: AssetImage('assets/logo.ico'),
+                              placeholder: const AssetImage('assets/logo.ico'),
                               image: recipe.images.isNotEmpty
                                   ? MemoryImage(decodeImageBase64(
                                       recipe.images.first.path))
-                                  : AssetImage('assets/logo_foreground.png')
+                                  : const AssetImage(
+                                          'assets/logo_foreground.png')
                                       as ImageProvider,
                               width: double.infinity,
                               height: 200,
@@ -145,12 +164,21 @@ class _RecipeDetailsState extends State<RecipeDetails>
                           ),
                         ),
 
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         // Row for rating stars
                         RatingRow(
                           averageScore: averageScore,
                           reviewCount: filteredReviews.length,
                         ),
+
+                        const SizedBox(height: 10),
+                        // Label for creator's name
+                        Text(
+                          '${AppLocalizations.of(context).translate('created_by')} ${recipe.creator.username}',
+                          style: const TextStyle(
+                              fontSize: 14, fontStyle: FontStyle.italic),
+                        ),
+
                         const Divider(height: 20),
 
                         IngredientsWrap(ingredients: recipe.ingredients),
@@ -173,8 +201,7 @@ class _RecipeDetailsState extends State<RecipeDetails>
 class IngredientsWrap extends StatelessWidget {
   final List<Ingredient> ingredients;
 
-  const IngredientsWrap({Key? key, required this.ingredients})
-      : super(key: key);
+  const IngredientsWrap({super.key, required this.ingredients});
 
   @override
   Widget build(BuildContext context) {
@@ -182,8 +209,8 @@ class IngredientsWrap extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Ingredientes',
-          style: textStyleVilaTourTitle(color: Colors.black),
+          AppLocalizations.of(context).translate('ingredients'),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
         Wrap(
@@ -195,7 +222,7 @@ class IngredientsWrap extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Text(
                 ingredient.name,
-                style: textStyleVilaTour(color: Colors.black),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             );
           }).toList(),

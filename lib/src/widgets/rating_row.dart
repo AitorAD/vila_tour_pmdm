@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/paint_stars.dart';
-import 'package:vila_tour_pmdm/src/models/models.dart';
 
 class RatingRow extends StatelessWidget {
   final double averageScore;
   final int reviewCount;
 
   const RatingRow({
-    Key? key,
+    super.key,
     required this.averageScore,
     required this.reviewCount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class RatingRow extends StatelessWidget {
         children: [
           Text(
             averageScore.toString(),
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontFamily: 'PontanoSans',
@@ -35,7 +34,7 @@ class RatingRow extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             '($reviewCount)',
-            style: TextStyle(color: Colors.white, fontSize: 16),
+            style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ],
       ),

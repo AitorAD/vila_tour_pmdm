@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/screens/add_review_screen.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/rating_row.dart';
-import 'package:vila_tour_pmdm/src/widgets/reviews_info.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
-import 'package:vila_tour_pmdm/src/widgets/favorite_floating_action_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class PlacesDetails extends StatefulWidget {
-  static final routeName = 'general_place';
+  static const routeName = 'general_place';
   const PlacesDetails({super.key});
 
   @override
@@ -55,13 +53,13 @@ class _PlacesDetailsState extends State<PlacesDetails>
         : 0;
 
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       floatingActionButtonLocation: showFab ?
       FloatingActionButtonLocation.centerFloat :
       FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFab
           ? ElevatedCustomButton(
-              text: 'Añadir reseña',
+              text: AppLocalizations.of(context).translate('addReview'),
               radius: 20,
               onPressed: () {
                 Navigator.pushNamed(context, AddReviewScreen.routeName, arguments: place);
@@ -69,16 +67,16 @@ class _PlacesDetailsState extends State<PlacesDetails>
             )
           : FavoriteFloatingActionButton(article: place),
       body: Stack(children: [
-        WavesWidget(),
+        const WavesWidget(),
         Column(
           children: [
             BarScreenArrow(labelText: place.name, arrowBack: true),
             TabBar(
               controller: _tabController,
               indicatorColor: const Color.fromARGB(255, 54, 71, 71),
-              tabs: const [
-                Tab(text: 'General'),
-                Tab(text: 'Reseñas'),
+              tabs: [
+                Tab(text: AppLocalizations.of(context).translate('general')),
+                Tab(text: AppLocalizations.of(context).translate('reviews')),
               ],
             ),
             Expanded(
@@ -100,7 +98,7 @@ class _PlacesDetailsState extends State<PlacesDetails>
                                 height: 350,
                                 enableInfiniteScroll: true,
                                 autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 5),
+                                autoPlayInterval: const Duration(seconds: 5),
                                 enlargeCenterPage: true,
                                 viewportFraction: 0.85,
                               ),
@@ -108,7 +106,7 @@ class _PlacesDetailsState extends State<PlacesDetails>
                                 return ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: FadeInImage(
-                                    placeholder: AssetImage('assets/logo.ico'),
+                                    placeholder: const AssetImage('assets/logo.ico'),
                                     image: image.path.startsWith('assets/')
                                         ? AssetImage(image.path)
                                             as ImageProvider

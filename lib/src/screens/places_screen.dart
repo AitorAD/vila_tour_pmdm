@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/services/place_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class PlacesScreen extends StatefulWidget {
-  static final routeName = 'places_screen';
+  static const routeName = 'places_screen';
   const PlacesScreen({super.key});
 
   @override
@@ -101,17 +102,17 @@ class _PlacesScreenState extends State<PlacesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          Positioned.fill(
+          const Positioned.fill(
             child: WavesWidget(),
           ),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Lugares', arrowBack: true),
+              BarScreenArrow(labelText: AppLocalizations.of(context).translate('places'), arrowBack: true),
               SearchBox(
-                hintText: 'Buscar lugares',
+                hintText: AppLocalizations.of(context).translate('searchPlaces'),
                 controller: searchController,
                 onChanged: (text) {
                   _placesFuture.then((places) => _filterPlaces(text, places));
@@ -128,12 +129,14 @@ class _PlacesScreenState extends State<PlacesScreen> {
                       print(snapshot.error);
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                          child: Text('No se encontraron lugares.'));
+                      return Center(
+                          child: Text(AppLocalizations.of(context).translate('noPlaces'), style: Theme.of(context).textTheme.bodyMedium));
                     } else {
                       final places = _filteredPlaces.isEmpty
                           ? snapshot.data!
                           : _filteredPlaces;
+
+                      places.sort((a, b) => a.name.compareTo(b.name));
 
                       return ListView.builder(
                         padding: EdgeInsets.zero,

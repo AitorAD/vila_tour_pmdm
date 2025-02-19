@@ -12,8 +12,6 @@ class ReviewService {
 
     String? token = await UserPreferences.instance.readData('token');
 
-    print('REVIEW JSON: ' + review.toJson());
-
     final response = await http.post(
       url,
       headers: {
@@ -23,8 +21,36 @@ class ReviewService {
       body: review.toJson(),
     );
 
-    print('RESPONSE BODY: ' + response.body);
-
     return response.statusCode == 200;
   }
+
+  Future<List<Review>> getReviewsUser(int id) async {
+    final url = Uri.parse(
+        '$baseURL/reviews/byUser?idUser=$id');
+
+    String? token = await UserPreferences.instance.readData('token');
+
+    final response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      try {
+        final List<dynamic> jsonResponse = json.decode(response.body);
+        List<Review> reviews = jsonResponse.map((e) => Review.fromMap(e)).toList();
+        return reviews;
+      } catch (e) {
+        throw Exception('Error al deserializar los datos de las reviews');
+      }
+    } else {
+      throw Exception('Error al cargar los datos de las reviews');
+    }
+    
+  }
+
+
 }

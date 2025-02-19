@@ -9,13 +9,13 @@ class CustomButton extends StatelessWidget {
   final double height; // Altura fija del botón
 
   const CustomButton({
-    Key? key,
+    super.key,
     required this.text,
     this.onPressed,
     this.radius = 40, // Valor predeterminado para el radio
     this.width = 150, // Ancho predeterminado
     this.height = 50, // Altura predeterminada
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

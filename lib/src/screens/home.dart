@@ -1,18 +1,15 @@
 import 'dart:ui';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/providers/theme_provider.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/services/article_service.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
-import 'package:vila_tour_pmdm/src/providers/providers.dart';
 
 class HomePage extends StatefulWidget {
-  static final routeName = 'home_screen';
+  static const routeName = 'home_screen';
   const HomePage({super.key});
 
   @override
@@ -34,21 +31,21 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          WavesWidget(),
+          const WavesWidget(),
           SingleChildScrollView(
             child: Column(
               children: [
                 BarScreenArrow(labelText: 'VILATOUR', arrowBack: false),
-                Container(
+                SizedBox(
                   height: 320,
                   child: FutureBuilder(
                     future: _futureArticles,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasData &&
                           snapshot.data!.isNotEmpty) {
                         List<Article> articles = snapshot.data!;
@@ -72,13 +69,14 @@ class _HomePageState extends State<HomePage> {
                         );
                       } else {
                         return Center(
-                          child: Text('No hay artículos disponibles.'),
+                          child: Text(AppLocalizations.of(context).translate('noArticles')),
                         );
                       }
                     },
                   ),
                 ),
-                _MainContent()
+                const SizedBox(height: 15),
+                const _MainContent()
               ],
             ),
           ),
@@ -136,82 +134,8 @@ class DockIndex extends StatelessWidget {
   }
 }
 
-class ImageCarousel extends StatelessWidget {
-  const ImageCarousel({
-    super.key,
-    required this.article,
-  });
-
-  final Article article;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        String route = LoginScreen.routeName;
-        if (article is Festival) route = DetailsFestival.routeName;
-        if (article is Place) route = PlacesDetails.routeName;
-        if (article is Recipe) route = RecipeDetails.routeName;
-        Navigator.pushNamed(
-          context,
-          route,
-          arguments: article,
-        );
-      },
-      child: Hero(
-        tag: article.id,
-        child: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 8,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          clipBehavior: Clip.hardEdge,
-          child: FadeInImage(
-            placeholder: const AssetImage('assets/logo.ico'),
-            image: article.images.isEmpty
-                ? const AssetImage('assets/logo.ico')
-                : MemoryImage(
-                    decodeImageBase64(article.images.first.path),
-                  ),
-            width: double.infinity,
-            height: 400,
-            fit: BoxFit.cover,
-            placeholderFit: BoxFit.contain,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ToggleThemeButton extends StatelessWidget {
-  const ToggleThemeButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-        Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-      },
-      child: Icon(Icons.dark_mode),
-    );
-  }
-}
-
 class _MainContent extends StatelessWidget {
-  const _MainContent({
-    super.key,
-  });
+  const _MainContent();
 
   @override
   Widget build(BuildContext context) {
@@ -223,13 +147,13 @@ class _MainContent extends StatelessWidget {
               route: PlacesScreen.routeName,
               color: Colors.blueAccent,
               icon: Icons.place,
-              text: 'Lugares de Interés',
+              text: AppLocalizations.of(context).translate('places'),
             ),
             _SingleCard(
               route: FestivalsScreen.routeName,
               color: Colors.pinkAccent,
               icon: Icons.celebration,
-              text: 'Festivales',
+              text: AppLocalizations.of(context).translate('festivals'),
             ),
           ],
         ),
@@ -239,13 +163,13 @@ class _MainContent extends StatelessWidget {
               route: RecipesScreen.routeName,
               color: Colors.purpleAccent,
               icon: Icons.restaurant_menu,
-              text: 'Recetas',
+              text: AppLocalizations.of(context).translate('recipes'),
             ),
             _SingleCard(
-              route: LoginScreen.routeName,
+              route: RoutesScreen.routeName,
               color: Colors.purple,
               icon: Icons.map,
-              text: 'Rutas',
+              text: AppLocalizations.of(context).translate('routes'),
             ),
           ],
         ),
@@ -260,8 +184,7 @@ class _SingleCard extends StatelessWidget {
   final String text;
   final String route;
 
-  _SingleCard({
-    super.key,
+  const _SingleCard({
     required this.icon,
     required this.color,
     required this.text,
@@ -275,7 +198,7 @@ class _SingleCard extends StatelessWidget {
         Navigator.pushNamed(context, route);
       },
       child: Container(
-        margin: EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: BackdropFilter(
@@ -289,13 +212,13 @@ class _SingleCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    child: Icon(icon, size: 35, color: Colors.white),
                     backgroundColor: color,
+                    child: Icon(icon, size: 35, color: Colors.white),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     text,
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
                     textAlign: TextAlign.center,
                   )
                 ],

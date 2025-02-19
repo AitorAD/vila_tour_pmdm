@@ -3,20 +3,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/models/image.dart' as customImage;
-import 'package:vila_tour_pmdm/src/providers/ingredients_provider.dart';
 import 'package:vila_tour_pmdm/src/providers/providers.dart';
 import 'package:vila_tour_pmdm/src/screens/screens.dart';
-import 'package:vila_tour_pmdm/src/services/config.dart';
-import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
-import 'package:vila_tour_pmdm/src/widgets/recipe_image.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class UploadRecipe extends StatefulWidget {
   static const routeName = 'upload_recipe';
-  UploadRecipe({super.key});
+  final Recipe? recipe;
+
+  const UploadRecipe({super.key, this.recipe});
 
   @override
   State<UploadRecipe> createState() => _UploadRecipeState();
@@ -26,6 +26,7 @@ class _UploadRecipeState extends State<UploadRecipe> {
   final ValueNotifier<List<Ingredient>> _selectedIngredients = ValueNotifier([]);
   customImage.Image? selectedImage;
   bool _isSearchFocused = false;
+  Recipe? recipe;
 
   @override
   void initState() {
@@ -36,54 +37,79 @@ class _UploadRecipeState extends State<UploadRecipe> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (recipe == null) {
+      recipe = ModalRoute.of(context)!.settings.arguments as Recipe?;
+      if (recipe != null) {
+        Provider.of<RecipeFormProvider>(context, listen: false).recipe = recipe!;
+        _selectedIngredients.value = recipe!.ingredients;
+        if (recipe!.images.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              selectedImage = decodeImageBase64(recipe!.images.first.path) as customImage.Image?;
+            });
+          });
+        }
+      } else {
+        Provider.of<RecipeFormProvider>(context, listen: false).recipe = Recipe(
+          type: "recipe",
+          id: 0,
+          creationDate: DateTime.now(),
+          lastModificationDate: DateTime.now(),
+          name: '',
+          description: '',
+          ingredients: _selectedIngredients.value,
+          averageScore: 0.0,
+          reviews: [],
+          approved: false,
+          recent: true,
+          creator: currentUser,
+          images: [],
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final recipeService = RecipeService();
     final recipeFormProvider = Provider.of<RecipeFormProvider>(context);
     final ingredientsProvider = Provider.of<IngredientsProvider>(context);
 
-    recipeFormProvider.recipe = Recipe(
-      type: "recipe",
-      id: 0,
-      creationDate: DateTime.now(),
-      lastModificationDate: DateTime.now(),
-      name: '',
-      description: '',
-      ingredients: _selectedIngredients.value,
-      averageScore: 1.2,
-      reviews: [],
-      approved: false,
-      recent: true,
-      creator: currentUser,
-      images: [],
-    );
-
     return Scaffold(
-      appBar: CustomAppBar(title: 'Subir Receta'),
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: const CustomNavigationBar(),
-      body: Stack(
+      body: Column(
         children: [
-          WavesWidget(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Form(
-                key: recipeFormProvider.formLogKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildImageSection(recipeFormProvider),
-                    const SizedBox(height: 15),
-                    _buildNameField(recipeFormProvider),
-                    const SizedBox(height: 15),
-                    _buildIngredientsSection(ingredientsProvider),
-                    const SizedBox(height: 20),
-                    _buildDescriptionSection(recipeFormProvider),
-                    const SizedBox(height: 15),
-                    _buildSubmitButton(recipeFormProvider, recipeService),
-                  ],
+          BarScreenArrow(labelText: AppLocalizations.of(context).translate(recipeFormProvider.recipe.name != '' ? 'editRecipe' : 'uploadRecipe'), arrowBack: false,),
+          Expanded(
+            child: Stack(
+              children: [
+                const WavesWidget(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: recipeFormProvider.formRecipeKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildImageSection(recipeFormProvider),
+                          const SizedBox(height: 15),
+                          _buildNameField(recipeFormProvider),
+                          const SizedBox(height: 15),
+                          _buildIngredientsSection(ingredientsProvider),
+                          const SizedBox(height: 20),
+                          _buildDescriptionSection(recipeFormProvider),
+                          const SizedBox(height: 15),
+                          _buildSubmitButton(recipeFormProvider, recipeService),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ],
@@ -94,27 +120,30 @@ class _UploadRecipeState extends State<UploadRecipe> {
   Widget _buildImageSection(RecipeFormProvider recipeFormProvider) {
     return _ProductImageStack(
       selectedImage: selectedImage?.path,
-      recipeFormProvider: recipeFormProvider,
       onImageSelected: (customImage.Image? image) {
         setState(() {
           selectedImage = image;
         });
       },
+      recipeFormProvider: recipeFormProvider,
     );
   }
 
   Widget _buildNameField(RecipeFormProvider recipeFormProvider) {
     return TextFormField(
+      initialValue: recipeFormProvider.recipe.name,
       decoration: InputDecoration(
-        labelText: "Nombre",
+        labelText: AppLocalizations.of(context).translate('name'),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      onChanged: (value) => recipeFormProvider.recipe!.name = value,
+      onChanged: (value) {
+        recipeFormProvider.setRecipeParams(value, null);
+      },
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Por favor ingrese el nombre de la receta';
+          return AppLocalizations.of(context).translate('requiredName');
         }
         return null;
       },
@@ -126,8 +155,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Ingredientes',
-          style: textStyleVilaTourTitle(color: Colors.black, fontSize: 20),
+          AppLocalizations.of(context).translate('ingredients'),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 10),
         FocusScope(
@@ -138,8 +167,9 @@ class _UploadRecipeState extends State<UploadRecipe> {
           },
           child: TextField(
             decoration: InputDecoration(
-              hintText: 'Buscar ingredientes...',
-              prefixIcon: Icon(Icons.search),
+              hintText:
+                  AppLocalizations.of(context).translate('searchIngredients'),
+              prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -161,7 +191,8 @@ class _UploadRecipeState extends State<UploadRecipe> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final filteredIngredients = ingredientsProvider.filteredIngredients
-            .where((ingredient) => !_selectedIngredients.value.contains(ingredient))
+            .where((ingredient) =>
+                !_selectedIngredients.value.contains(ingredient))
             .toList();
         final itemCount = filteredIngredients.length;
         final containerHeight = (itemCount > 3 ? 3 : itemCount) * 50.0;
@@ -178,17 +209,23 @@ class _UploadRecipeState extends State<UploadRecipe> {
             itemBuilder: (context, index) {
               final ingredient = filteredIngredients[index];
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(ingredient.name, style: textStyleVilaTour(color: Colors.black)),
+                    Text(ingredient.name,
+                        style: Theme.of(context).textTheme.bodyLarge),
                     IconButton(
-                      icon: Icon(Icons.add),
+                      icon: const Icon(Icons.add),
                       onPressed: () {
-                        _selectedIngredients.value = List.from(_selectedIngredients.value)..add(ingredient);
-                        ingredientsProvider.filterIngredients(ingredientsProvider.currentFilter);
-                        ingredientsProvider.removeIngredientFromAvailable(ingredient);
+                        _selectedIngredients.value =
+                            List.from(_selectedIngredients.value)
+                              ..add(ingredient);
+                        ingredientsProvider.filterIngredients(
+                            ingredientsProvider.currentFilter);
+                        ingredientsProvider
+                            .removeIngredientFromAvailable(ingredient);
                       },
                     ),
                   ],
@@ -215,14 +252,21 @@ class _UploadRecipeState extends State<UploadRecipe> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(ingredient.name, style: textStyleVilaTour(color: const Color.fromARGB(255, 0, 0, 0))),
+                  Text(ingredient.name,
+                      style: Theme.of(context).textTheme.bodyMedium),
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: () {
-                      _selectedIngredients.value = List.from(_selectedIngredients.value)..remove(ingredient);
-                      Provider.of<IngredientsProvider>(context, listen: false).filterIngredients(
-                          Provider.of<IngredientsProvider>(context, listen: false).currentFilter);
-                      Provider.of<IngredientsProvider>(context, listen: false).addIngredientToAvailable(ingredient);
+                      _selectedIngredients.value =
+                          List.from(_selectedIngredients.value)
+                            ..remove(ingredient);
+                      Provider.of<IngredientsProvider>(context, listen: false)
+                          .filterIngredients(Provider.of<IngredientsProvider>(
+                                  context,
+                                  listen: false)
+                              .currentFilter);
+                      Provider.of<IngredientsProvider>(context, listen: false)
+                          .addIngredientToAvailable(ingredient);
                     },
                     child: const Icon(Icons.close, size: 16, color: Colors.red),
                   ),
@@ -240,22 +284,26 @@ class _UploadRecipeState extends State<UploadRecipe> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Elaboración',
-          style: textStyleVilaTourTitle(color: Colors.black, fontSize: 20),
+          AppLocalizations.of(context).translate('elaboration'),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 10),
         TextFormField(
+          initialValue: recipeFormProvider.recipe.description,
           maxLines: 6,
           decoration: InputDecoration(
-            hintText: 'Escribe la descripción de la receta...',
+            hintText: AppLocalizations.of(context).translate('writeRecipeDesc'),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onChanged: (value) => recipeFormProvider.recipe!.description = value,
+          onChanged: (value) {
+            recipeFormProvider.setRecipeParams(null, value);
+          },
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Por favor ingrese la descripción de la receta';
+              return AppLocalizations.of(context)
+                  .translate('pleaseWriteRecipe');
             }
             return null;
           },
@@ -264,31 +312,38 @@ class _UploadRecipeState extends State<UploadRecipe> {
     );
   }
 
-  Widget _buildSubmitButton(RecipeFormProvider recipeFormProvider, RecipeService recipeService) {
+  Widget _buildSubmitButton(
+      RecipeFormProvider recipeFormProvider, RecipeService recipeService) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: CustomButton(
-          text: "Enviar",
+          text: AppLocalizations.of(context).translate('send'),
           onPressed: () async {
-            if (recipeFormProvider.formLogKey.currentState!.validate()) {
+            if (recipeFormProvider.formRecipeKey.currentState!.validate()) {
               bool? confirm = await showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     backgroundColor: Colors.white,
-                    title: const Text('¿Estás seguro de enviar la receta?'),
-                    content: const Text('Una vez enviada, la receta irá a revisión.'),
+                    title: Text(AppLocalizations.of(context)
+                        .translate('confirmRecipe')),
+                    content: Text(AppLocalizations.of(context)
+                        .translate('sendRecipeMessage')),
                     actions: <Widget>[
                       TextButton(
-                        child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+                        child: Text(
+                            AppLocalizations.of(context).translate('cancel'),
+                            style: const TextStyle(color: Colors.black)),
                         onPressed: () {
                           Navigator.of(context).pop(false);
                         },
                       ),
                       TextButton(
-                        child: const Text('Enviar', style: TextStyle(color: Colors.black)),
+                        child: Text(
+                            AppLocalizations.of(context).translate('send'),
+                            style: const TextStyle(color: Colors.black)),
                         onPressed: () {
                           Navigator.of(context).pop(true);
                         },
@@ -300,30 +355,43 @@ class _UploadRecipeState extends State<UploadRecipe> {
 
               if (confirm == true) {
                 try {
-                  recipeFormProvider.recipe!.ingredients = _selectedIngredients.value;
+                  recipeFormProvider.recipe.ingredients =
+                      _selectedIngredients.value;
 
-                  if (selectedImage != null) {
-                    String base64Image = await fileToBase64(File(selectedImage!.path));
-                    recipeFormProvider.recipe!.images.add(customImage.Image(path: base64Image));
+                  if (widget.recipe != null) {
+                    // TODO Lógica para actualizar la receta
+                  } else {
+                    Recipe createdRecipe = await recipeService
+                        .createRecipe(recipeFormProvider.recipe);
+
+                    if (selectedImage != null) {
+                      ImageService imageService = ImageService();
+
+                      String base64Image =
+                          await fileToBase64(File(selectedImage!.path));
+
+                      customImage.Image image = customImage.Image(
+                          path: base64Image, article: createdRecipe);
+
+                      await imageService.uploadImage(image);
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate('recipeSended')),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+
+                    Navigator.pushReplacementNamed(context, HomePage.routeName);
                   }
-
-                  await recipeService.createRecipe(recipeFormProvider.recipe!);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Receta enviada a revisión'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-
-                  Navigator.pushReplacementNamed(context, HomePage.routeName);
                 } catch (e) {
-                  print("RECETAERROR:" + e.toString());
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Error al enviar la receta'),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)
+                          .translate('recipeError')),
                       backgroundColor: Colors.red,
-                      duration: Duration(seconds: 2),
+                      duration: const Duration(seconds: 2),
                     ),
                   );
                 }
@@ -349,21 +417,20 @@ class _ProductImageStack extends StatelessWidget {
   final String? selectedImage;
   final Function(customImage.Image?) onImageSelected;
 
-  Future<void> _pickImage(ImageSource source) async {
+  Future<void> _pickImage(BuildContext context, ImageSource source) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: source, imageQuality: 50);
+      final pickedFile =
+          await picker.pickImage(source: source, imageQuality: 50);
 
       if (pickedFile != null) {
-        // Cargar la imagen sin convertir a base64 inicialmente
         final image = customImage.Image(path: pickedFile.path);
-
-        onImageSelected(image); // Pasar la imagen no codificada
+        onImageSelected(image);
       } else {
-        print('No se seleccionó ninguna imagen.');
+        print(AppLocalizations.of(context).translate('noImageSelected'));
       }
     } catch (e) {
-      print('Error al seleccionar la imagen: $e');
+      print(AppLocalizations.of(context).translate('errorSelectedImage'));
     }
   }
 
@@ -371,15 +438,30 @@ class _ProductImageStack extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        RecipeImage(url: selectedImage),
+        Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.4,
+            maxWidth: MediaQuery.of(context).size.width,
+          ),
+          child: RecipeImage(url: selectedImage),
+        ),
+        if (selectedImage != null)
+          Positioned(
+            top: 10,
+            left: 10,
+            child: IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red, size: 40),
+              onPressed: () => onImageSelected(null),
+            ),
+          ),
         _IconPositionedButton(
           icon: Icons.photo_library_outlined,
-          onPressed: () => _pickImage(ImageSource.gallery),
+          onPressed: () => _pickImage(context, ImageSource.gallery),
           position: const Offset(65, 12),
         ),
         _IconPositionedButton(
           icon: Icons.camera_alt_outlined,
-          onPressed: () => _pickImage(ImageSource.camera),
+          onPressed: () => _pickImage(context, ImageSource.camera),
           position: const Offset(15, 12),
         ),
       ],

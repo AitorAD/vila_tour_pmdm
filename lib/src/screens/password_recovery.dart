@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/services/user_service.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class PasswordRecovery extends StatefulWidget {
-  const PasswordRecovery({Key? key}) : super(key: key);
+  const PasswordRecovery({super.key});
 
-  static final routeName = 'recovery_password_screen';
+  static const routeName = 'recovery_password_screen';
 
   @override
   State<PasswordRecovery> createState() => _PasswordRecoveryState();
 }
-
 
 class _PasswordRecoveryState extends State<PasswordRecovery> {
   final _formKey = GlobalKey<FormState>();
@@ -38,15 +38,18 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                 child: IntrinsicHeight(
                   child: Column(
                     children: [
-                      SizedBox(height: 25),
-                      const BarScreenArrow(
-                          labelText: "Recuperar Contraseña", arrowBack: true),
+                      const SizedBox(height: 25),
+                      BarScreenArrow(
+                          labelText: AppLocalizations.of(context)
+                              .translate('recoveryPassword'),
+                          arrowBack: true),
                       Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30.0),
                               child: !_emailSent
                                   ? _buildEmailForm()
                                   : _buildSuccessMessage(),
@@ -72,22 +75,22 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
       child: Column(
         children: [
           Text(
-            "Correo de recuperación",
+            AppLocalizations.of(context).translate('recoveryEmail'),
             style: textStyleVilaTourTitle(color: Colors.black),
           ),
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
-              labelText: 'Correo Electrónico',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context).translate('email'),
             ),
-            validator: EmailValidator.validateEmail,
+            validator: (value) => EmailValidator.validateEmail(context, value),
           ),
-          SizedBox(height: 100),
+          const SizedBox(height: 100),
           CustomButton(
-            text: 'Enviar',
+            text: AppLocalizations.of(context).translate('send'),
             onPressed: _sendRecoveryEmail,
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
         ],
       ),
     );
@@ -98,16 +101,16 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.check_circle_outline, size: 80, color: Colors.green),
-        SizedBox(height: 20),
+        const Icon(Icons.check_circle_outline, size: 80, color: Colors.green),
+        const SizedBox(height: 20),
         Text(
-          'Correo de recuperación enviado.',
+          AppLocalizations.of(context).translate('recoveryEmailSended'),
           style: textStyleVilaTourTitle(color: Colors.black),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
-          'Por favor, revisa tu correo para continuar.',
+          AppLocalizations.of(context).translate('checkEmail'),
           textAlign: TextAlign.center,
         ),
       ],
@@ -126,20 +129,21 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
         if (emailExists) {
           print("Que si que existe");
           final emailSent = await userService.sendRecoveryEmail(email);
-          if(emailSent){
+          if (emailSent) {
             print("Se ha enviado");
-              setState(() {
+            setState(() {
               _emailSent = true;
+            });
+          } else {
+            _showErrorDialog(context);
           }
-          );
-        } else {
-          _showErrorDialog(context);
-        }}
+        }
       } catch (e) {
         print("Error al enviar el correo: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Hubo un error, intenta más tarde."))
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+          AppLocalizations.of(context).translate('unexpectedError'),
+        )));
       }
     }
   }
@@ -150,14 +154,18 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Text('Correo no encontrado'),
+          title: Text(
+            AppLocalizations.of(context).translate('email404'),
+          ),
           content: Text(
-            'El correo ingresado no está registrado. Por favor, verifica e intenta de nuevo.',
+            AppLocalizations.of(context).translate('emailNotRegistered'),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Aceptar'),
+              child: Text(
+                AppLocalizations.of(context).translate('accept'),
+              ),
             ),
           ],
         );
@@ -167,9 +175,13 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
 }
 
 class EmailValidator {
-  static String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) return 'Por favor ingresa tu correo';
-    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) return 'Correo no válido';
+  static String? validateEmail(BuildContext context, String? value) {
+    if (value == null || value.isEmpty) {
+      return AppLocalizations.of(context).translate('putEmail');
+    }
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+      return AppLocalizations.of(context).translate('emailNotValid');
+    }
     return null;
   }
 }

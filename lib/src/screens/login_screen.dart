@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vila_tour_pmdm/src/providers/login_form_provider.dart';
-import 'package:vila_tour_pmdm/src/screens/password_recovery.dart';
+import 'package:vila_tour_pmdm/src/prefs/user_preferences.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
+import 'package:vila_tour_pmdm/src/screens/screens.dart';
 import 'package:vila_tour_pmdm/src/ui/input_decorations.dart';
-import 'package:vila_tour_pmdm/src/screens/home.dart';
-import 'package:vila_tour_pmdm/src/screens/registrer_screen.dart';
-import 'package:vila_tour_pmdm/src/services/login_service.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/utils/result.dart';
-import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = 'login_screen';
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,10 @@ class LoginScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       const HeaderLog(),
-                      const BarScreenLogin(labelText: "Log In"),
+                      BarScreenLogin(
+                        labelText:
+                            AppLocalizations.of(context).translate('login'),
+                      ),
                       Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -48,11 +51,10 @@ class LoginScreen extends StatelessWidget {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 30.0),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start, 
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   _LoginForm(
-                                    key:
-                                        Key('login_form_${loginForm.hashCode}'),
+                                    key: UniqueKey(), // Asegúrate de que cada instancia tenga una clave única
                                     loginForm: loginForm,
                                   ),
                                   const SizedBox(height: 10),
@@ -81,7 +83,7 @@ class LoginScreen extends StatelessWidget {
 
 class _LoginForm extends StatelessWidget {
   final LoginFormProvider loginForm;
-  const _LoginForm({Key? key, required this.loginForm}) : super(key: key);
+  const _LoginForm({super.key, required this.loginForm});
 
   @override
   Widget build(BuildContext context) {
@@ -91,40 +93,41 @@ class _LoginForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Usuario:', style: textStyleVilaTourTitle(color: Colors.black)),
+          Text(
+            AppLocalizations.of(context).translate('username'),
+            style: textStyleVilaTourTitle(color: Colors.black),
+          ),
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'El nombre de usuario es obligatorio';
+                return AppLocalizations.of(context).translate('completeFields');
               }
               return null;
             },
             autocorrect: false,
             keyboardType: TextInputType.name,
             decoration: InputDecorations.authInputDecoration(
-              hintText: 'Nombre de Usuario',
+              hintText: AppLocalizations.of(context).translate('enterUsername'),
             ),
             onChanged: (value) => loginForm.username = value,
           ),
           const SizedBox(height: 30),
-          Text('Contraseña:',
-              style: textStyleVilaTourTitle(color: Colors.black)),
+          Text(
+            AppLocalizations.of(context).translate('password'),
+            style: textStyleVilaTourTitle(color: Colors.black),
+          ),
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'La contraseña es obligatoria';
+                return AppLocalizations.of(context).translate('completeFields');
               }
-              /*final regex = RegExp(r'^(?=.*[a-zA-Z])(?=.*\d).+$');
-              if (!regex.hasMatch(value)) {
-                return 'Debe contener al menos un número';
-              }*/
               return null;
             },
             autocorrect: false,
             keyboardType: TextInputType.visiblePassword,
             obscureText: true,
             decoration: InputDecorations.authInputDecoration(
-              hintText: '**********',
+              hintText: AppLocalizations.of(context).translate('enterPassword'),
             ),
             onChanged: (value) => loginForm.password = value,
           ),
@@ -135,16 +138,16 @@ class _LoginForm extends StatelessWidget {
 }
 
 class _RecoveryPassword extends StatelessWidget {
-  const _RecoveryPassword({Key? key}) : super(key: key);
+  const _RecoveryPassword();
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-          Navigator.pushNamed(context, PasswordRecovery.routeName);
+        Navigator.pushNamed(context, PasswordRecovery.routeName);
       },
       child: Text(
-        '¿Has olvidado tu contraseña? Haz click aquí',
+        AppLocalizations.of(context).translate('forgotPassword'),
         style: const TextStyle(
           color: Colors.black,
           decoration: TextDecoration.underline,
@@ -158,8 +161,7 @@ class _Botones extends StatelessWidget {
   final LoginFormProvider loginForm;
   final LoginService loginService;
   const _Botones(
-      {Key? key, required this.loginForm, required this.loginService})
-      : super(key: key);
+      {super.key, required this.loginForm, required this.loginService});
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +175,7 @@ class _Botones extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             LoginBtn(
-              key: Key('login_button_${loginForm.hashCode}'),
+              key: UniqueKey(), // Asegúrate de que cada instancia tenga una clave única
               loginForm: loginForm,
               loginService: loginService,
             ),
@@ -183,17 +185,17 @@ class _Botones extends StatelessWidget {
                 Navigator.pushNamed(context, RegistrerScreen.routeName);
               },
               child: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                   children: [
                     TextSpan(
-                      text: '¿No tienes cuenta? ',
-                      style: TextStyle(
+                      text: AppLocalizations.of(context).translate('noAccount'),
+                      style: const TextStyle(
                         color: Colors.black,
                       ),
                     ),
                     TextSpan(
-                      text: 'Regístrate',
-                      style: TextStyle(
+                      text: ' ${AppLocalizations.of(context).translate('register')}',
+                      style: const TextStyle(
                         color: Color.fromARGB(210, 11, 145, 185),
                       ),
                     ),
@@ -221,7 +223,7 @@ class LoginBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomButton(
-      text: 'Entrar',
+      text: AppLocalizations.of(context).translate('loginButton'),
       onPressed: () async {
         if (loginForm.isValidForm()) {
           print('Formulario válido. Procesando login.');
@@ -238,41 +240,53 @@ class LoginBtn extends StatelessWidget {
           switch (loginResult) {
             case Result.success:
               print('Login exitoso.');
+
+              // Obtener el token tras el login
+              final token = await loginService.getToken();
+              final expiration = await loginService.getTokenDurationMs();
+              if (token != null && token.isNotEmpty) {
+                await UserPreferences.instance.saveToken(token, expiration!);
+                print('Token guardado correctamente en SecureStorage.');
+              } else {
+                print('Error: No se recibió un token válido.');
+              }
+
               Navigator.pushReplacementNamed(context, HomePage.routeName);
               break;
 
             case Result.invalidCredentials:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                      'Credenciales incorrectas. Por favor, verifica tu usuario y contraseña.'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)
+                      .translate('invalidCredentials')),
                 ),
               );
               break;
 
             case Result.noConnection:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   content: Text(
-                      'No se pudo conectar a la base de datos. Por favor, inténtalo más tarde.'),
+                      AppLocalizations.of(context).translate('noConnection')),
                 ),
               );
               break;
 
             case Result.serverError:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   content: Text(
-                      'Ocurrió un error en el servidor. Por favor, inténtalo más tarde.'),
+                      AppLocalizations.of(context).translate('serverError')),
                 ),
               );
               break;
 
             case Result.unexpectedError:
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   content: Text(
-                      'Ocurrió un error inesperado. Por favor, inténtalo más tarde.'),
+                    AppLocalizations.of(context).translate('unexpectedError'),
+                  ),
                 ),
               );
               break;
@@ -281,11 +295,10 @@ class LoginBtn extends StatelessWidget {
               break;
           }
         } else {
-          print('Formulario inválido.');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('Por favor, completa todos los campos correctamente.'),
+            SnackBar(
+              content: Text(
+                  AppLocalizations.of(context).translate('completeFields')),
             ),
           );
         }

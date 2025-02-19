@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/providers/review_provider.dart';
 import 'package:vila_tour_pmdm/src/services/config.dart';
@@ -7,13 +8,15 @@ import 'package:vila_tour_pmdm/src/services/config.dart';
 class FavoriteFloatingActionButton extends StatefulWidget {
   final Article article;
 
-  const FavoriteFloatingActionButton({Key? key, required this.article}) : super(key: key);
+  const FavoriteFloatingActionButton({super.key, required this.article});
 
   @override
-  _FavoriteFloatingActionButtonState createState() => _FavoriteFloatingActionButtonState();
+  _FavoriteFloatingActionButtonState createState() =>
+      _FavoriteFloatingActionButtonState();
 }
 
-class _FavoriteFloatingActionButtonState extends State<FavoriteFloatingActionButton> {
+class _FavoriteFloatingActionButtonState
+    extends State<FavoriteFloatingActionButton> {
   bool isLoading = false;
 
   @override
@@ -47,7 +50,8 @@ class _FavoriteFloatingActionButtonState extends State<FavoriteFloatingActionBut
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error al actualizar el estado de favorito'),
+              content: Text(
+                  AppLocalizations.of(context).translate('updateFavError')),
               backgroundColor: Colors.red,
             ),
           );
@@ -59,8 +63,8 @@ class _FavoriteFloatingActionButtonState extends State<FavoriteFloatingActionBut
       },
       backgroundColor: isFavourite ? Colors.white : Colors.redAccent,
       child: isFavourite
-          ? Icon(Icons.favorite, color: Colors.redAccent)
-          : Icon(Icons.favorite_border),
+          ? const Icon(Icons.favorite, color: Colors.redAccent)
+          : const Icon(Icons.favorite_border),
     );
   }
 }

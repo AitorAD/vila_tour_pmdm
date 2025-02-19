@@ -6,40 +6,23 @@ const tealGradientMiddle2 = Color(0xFF25C1CE);
 const tealGradientMiddle3 = Color(0xFF17BFC1);
 const tealGradientEnd = Color(0xFF01C2A9);
 
-ThemeData lightMode = ThemeData(brightness: Brightness.light);
+ThemeData lightMode = ThemeData(
+  brightness: Brightness.light,
+  textTheme: const TextTheme(
+    titleLarge: TextStyle(color: Colors.black),
+    titleMedium: TextStyle(color: Colors.black),
+    bodyLarge: TextStyle(color: Colors.black),
+    bodyMedium: TextStyle(color: Colors.black),
+    bodySmall: TextStyle(color: Colors.black),
+  ));
 
 ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,
-  colorScheme: const ColorScheme.dark(
-    primary: tealGradientMiddle3,
-    primaryContainer: tealGradientEnd,
-    secondary: tealGradientMiddle1,
-    background: Color(0xFF121212),
-    surface: Color(0xFF1E1E1E),
-    onPrimary: Colors.white,
-    onSecondary: Colors.white,
-    onBackground: Colors.white70,
-    onSurface: Colors.white,
-  ),
-  scaffoldBackgroundColor: const Color(0xFF121212),
-  appBarTheme: const AppBarTheme(
-    centerTitle: true,
-    color: Color(0xFF1E1E1E), // Fondo oscuro para el modo oscuro
-    titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
-    iconTheme: IconThemeData(color: Colors.white),
-  ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    selectedItemColor: Colors.white,
-    unselectedItemColor: Colors.white,
-  ),
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: tealGradientEnd,
-    foregroundColor: Colors.white,
-  ),
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(tealGradientMiddle2),
-      foregroundColor: MaterialStateProperty.all(Colors.white),
-    ),
-  ),
+  textTheme: const TextTheme(
+    titleMedium: TextStyle(),
+    titleLarge: TextStyle(color: Colors.white),
+    bodyLarge: TextStyle(color: Colors.white),
+    bodyMedium: TextStyle(color: Colors.white),
+    bodySmall: TextStyle(color: Colors.white),
+  )
 );

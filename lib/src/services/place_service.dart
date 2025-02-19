@@ -19,8 +19,6 @@ class PlaceService {
       },
     );
 
-    // print('RESPONSE BODY' + response.body);
-
     List<Place> places = Place.fromJsonList(json.decode(response.body));
 
     return places;

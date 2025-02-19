@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
 import 'package:vila_tour_pmdm/src/services/recipe_service.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class RecipesScreen extends StatefulWidget {
-  static final routeName = 'recipes_screen';
+  static const routeName = 'recipes_screen';
   const RecipesScreen({super.key});
 
   @override
@@ -55,7 +56,9 @@ class _RecipesScreenState extends State<RecipesScreen> {
       case 'averageScore':
         return recipe.averageScore.toString();
       case 'ingredients':
-        return recipe.ingredients.map((ingredient) => ingredient.name).join(', ');
+        return recipe.ingredients
+            .map((ingredient) => ingredient.name)
+            .join(', ');
       default:
         return null;
     }
@@ -107,20 +110,24 @@ class _RecipesScreenState extends State<RecipesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          Positioned.fill(
+          const Positioned.fill(
             child: WavesWidget(),
           ),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Recetas', arrowBack: true),
+              BarScreenArrow(
+                  labelText: AppLocalizations.of(context).translate('recipes'),
+                  arrowBack: true),
               SearchBox(
-                hintText: 'Buscar recetas',
+                hintText:
+                    AppLocalizations.of(context).translate('searchRecipes'),
                 controller: searchController,
                 onChanged: (text) {
-                  _recipesFuture.then((recipes) => _filterRecipes(text, recipes));
+                  _recipesFuture
+                      .then((recipes) => _filterRecipes(text, recipes));
                 },
                 onFilterPressed: _showFilterOptions,
               ),
@@ -131,15 +138,20 @@ class _RecipesScreenState extends State<RecipesScreen> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
-                      print(snapshot.error);
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                          child: Text('No se encontraron recetas.'));
+                      return Center(
+                          child: Text(AppLocalizations.of(context)
+                              .translate('norecipes')));
                     } else {
                       final recipes = _filteredRecipes.isEmpty
                           ? snapshot.data!
                           : _filteredRecipes;
+
+                      recipes.sort((a, b) => a.name.compareTo(b.name));
+
+                      // Elimina las recetas no aprobadas, de esta forma no se muestran
+                      recipes.removeWhere((recipe) => recipe.approved == false);
 
                       return ListView.builder(
                         padding: EdgeInsets.zero,

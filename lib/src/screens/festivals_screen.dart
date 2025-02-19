@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/services/festival_service.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class FestivalsScreen extends StatefulWidget {
-  static final routeName = 'festivals_screen';
+  static const routeName = 'festivals_screen';
   const FestivalsScreen({super.key});
 
   @override
@@ -13,6 +14,9 @@ class FestivalsScreen extends StatefulWidget {
 
 class _FestivalsScreenState extends State<FestivalsScreen> {
   final TextEditingController searchController = TextEditingController();
+
+  final festivalService = FestivalService();
+  final imageService = ImageService();
   late Future<List<Festival>> _festivalsFuture;
   List<Festival> _filteredFestivals = [];
   String _selectedAttribute = 'name'; // Atributo inicial para filtrar
@@ -24,10 +28,20 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
   }
 
   void _loadFestivals() {
-    final festivalService = FestivalService();
     setState(() {
-      _festivalsFuture = festivalService.getFestivals();
+      _festivalsFuture = _fetchFestivalsWithImages();
     });
+  }
+
+  Future<List<Festival>> _fetchFestivalsWithImages() async {
+    List<Festival> festivals = await festivalService.getFestivals();
+
+    for (var festival in festivals) {
+      var image = await imageService.getImageByArticle(festival);
+      festival.images.add(image);
+    }
+
+    return festivals;
   }
 
   void _filterFestivals(String query, List<Festival> festivals) {
@@ -107,20 +121,22 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          Positioned.fill(
+          const Positioned.fill(
             child: WavesWidget(),
           ),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Festivales y Tradiciones', arrowBack: true),
+              BarScreenArrow(
+                  labelText: AppLocalizations.of(context).translate('festivlasAndTraditions'), arrowBack: true),
               SearchBox(
-                hintText: 'Buscar festivales',
+                hintText: AppLocalizations.of(context).translate('searchFestivals'),
                 controller: searchController,
                 onChanged: (text) {
-                  _festivalsFuture.then((festivals) => _filterFestivals(text, festivals));
+                  _festivalsFuture
+                      .then((festivals) => _filterFestivals(text, festivals));
                 },
                 onFilterPressed: _showFilterOptions,
               ),
@@ -134,14 +150,17 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                       print(snapshot.error);
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(
-                          child: Text('No se encontraron festivales.'));
+                      return Center(
+                          child: Text(AppLocalizations.of(context).translate('noFestivals')));
                     } else {
                       final festivals = _filteredFestivals.isEmpty
                           ? snapshot.data!
                           : _filteredFestivals;
 
-                      return ListView.builder(
+                      // Ordenar la lista por nombre antes de mostrarla
+                      festivals.sort((a, b) => a.name.compareTo(b.name));
+
+                      ListView list = ListView.builder(
                         padding: EdgeInsets.zero,
                         itemCount: festivals.length,
                         itemBuilder: (context, index) {
@@ -149,6 +168,7 @@ class _FestivalsScreenState extends State<FestivalsScreen> {
                           return ArticleBox(article: festival);
                         },
                       );
+                      return list;
                     }
                   },
                 ),

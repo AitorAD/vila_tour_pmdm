@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:vila_tour_pmdm/src/languages/app_localizations.dart';
 import 'package:vila_tour_pmdm/src/models/models.dart';
-import 'package:vila_tour_pmdm/src/providers/review_form_provider.dart';
-import 'package:vila_tour_pmdm/src/services/config.dart';
-import 'package:vila_tour_pmdm/src/services/review_service.dart';
-import 'package:vila_tour_pmdm/src/utils/utils.dart';
+import 'package:vila_tour_pmdm/src/providers/providers.dart';
+import 'package:vila_tour_pmdm/src/services/services.dart';
 import 'package:vila_tour_pmdm/src/widgets/widgets.dart';
 
 class AddReviewScreen extends StatelessWidget {
-  static final routeName = 'add_review';
+  static const routeName = 'add_review';
 
   const AddReviewScreen({super.key});
 
@@ -19,13 +18,13 @@ class AddReviewScreen extends StatelessWidget {
     ReviewFormProvider reviewFormProvider = ReviewFormProvider();
 
     return Scaffold(
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
       body: Stack(
         children: [
-          WavesWidget(),
+          const WavesWidget(),
           Column(
             children: [
-              BarScreenArrow(labelText: 'Añadir Reseña', arrowBack: true),
+              BarScreenArrow(labelText: AppLocalizations.of(context).translate('addReview'), arrowBack: true),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -52,7 +51,6 @@ class _ReviewForm extends StatelessWidget {
   Article article;
 
   _ReviewForm({
-    super.key,
     required this.reviewFormProvider,
     required this.reviewService,
     required this.article,
@@ -64,23 +62,20 @@ class _ReviewForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           StarRating(reviewFormProvider: reviewFormProvider),
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Escribe tu reseña: ',
-                style: textStyleVilaTourTitle(
-                  color: Colors.black,
-                  fontSize: 20,
-                ),
+                AppLocalizations.of(context).translate('writeReview'),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 10),
               TextFormField(
                 decoration: InputDecoration(
-                  labelStyle: TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(color: Colors.white),
                   filled: true,
                   fillColor: Colors.black.withOpacity(0.3),
                   enabledBorder: _borderReviewBox(),
@@ -93,13 +88,13 @@ class _ReviewForm extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           CustomButton(
-            text: 'Enviar',
+            text: AppLocalizations.of(context).translate('send'),
             radius: 30,
             onPressed: () async {
               if (reviewFormProvider.rating == 0) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Añade una puntuación'),
+                    content: Text(AppLocalizations.of(context).translate('addPoints')),
                   ),
                 );
                 return;
@@ -118,8 +113,8 @@ class _ReviewForm extends StatelessWidget {
               );
               bool isAddedReview = await reviewService.addUpdateReview(review);
               String message = isAddedReview
-                  ? 'Reseña añadida correctamente'
-                  : 'Error al añadir la reseña';
+                  ? AppLocalizations.of(context).translate('reviewSucces')
+                  : AppLocalizations.of(context).translate('reviewNotSucces');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(message),
@@ -144,7 +139,7 @@ class _ReviewForm extends StatelessWidget {
   OutlineInputBorder _borderReviewBox() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),
-      borderSide: BorderSide(color: Colors.transparent),
+      borderSide: const BorderSide(color: Colors.transparent),
     );
   }
 }
@@ -152,8 +147,7 @@ class _ReviewForm extends StatelessWidget {
 class StarRating extends StatefulWidget {
   final ReviewFormProvider reviewFormProvider;
 
-  const StarRating({Key? key, required this.reviewFormProvider})
-      : super(key: key);
+  const StarRating({super.key, required this.reviewFormProvider});
 
   @override
   _StarRatingState createState() => _StarRatingState();
@@ -191,8 +185,8 @@ class _StarRatingState extends State<StarRating> {
             ),
           ],
         ),
-        SizedBox(height: 15),
-        Text('$_selectedStars/5', style: TextStyle(fontSize: 40)),
+        const SizedBox(height: 15),
+        Text('$_selectedStars/5', style: const TextStyle(fontSize: 40)),
       ],
     );
   }

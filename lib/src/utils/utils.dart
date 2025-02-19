@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:async';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
@@ -57,17 +58,25 @@ String formatDate(DateTime date) {
 }
 
 ImageProvider getImage(String? picture) {
-    if (picture != null && picture.isNotEmpty) {
-      try {
-        // Intentamos decodificar la cadena base64 para convertirla en una imagen.
-        return MemoryImage(decodeImageBase64(picture));
-      } catch (e) {
-        print('Error al decodificar la imagen base64: $e');
-        // En caso de error en la decodificación, se muestra la imagen predeterminada.
-        return AssetImage('assets/logo.ico');
-      }
-    } else {
-      // Si no hay imagen, mostramos la predeterminada.
+  if (picture != null && picture.isNotEmpty) {
+    try {
+      // Intentamos decodificar la cadena base64 para convertirla en una imagen.
+      return MemoryImage(decodeImageBase64(picture));
+    } catch (e) {
+      print('Error al decodificar la imagen base64: $e');
+      // En caso de error en la decodificación, se muestra la imagen predeterminada.
       return AssetImage('assets/logo.ico');
     }
+  } else {
+    // Si no hay imagen, mostramos la predeterminada.
+    return AssetImage('assets/logo.ico');
   }
+}
+
+double screenHeight(BuildContext context) {
+  return MediaQuery.of(context).size.height;
+}
+
+double screenWidth(BuildContext context) {
+  return MediaQuery.of(context).size.width;
+}
