@@ -40,8 +40,9 @@ class ReviewService {
 
     if (response.statusCode == 200) {
       try {
-        final List<dynamic> jsonResponse = json.decode(response.body);
-        List<Review> reviews = jsonResponse.map((e) => Review.fromMap(e)).toList();
+        final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+        final List<dynamic> responseReview = jsonResponse;
+        List<Review> reviews = responseReview.map((e) => Review.fromMap(e)).toList();
         return reviews;
       } catch (e) {
         throw Exception('Error al deserializar los datos de las reviews');

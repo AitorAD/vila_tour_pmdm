@@ -22,7 +22,9 @@ class IngredientService {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+
+        final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+        final List<dynamic> data = jsonResponse;
         return Ingredient.fromJsonList(data);
       } else {
         throw HttpException('Failed to load ingredients: ${response.statusCode}');

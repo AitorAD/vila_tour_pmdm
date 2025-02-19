@@ -19,7 +19,9 @@ class PlaceService {
       },
     );
 
-    List<Place> places = Place.fromJsonList(json.decode(response.body));
+    final jsonResponse = jsonDecode(const Utf8Decoder().convert(response.bodyBytes));
+
+    List<Place> places = Place.fromJsonList(jsonResponse);
 
     return places;
   }
